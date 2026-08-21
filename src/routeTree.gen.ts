@@ -11,7 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminHistoryRouteImport } from './routes/admin.history'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as HotelsSlugRouteImport } from './routes/hotels.$slug'
+import { Route as HotelsSlugGalleryRouteImport } from './routes/hotels.$slug_.gallery'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +27,98 @@ const BookRoute = BookRouteImport.update({
   path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminHistoryRoute = AdminHistoryRouteImport.update({
+  id: '/admin/history',
+  path: '/admin/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HotelsSlugRoute = HotelsSlugRouteImport.update({
   id: '/hotels/$slug',
   path: '/hotels/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HotelsSlugGalleryRoute = HotelsSlugGalleryRouteImport.update({
+  id: '/hotels/$slug_/gallery',
+  path: '/hotels/$slug/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/book': typeof BookRoute
+  '/admin/history': typeof AdminHistoryRoute
+  '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/hotels/$slug/gallery': typeof HotelsSlugGalleryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book': typeof BookRoute
+  '/admin/history': typeof AdminHistoryRoute
+  '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/hotels/$slug/gallery': typeof HotelsSlugGalleryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/book': typeof BookRoute
+  '/admin/history': typeof AdminHistoryRoute
+  '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/hotels/$slug_/gallery': typeof HotelsSlugGalleryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/book' | '/hotels/$slug'
+  fullPaths:
+    | '/'
+    | '/book'
+    | '/admin/history'
+    | '/admin/login'
+    | '/hotels/$slug'
+    | '/admin/'
+    | '/hotels/$slug/gallery'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/book' | '/hotels/$slug'
-  id: '__root__' | '/' | '/book' | '/hotels/$slug'
+  to:
+    | '/'
+    | '/book'
+    | '/admin/history'
+    | '/admin/login'
+    | '/hotels/$slug'
+    | '/admin'
+    | '/hotels/$slug/gallery'
+  id:
+    | '__root__'
+    | '/'
+    | '/book'
+    | '/admin/history'
+    | '/admin/login'
+    | '/hotels/$slug'
+    | '/admin/'
+    | '/hotels/$slug_/gallery'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookRoute: typeof BookRoute
+  AdminHistoryRoute: typeof AdminHistoryRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   HotelsSlugRoute: typeof HotelsSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  HotelsSlugGalleryRoute: typeof HotelsSlugGalleryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +137,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/history': {
+      id: '/admin/history'
+      path: '/admin/history'
+      fullPath: '/admin/history'
+      preLoaderRoute: typeof AdminHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hotels/$slug': {
       id: '/hotels/$slug'
       path: '/hotels/$slug'
       fullPath: '/hotels/$slug'
       preLoaderRoute: typeof HotelsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hotels/$slug_/gallery': {
+      id: '/hotels/$slug_/gallery'
+      path: '/hotels/$slug/gallery'
+      fullPath: '/hotels/$slug/gallery'
+      preLoaderRoute: typeof HotelsSlugGalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +178,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookRoute: BookRoute,
+  AdminHistoryRoute: AdminHistoryRoute,
+  AdminLoginRoute: AdminLoginRoute,
   HotelsSlugRoute: HotelsSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  HotelsSlugGalleryRoute: HotelsSlugGalleryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

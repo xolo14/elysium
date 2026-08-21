@@ -28,7 +28,7 @@ async function main() {
 
   const target = process.argv[2];
   if (target === "migrate") {
-    await runFile("db/migrations/001_initial.sql");
+    await runFile("db/migrations/002_booking_lifecycle.sql");
     console.log("Migration complete.");
     return;
   }
@@ -41,6 +41,7 @@ async function main() {
 
   if (target === "setup") {
     await runFile("db/migrations/001_initial.sql");
+    await runFile("db/migrations/002_booking_lifecycle.sql");
     await runFile("db/seed.sql");
     console.log("Database setup complete.");
     return;

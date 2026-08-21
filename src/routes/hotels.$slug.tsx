@@ -2,7 +2,10 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
+import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
+import { HotelImageCarousel } from "@/components/HotelImageCarousel";
+import { createBooking } from "@/server/bookings";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { Reveal } from "@/components/Reveal";
@@ -64,60 +67,19 @@ function HotelPage() {
 }
 
 function HotelHero({ hotel }: { hotel: Hotel }) {
-  const images = useMemo(
-    () => [hotel.hero, ...hotel.gallery.map((g) => g.image)].slice(0, 7),
-    [hotel],
-  );
-  const [i, setI] = useState(0);
-  const go = (n: number) => setI((p) => (p + n + images.length) % images.length);
+  const carouselImages = useMemo(() => getHotelCarouselImages(hotel), [hotel]);
 
   return (
-    <section className="relative h-[70svh] min-h-[520px] w-full overflow-hidden bg-forest">
-       <BrandLineCorner className="pointer-events-none absolute top-32 left-8 z-10 h-40 w-20 text-ivory/65 sm:left-12 lg:left-20 lg:h-52 lg:w-28" />
-       {images.map((src, idx) => (
-        <img
-          key={src + idx}
-          src={src}
-          alt={`${hotel.name}, ${hotel.place} — view ${idx + 1}`}
-          loading={idx === 0 ? "eager" : "lazy"}
-          className={cn(
-            "absolute inset-0 h-full w-full object-cover transition-opacity duration-1000",
-            idx === i ? "opacity-100" : "opacity-0",
-          )}
-        />
-      ))}
-
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 p-6 sm:p-10">
-        <div className="flex gap-2">
-          {images.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setI(idx)}
-              aria-label={`Show image ${idx + 1}`}
-              className={cn(
-                "h-px w-10 transition-colors duration-500",
-                idx === i ? "bg-ivory" : "bg-ivory/35",
-              )}
-            />
-          ))}
-        </div>
-        <div className="flex gap-3">
-          <button
-            onClick={() => go(-1)}
-            aria-label="Previous image"
-            className="eyebrow border border-ivory/40 px-4 py-2 text-ivory transition-colors hover:bg-ivory hover:text-forest"
-          >
-            Prev
-          </button>
-          <button
-            onClick={() => go(1)}
-            aria-label="Next image"
-            className="eyebrow border border-ivory/40 px-4 py-2 text-ivory transition-colors hover:bg-ivory hover:text-forest"
-          >
-            Next
-          </button>
-        </div>
-      </div>
+    <section className="relative z-20 h-[70svh] min-h-[520px] w-full overflow-hidden bg-forest">
+      <BrandLineCorner className="pointer-events-none absolute top-32 left-8 z-10 h-40 w-20 text-ivory/65 sm:left-12 lg:left-20 lg:h-52 lg:w-28" />
+      <HotelImageCarousel
+        key={hotel.id}
+        images={carouselImages}
+        hotelSlug={hotel.slug}
+        hotelName={hotel.name}
+        place={hotel.place}
+        className="h-full"
+      />
     </section>
   );
 }
@@ -245,22 +207,63 @@ function BookingPanel({
   suite: Suite;
   onClose: () => void;
 }) {
-  const today = new Date().toISOString().slice(0, 10);
+  const tomorrow = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().slice(0, 10);
+  }, []);
+  const defaultOut = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toISOString().slice(0, 10);
+  }, []);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
-    checkIn: today,
-    checkOut: today,
+    checkIn: tomorrow,
+    checkOut: defaultOut,
     guests: "2",
   });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   const nights = useMemo(() => {
     const a = new Date(form.checkIn).getTime();
     const b = new Date(form.checkOut).getTime();
-    return Math.max(0, Math.round((b - a) / 86_400_000));
+    if (!Number.isFinite(a) || !Number.isFinite(b) || b <= a) return 1;
+    return Math.max(1, Math.round((b - a) / 86_400_000));
   }, [form.checkIn, form.checkOut]);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const result = await createBooking({
+        data: {
+          hotelId: hotel.id,
+          suiteName: suite.name,
+          guestName: form.name.trim(),
+          guestEmail: form.email.trim(),
+          guestPhone: form.phone.trim(),
+          checkIn: form.checkIn,
+          checkOut: form.checkOut,
+          guests: Number(form.guests) || 1,
+        },
+      });
+      setBookingId(result.id);
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save your request.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-0 sm:items-center sm:p-6">
@@ -283,9 +286,14 @@ function BookingPanel({
             <p className="font-display text-2xl">Request received</p>
             <p className="mt-4 text-base leading-relaxed text-foreground/80">
               Thank you, {form.name || "guest"}. Our front desk will confirm {suite.name} for{" "}
-              {nights || 1} night{nights === 1 ? "" : "s"} at {hotel.name}, {hotel.place} on{" "}
+              {nights} night{nights === 1 ? "" : "s"} at {hotel.name}, {hotel.place} on{" "}
               {hotel.contact.phone}.
             </p>
+            {bookingId && (
+              <p className="mt-3 text-sm text-muted-foreground">
+                Reference: <span className="font-mono">{bookingId.slice(0, 8)}</span>
+              </p>
+            )}
             <a
               href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
               className="eyebrow mt-6 inline-block border border-foreground/25 px-6 py-3"
@@ -294,13 +302,7 @@ function BookingPanel({
             </a>
           </div>
         ) : (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSent(true);
-            }}
-            className="mt-10 grid gap-5 sm:grid-cols-2"
-          >
+          <form onSubmit={onSubmit} className="mt-10 grid gap-5 sm:grid-cols-2">
             {(
               [
                 ["name", "Full name", "text"],
@@ -325,13 +327,19 @@ function BookingPanel({
             ))}
             <div className="sm:col-span-2 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
               <p className="text-sm text-muted-foreground">
-                {nights || 1} night{nights === 1 ? "" : "s"} · {form.guests} guests
+                {nights} night{nights === 1 ? "" : "s"} · {form.guests} guests
               </p>
+              {error && (
+                <p className="w-full text-sm text-destructive" role="alert">
+                  {error}
+                </p>
+              )}
               <button
                 type="submit"
-                className="eyebrow border border-foreground/25 px-8 py-3 transition-colors hover:bg-forest hover:text-ivory"
+                disabled={submitting}
+                className="eyebrow border border-foreground/25 px-8 py-3 transition-colors hover:bg-forest hover:text-ivory disabled:opacity-60"
               >
-                Confirm request
+                {submitting ? "Saving…" : "Confirm request"}
               </button>
             </div>
           </form>

@@ -3,8 +3,6 @@ import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
 
-
-
 export function Hero() {
   const { hotel } = useHotel();
   const ref = useRef<HTMLElement>(null);
