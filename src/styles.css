@@ -1,0 +1,335 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "Carla Sans";
+  src: url("/fonts/CarlaSansRegular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/DMSans-VariableFont_opsz_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Acumin";
+  src: url("/fonts/Acumin-Variable-Concept.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Myriad Pro";
+  src: url("/fonts/MyriadPro-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+
+/*
+ * ELYSIUM STUDIO SUITES — design system
+ * Palette taken from the uploaded brand guidelines:
+ *   Forest Green  #06332C / #826135 (bronze)
+ *   Luxury Sand   #DA9953
+ *   Warm Ivory    #F7F4E9
+ * All values in oklch. Never hardcode colors in components.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --font-display: "Carla Sans", "Acumin", sans-serif;
+  --font-sans: "DM Sans", "Myriad Pro", system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-bronze: var(--bronze);
+  --color-forest: var(--forest);
+  --color-forest-deep: var(--forest-deep);
+
+  --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --radius: 0rem;
+
+  --ivory: oklch(0.9665 0.0149 94.2);
+  --ivory-dim: oklch(0.9366 0.0219 92.51);
+  --sand: oklch(0.7327 0.1166 66.22);
+  --bronze: oklch(0.5166 0.0741 72.84);
+  --forest: oklch(0.2897 0.0485 179.75);
+  --forest-deep: oklch(0.2 0.035 180);
+
+  --background: var(--ivory);
+  --foreground: var(--forest);
+  --card: oklch(0.9829 0.0093 94.2);
+  --card-foreground: var(--forest);
+  --popover: var(--ivory);
+  --popover-foreground: var(--forest);
+  --primary: var(--forest);
+  --primary-foreground: var(--ivory);
+  --secondary: var(--ivory-dim);
+  --secondary-foreground: var(--forest);
+  --muted: var(--ivory-dim);
+  --muted-foreground: oklch(0.52 0.02 150);
+  --accent: var(--sand);
+  --accent-foreground: var(--forest);
+  --destructive: oklch(0.505 0.13 30);
+  --destructive-foreground: var(--ivory);
+  --border: oklch(0.2897 0.0485 179.75 / 14%);
+  --input: oklch(0.2897 0.0485 179.75 / 20%);
+  --ring: var(--sand);
+
+  --shadow-luxe: 0 40px 120px -40px oklch(0.2897 0.0485 179.75 / 0.35);
+  --shadow-float: 0 24px 60px -30px oklch(0.2897 0.0485 179.75 / 0.28);
+}
+
+.dark {
+  --background: var(--forest-deep);
+  --foreground: var(--ivory);
+  --card: var(--forest);
+  --card-foreground: var(--ivory);
+  --popover: var(--forest);
+  --popover-foreground: var(--ivory);
+  --primary: var(--ivory);
+  --primary-foreground: var(--forest);
+  --secondary: oklch(0.34 0.045 179);
+  --secondary-foreground: var(--ivory);
+  --muted: oklch(0.34 0.045 179);
+  --muted-foreground: oklch(0.78 0.02 120);
+  --accent: var(--sand);
+  --accent-foreground: var(--forest);
+  --border: oklch(0.9665 0.0149 94.2 / 16%);
+  --input: oklch(0.9665 0.0149 94.2 / 22%);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--sand);
+    color: var(--forest);
+  }
+
+}
+
+@layer components {
+  /* Editorial eyebrow label */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  @media (min-width: 640px) {
+    .eyebrow {
+      font-size: 0.75rem;
+    }
+  }
+
+  /* Shared premium display scale for section titles */
+  .display-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 9.5vw, 4.5rem);
+    line-height: 0.94;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 640px) {
+    .display-title {
+      font-size: clamp(3rem, 6vw, 4.5rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .display-title {
+      font-size: 4.5rem;
+    }
+  }
+
+
+  /* Frosted luxury glass surface */
+  .glass {
+    background: color-mix(in oklab, var(--ivory) 62%, transparent);
+    backdrop-filter: blur(22px) saturate(130%);
+    border: 1px solid color-mix(in oklab, var(--forest) 12%, transparent);
+  }
+
+  .glass-dark {
+    background: color-mix(in oklab, var(--forest) 45%, transparent);
+    backdrop-filter: blur(24px) saturate(120%);
+    border: 1px solid color-mix(in oklab, var(--ivory) 16%, transparent);
+  }
+
+  /* Fine hairline rule used across sections */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in oklab, var(--forest) 25%, transparent),
+      transparent
+    );
+  }
+
+
+  /* Luxury underline reveal for links */
+  .link-luxe {
+    position: relative;
+  }
+  .link-luxe::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 700ms var(--ease-luxe);
+  }
+  .link-luxe:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .ken-burns {
+    animation: ken-burns 26s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  .marquee-track {
+    animation: marquee 46s linear infinite;
+  }
+}
+
+@keyframes brand-glyph-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(2deg);
+  }
+}
+
+@keyframes slow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes dash-draw {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@utility animate-drift {
+  @media (min-width: 1024px) {
+    animation: drift 9s ease-in-out infinite;
+  }
+}
+
+@utility animate-slow-spin {
+  animation: slow-spin 60s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ken-burns,
+  .marquee-track,
+  .animate-drift,
+  .animate-slow-spin {
+    animation: none !important;
+  }
+}
