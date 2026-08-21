@@ -5,7 +5,7 @@ import { hotels, type Hotel, type Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import { HotelImageCarousel } from "@/components/HotelImageCarousel";
-import { createBooking } from "@/server/bookings";
+import { createBooking } from "@/fns/bookings";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { Reveal } from "@/components/Reveal";

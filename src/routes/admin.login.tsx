@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { adminLogin, getAdminSession } from "@/server/admin";
+import { adminLogin, getAdminSession } from "@/fns/admin";
 
 export const Route = createFileRoute("/admin/login")({
   loader: async () => {

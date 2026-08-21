@@ -1,8 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { sql } from "@/lib/db";
-
 const createBookingInput = z.object({
   hotelId: z.enum(["madhapur", "hitec"]),
   suiteName: z.string().min(1),
@@ -26,6 +24,7 @@ function nightsBetween(checkIn: string, checkOut: string) {
 export const createBooking = createServerFn({ method: "POST" })
   .validator(createBookingInput)
   .handler(async ({ data }) => {
+    const { sql } = await import("@/lib/db");
     const nights = nightsBetween(data.checkIn, data.checkOut);
 
     const suites = await sql`

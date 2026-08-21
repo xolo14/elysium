@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 
 import { AdminShell, AdminBookingList } from "@/components/admin/AdminBookingList";
-import { getAdminBookings, getAdminSession } from "@/server/admin";
+import { getAdminBookings, getAdminSession } from "@/fns/admin";
 
 export const Route = createFileRoute("/admin/history")({
   loader: async () => {

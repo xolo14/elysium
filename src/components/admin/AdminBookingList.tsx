@@ -9,7 +9,7 @@ import {
   adminCheckIn,
   adminCheckOut,
   adminLogout,
-} from "@/server/admin";
+} from "@/fns/admin";
 
 type AdminShellProps = {
   title: string;

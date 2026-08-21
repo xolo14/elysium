@@ -1,9 +1,11 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { GalleryImage } from "@/data/hotel-images";
 import { cn } from "@/lib/utils";
+
+const AUTOPLAY_MS = 2000;
 
 type HotelImageCarouselProps = {
   images: GalleryImage[];
@@ -25,11 +27,18 @@ export function HotelImageCarousel({
   const slides = useMemo(() => images.filter((image) => Boolean(image.src)), [images]);
   const [index, setIndex] = useState(0);
   const lastIndex = Math.max(0, slides.length - 1);
-  const atStart = index <= 0;
-  const atEnd = index >= lastIndex;
+  const goPrev = () => setIndex((prev) => (prev <= 0 ? lastIndex : prev - 1));
+  const goNext = () => setIndex((prev) => (prev >= lastIndex ? 0 : prev + 1));
 
-  const goPrev = () => setIndex((prev) => Math.max(0, prev - 1));
-  const goNext = () => setIndex((prev) => Math.min(lastIndex, prev + 1));
+  useEffect(() => {
+    if (slides.length <= 1) return;
+
+    const timer = window.setInterval(() => {
+      setIndex((prev) => (prev >= lastIndex ? 0 : prev + 1));
+    }, AUTOPLAY_MS);
+
+    return () => window.clearInterval(timer);
+  }, [lastIndex, slides.length]);
 
   if (!slides.length) return null;
 
@@ -63,7 +72,7 @@ export function HotelImageCarousel({
                 aria-current={slideIndex === index ? "true" : undefined}
                 onClick={() => setIndex(slideIndex)}
                 className={cn(
-                  "h-1 flex-1 max-w-12 transition-all duration-500",
+                  "h-1 max-w-12 flex-1 transition-all duration-500",
                   slideIndex === index ? "bg-ivory" : "bg-ivory/35 hover:bg-ivory/55",
                 )}
               />
@@ -71,52 +80,46 @@ export function HotelImageCarousel({
           </div>
 
           <div className="flex shrink-0 items-center gap-3">
-            {atEnd ? (
-              <Link
-                to="/hotels/$slug/gallery"
-                params={{ slug: hotelSlug }}
-                preload="intent"
-                className="link-luxe eyebrow relative z-30 hidden min-h-11 items-center text-ivory sm:inline-flex"
-              >
-                View all images
-              </Link>
-            ) : (
-              <div className="flex items-center gap-2">
-                {!atStart && (
-                  <button
-                    type="button"
-                    onClick={goPrev}
-                    aria-label="Previous image"
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/45 bg-forest/35 text-ivory backdrop-blur-sm transition-colors hover:bg-ivory hover:text-forest"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={goNext}
-                  aria-label="Next image"
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/45 bg-ivory text-forest transition-opacity hover:opacity-90"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {atEnd && (
-          <div className="mt-4 flex justify-end sm:mt-0">
             <Link
               to="/hotels/$slug/gallery"
               params={{ slug: hotelSlug }}
               preload="intent"
-              className="link-luxe eyebrow relative z-30 inline-flex min-h-11 items-center text-ivory sm:hidden"
+              className="link-luxe eyebrow relative z-30 hidden min-h-11 items-center text-ivory sm:inline-flex"
             >
               View all images
             </Link>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={goPrev}
+                aria-label="Previous image"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/45 bg-forest/35 text-ivory backdrop-blur-sm transition-colors hover:bg-ivory hover:text-forest"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={goNext}
+                aria-label="Next image"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/45 bg-ivory text-forest transition-opacity hover:opacity-90"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
-        )}
+        </div>
+
+        <div className="mt-4 flex justify-end sm:hidden">
+          <Link
+            to="/hotels/$slug/gallery"
+            params={{ slug: hotelSlug }}
+            preload="intent"
+            className="link-luxe eyebrow relative z-30 inline-flex min-h-11 items-center text-ivory"
+          >
+            View all images
+          </Link>
+        </div>
       </div>
     </div>
   );

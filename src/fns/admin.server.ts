@@ -1,6 +1,4 @@
-import { createServerFn } from "@tanstack/react-start";
 import { deleteCookie, getCookie, setCookie } from "@tanstack/react-start/server";
-import { z } from "zod";
 
 import {
   ADMIN_COOKIE,
@@ -10,13 +8,6 @@ import {
 } from "@/lib/admin-auth";
 import type { AdminBooking, BookingStatus } from "@/lib/bookings-shared";
 import { sql } from "@/lib/db";
-
-function requireAdmin() {
-  const token = getCookie(ADMIN_COOKIE);
-  if (!isValidAdminToken(token)) {
-    throw new Error("Unauthorized");
-  }
-}
 
 type BookingRow = {
   id: string;
@@ -56,6 +47,12 @@ function mapBooking(row: BookingRow): AdminBooking {
     hotelPlace: row.hotel_place,
     suiteName: row.suite_name,
   };
+}
+
+function requireAdmin() {
+  if (!isValidAdminToken(getCookie(ADMIN_COOKIE))) {
+    throw new Error("Unauthorized");
+  }
 }
 
 async function fetchBookings(view: "active" | "history") {
@@ -113,101 +110,91 @@ async function fetchBookings(view: "active" | "history") {
   return (rows as BookingRow[]).map(mapBooking);
 }
 
-export const adminLogin = createServerFn({ method: "POST" })
-  .validator(z.object({ password: z.string().min(1) }))
-  .handler(async ({ data }) => {
-    if (!verifyAdminPassword(data.password)) {
-      throw new Error("Invalid password");
-    }
+export async function adminLoginImpl(data: { password: string }) {
+  if (!verifyAdminPassword(data.password)) {
+    throw new Error("Invalid password");
+  }
 
-    setCookie(ADMIN_COOKIE, createAdminToken(), {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 12,
-    });
-
-    return { ok: true as const };
+  setCookie(ADMIN_COOKIE, createAdminToken(), {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 12,
   });
 
-export const adminLogout = createServerFn({ method: "POST" }).handler(async () => {
+  return { ok: true as const };
+}
+
+export async function adminLogoutImpl() {
   deleteCookie(ADMIN_COOKIE, { path: "/" });
   return { ok: true as const };
-});
+}
 
-export const getAdminSession = createServerFn({ method: "GET" }).handler(async () => {
+export async function getAdminSessionImpl() {
   return { authenticated: isValidAdminToken(getCookie(ADMIN_COOKIE)) };
-});
+}
 
-export const getAdminBookings = createServerFn({ method: "GET" })
-  .validator(z.object({ view: z.enum(["active", "history"]) }))
-  .handler(async ({ data }) => {
-    requireAdmin();
-    return fetchBookings(data.view);
-  });
+export async function getAdminBookingsImpl(data: { view: "active" | "history" }) {
+  requireAdmin();
+  return fetchBookings(data.view);
+}
 
-export const adminCheckIn = createServerFn({ method: "POST" })
-  .validator(z.object({ bookingId: z.string().uuid() }))
-  .handler(async ({ data }) => {
-    requireAdmin();
+export async function adminCheckInImpl(data: { bookingId: string }) {
+  requireAdmin();
 
-    const rows = await sql`
-      UPDATE bookings
-      SET
-        status = 'checked_in',
-        checked_in_at = NOW(),
-        updated_at = NOW()
-      WHERE id = ${data.bookingId}
-        AND status IN ('pending', 'confirmed')
-      RETURNING id
-    `;
+  const rows = await sql`
+    UPDATE bookings
+    SET
+      status = 'checked_in',
+      checked_in_at = NOW(),
+      updated_at = NOW()
+    WHERE id = ${data.bookingId}
+      AND status IN ('pending', 'confirmed')
+    RETURNING id
+  `;
 
-    if (!rows[0]) {
-      throw new Error("Booking not found or already checked in");
-    }
+  if (!rows[0]) {
+    throw new Error("Booking not found or already checked in");
+  }
 
-    return { ok: true as const };
-  });
+  return { ok: true as const };
+}
 
-export const adminCheckOut = createServerFn({ method: "POST" })
-  .validator(z.object({ bookingId: z.string().uuid() }))
-  .handler(async ({ data }) => {
-    requireAdmin();
+export async function adminCheckOutImpl(data: { bookingId: string }) {
+  requireAdmin();
 
-    const rows = await sql`
-      UPDATE bookings
-      SET
-        status = 'checked_out',
-        checked_out_at = NOW(),
-        updated_at = NOW()
-      WHERE id = ${data.bookingId}
-        AND status = 'checked_in'
-      RETURNING id
-    `;
+  const rows = await sql`
+    UPDATE bookings
+    SET
+      status = 'checked_out',
+      checked_out_at = NOW(),
+      updated_at = NOW()
+    WHERE id = ${data.bookingId}
+      AND status = 'checked_in'
+    RETURNING id
+  `;
 
-    if (!rows[0]) {
-      throw new Error("Booking not found or not checked in");
-    }
+  if (!rows[0]) {
+    throw new Error("Booking not found or not checked in");
+  }
 
-    return { ok: true as const };
-  });
+  return { ok: true as const };
+}
 
-export const adminCancelBooking = createServerFn({ method: "POST" })
-  .validator(z.object({ bookingId: z.string().uuid() }))
-  .handler(async ({ data }) => {
-    requireAdmin();
+export async function adminCancelBookingImpl(data: { bookingId: string }) {
+  requireAdmin();
 
-    const rows = await sql`
-      UPDATE bookings
-      SET status = 'cancelled', updated_at = NOW()
-      WHERE id = ${data.bookingId}
-        AND status IN ('pending', 'confirmed')
-      RETURNING id
-    `;
+  const rows = await sql`
+    UPDATE bookings
+    SET status = 'cancelled', updated_at = NOW()
+    WHERE id = ${data.bookingId}
+      AND status IN ('pending', 'confirmed')
+    RETURNING id
+  `;
 
-    if (!rows[0]) {
-      throw new Error("Booking cannot be cancelled");
-    }
+  if (!rows[0]) {
+    throw new Error("Booking cannot be cancelled");
+  }
 
-    return { ok: true as const };
-  });
+  return { ok: true as const };
+}

@@ -5,7 +5,7 @@ import { useHotel } from "@/context/hotel";
 import type { Suite } from "@/data/hotels";
 import { BrandStar } from "@/lib/brand";
 import { cn } from "@/lib/utils";
-import { createBooking } from "@/server/bookings";
+import { createBooking } from "@/fns/bookings";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
