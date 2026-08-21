@@ -9,10 +9,14 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "db:migrate": "node --env-file=.env scripts/db-run.mjs migrate",
+    "db:seed": "node --env-file=.env scripts/db-run.mjs seed",
+    "db:setup": "node --env-file=.env scripts/db-run.mjs setup"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@neondatabase/serverless": "^1.1.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",

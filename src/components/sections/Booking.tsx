@@ -5,6 +5,7 @@ import { useHotel } from "@/context/hotel";
 import type { Suite } from "@/data/hotels";
 import { BrandStar } from "@/lib/brand";
 import { cn } from "@/lib/utils";
+import { createBooking } from "@/server/bookings";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -62,10 +63,15 @@ export function Booking() {
   const [guests, setGuests] = useState(2);
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [bookingId, setBookingId] = useState<string | null>(null);
 
   useEffect(() => {
     setSuite(hotel.suites[0]!);
     setSent(false);
+    setError(null);
+    setBookingId(null);
   }, [hotel.id, hotel.suites]);
 
   const nights = nightsBetween(checkIn, checkOut);
@@ -76,9 +82,31 @@ export function Booking() {
     return toInputDate(d);
   }, [checkIn]);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const result = await createBooking({
+        data: {
+          hotelId: hotel.id,
+          suiteName: suite.name,
+          guestName: form.name.trim(),
+          guestEmail: form.email.trim(),
+          guestPhone: form.phone.trim(),
+          checkIn,
+          checkOut,
+          guests,
+        },
+      });
+      setBookingId(result.id);
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save your request. Please call the desk.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -181,6 +209,11 @@ export function Booking() {
                 {nights === 1 ? "" : "s"}, {formatNice(checkIn)} to {formatNice(checkOut)}. Our
                 desk will call {form.phone || hotel.contact.phone} within two hours.
               </p>
+              {bookingId && (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Reference: <span className="font-mono text-foreground">{bookingId.slice(0, 8)}</span>
+                </p>
+              )}
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
@@ -193,6 +226,8 @@ export function Booking() {
                   onClick={() => {
                     setSent(false);
                     setForm({ name: "", email: "", phone: "" });
+                    setBookingId(null);
+                    setError(null);
                   }}
                   className="eyebrow inline-flex min-h-12 items-center border border-foreground/20 px-6 py-3"
                 >
@@ -369,12 +404,21 @@ export function Booking() {
                     </p>
                     <p className="mt-2 text-xs text-muted-foreground">Taxes & breakfast included</p>
 
+                    {error && (
+                      <p className="mt-4 text-sm text-destructive" role="alert">
+                        {error}
+                      </p>
+                    )}
+
                     <button
                       type="submit"
-                      className="mt-8 flex w-full min-h-14 items-center justify-center gap-3 bg-forest px-6 py-4 text-ivory transition-opacity hover:opacity-90"
+                      disabled={submitting}
+                      className="mt-8 flex w-full min-h-14 items-center justify-center gap-3 bg-forest px-6 py-4 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       <BrandStar className="h-2.5 w-2.5 text-accent" />
-                      <span className="eyebrow">Request reservation</span>
+                      <span className="eyebrow">
+                        {submitting ? "Saving request…" : "Request reservation"}
+                      </span>
                     </button>
 
                     <a
