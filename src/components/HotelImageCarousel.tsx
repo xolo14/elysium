@@ -14,6 +14,8 @@ type HotelImageCarouselProps = {
   place: string;
   className?: string;
   overlay?: React.ReactNode;
+  /** Hotel detail hero: lifts controls above the overlapping summary card. */
+  layout?: "hero" | "default";
 };
 
 export function HotelImageCarousel({
@@ -23,12 +25,21 @@ export function HotelImageCarousel({
   place,
   className,
   overlay,
+  layout = "default",
 }: HotelImageCarouselProps) {
   const slides = useMemo(() => images.filter((image) => Boolean(image.src)), [images]);
   const [index, setIndex] = useState(0);
   const lastIndex = Math.max(0, slides.length - 1);
+  const currentSlide = slides[index];
+  const progress = slides.length > 0 ? ((index + 1) / slides.length) * 100 : 0;
+  const isHero = layout === "hero";
+
   const goPrev = () => setIndex((prev) => (prev <= 0 ? lastIndex : prev - 1));
   const goNext = () => setIndex((prev) => (prev >= lastIndex ? 0 : prev + 1));
+
+  useEffect(() => {
+    setIndex(0);
+  }, [slides]);
 
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -57,69 +68,119 @@ export function HotelImageCarousel({
         />
       ))}
 
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(8,20,17,0.55),rgba(8,20,17,0.08)_45%,rgba(8,20,17,0.25))]" />
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0",
+          isHero
+            ? "bg-[linear-gradient(to_top,rgba(8,20,17,0.72)_0%,rgba(8,20,17,0.15)_38%,rgba(8,20,17,0.05)_100%)]"
+            : "bg-[linear-gradient(to_top,rgba(8,20,17,0.65),rgba(8,20,17,0.08)_45%,rgba(8,20,17,0.25))]",
+        )}
+      />
 
       {overlay}
 
-      <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-30 px-5 pb-6 sm:px-8 sm:pb-8">
-        <div className="flex items-end justify-between gap-4">
-          <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">
-            {slides.map((slide, slideIndex) => (
-              <button
-                key={`${slide.src}-${slideIndex}-indicator`}
-                type="button"
-                aria-label={`Show image ${slideIndex + 1} of ${slides.length}`}
-                aria-current={slideIndex === index ? "true" : undefined}
-                onClick={() => setIndex(slideIndex)}
+      {/* Top progress — subtle, out of the way */}
+      {slides.length > 1 && (
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-x-0 top-0 z-20 h-0.5 bg-ivory/15",
+            isHero && "top-auto bottom-0",
+          )}
+        >
+          <div
+            className="h-full bg-ivory/80 transition-[width] duration-500 ease-out"
+            style={{ width: `${progress}%` }}
+            role="progressbar"
+            aria-valuenow={index + 1}
+            aria-valuemin={1}
+            aria-valuemax={slides.length}
+            aria-label={`Image ${index + 1} of ${slides.length}`}
+          />
+        </div>
+      )}
+
+      <div
+        className={cn(
+          "pointer-events-auto absolute inset-x-0 z-30",
+          isHero ? "bottom-24 px-4 sm:bottom-28 sm:px-10" : "bottom-0 px-5 pb-6 sm:px-8 sm:pb-8",
+        )}
+      >
+        <div
+          className={cn(
+            "flex items-center justify-between gap-4",
+            isHero &&
+              "border border-ivory/15 bg-forest/55 px-4 py-3 backdrop-blur-md sm:px-5 sm:py-4",
+          )}
+        >
+          <div className="min-w-0 flex-1">
+            {currentSlide?.caption && (
+              <p
                 className={cn(
-                  "h-1 max-w-12 flex-1 transition-all duration-500",
-                  slideIndex === index ? "bg-ivory" : "bg-ivory/35 hover:bg-ivory/55",
+                  "truncate text-ivory",
+                  isHero
+                    ? "eyebrow text-ivory/85"
+                    : "font-display text-lg sm:text-xl",
                 )}
-              />
-            ))}
+              >
+                {currentSlide.caption}
+              </p>
+            )}
           </div>
 
-          <div className="flex shrink-0 items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Link
               to="/hotels/$slug/gallery"
               params={{ slug: hotelSlug }}
               preload="intent"
-              className="link-luxe eyebrow relative z-30 hidden min-h-11 items-center text-ivory sm:inline-flex"
+              className={cn(
+                "link-luxe eyebrow relative z-30 inline-flex items-center text-ivory transition-opacity hover:opacity-80",
+                isHero ? "min-h-9 shrink-0 px-1" : "hidden min-h-11 sm:inline-flex",
+              )}
             >
-              View all images
+              {isHero ? "Gallery" : "View all images"}
             </Link>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={goPrev}
-                aria-label="Previous image"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/45 bg-forest/35 text-ivory backdrop-blur-sm transition-colors hover:bg-ivory hover:text-forest"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label="Next image"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/45 bg-ivory text-forest transition-opacity hover:opacity-90"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
+            {slides.length > 1 && (
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  aria-label="Previous image"
+                  className={cn(
+                    "inline-flex items-center justify-center rounded-full border border-ivory/40 text-ivory transition-colors hover:bg-ivory hover:text-forest",
+                    isHero ? "h-9 w-9 bg-forest/40" : "h-11 w-11 bg-forest/35 backdrop-blur-sm",
+                  )}
+                >
+                  <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={goNext}
+                  aria-label="Next image"
+                  className={cn(
+                    "inline-flex items-center justify-center rounded-full border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90",
+                    isHero ? "h-9 w-9" : "h-11 w-11",
+                  )}
+                >
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="mt-4 flex justify-end sm:hidden">
-          <Link
-            to="/hotels/$slug/gallery"
-            params={{ slug: hotelSlug }}
-            preload="intent"
-            className="link-luxe eyebrow relative z-30 inline-flex min-h-11 items-center text-ivory"
-          >
-            View all images
-          </Link>
-        </div>
+        {!isHero && (
+          <div className="mt-4 flex justify-end sm:hidden">
+            <Link
+              to="/hotels/$slug/gallery"
+              params={{ slug: hotelSlug }}
+              preload="intent"
+              className="link-luxe eyebrow relative z-30 inline-flex min-h-11 items-center text-ivory"
+            >
+              View all images
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

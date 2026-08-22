@@ -45,8 +45,8 @@ export function Footer() {
           </h2>
         </Reveal>
 
-        <Reveal delay={0.1} className="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-x-8">
-          <div className="lg:col-span-3">
+        <Reveal delay={0.1} className="mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-12">
+          <div className="min-w-0 lg:col-span-3">
             <p className="eyebrow text-ivory/60">Newsletter</p>
             <form
               onSubmit={(event) => {
@@ -76,7 +76,7 @@ export function Footer() {
             </p>
           </div>
 
-          <nav className="lg:col-span-2">
+          <nav className="min-w-0 lg:col-span-2">
             <p className="eyebrow text-ivory/60">Navigate</p>
             <ul className="mt-6 space-y-3">
               {navItems.map((item) => (
@@ -89,34 +89,36 @@ export function Footer() {
             </ul>
           </nav>
 
-          {hotels.map((h) => (
-            <address key={h.id} className="not-italic lg:col-span-3">
-              <p className="eyebrow text-ivory/60">{h.place}</p>
-              <a
-                href={`/hotels/${h.slug}`}
-                className="link-luxe mt-3 block font-display text-[clamp(1.05rem,4.5vw,1.5rem)] font-semibold sm:whitespace-nowrap"
-              >
-                {h.name}
-              </a>
-              <p className="mt-2 text-sm text-ivory/55">{h.region}</p>
-              <div className="mt-6 space-y-1 text-sm leading-relaxed text-ivory/75">
-                {h.contact.address.map((line) => (
-                  <p key={line}>{line}</p>
-                ))}
-              </div>
-              <a
-                href={`tel:${h.contact.phone.replace(/\s/g, "")}`}
-                className="link-luxe mt-6 block text-sm"
-              >
-                {h.contact.phone}
-              </a>
-              <a href={`mailto:${h.contact.email}`} className="link-luxe mt-2 block text-sm">
-                {h.contact.email}
-              </a>
-            </address>
-          ))}
+          <div className="grid min-w-0 gap-10 sm:grid-cols-2 md:col-span-2 lg:col-span-5 lg:gap-x-10">
+            {hotels.map((h) => (
+              <address key={h.id} className="not-italic min-w-0">
+                <p className="eyebrow text-ivory/60">{h.place}</p>
+                <a
+                  href={`/hotels/${h.slug}`}
+                  className="link-luxe mt-3 block font-display text-lg leading-snug font-semibold lg:text-xl"
+                >
+                  {h.name}
+                </a>
+                <p className="mt-2 text-sm text-ivory/55">{h.region}</p>
+                <div className="mt-6 space-y-1 text-sm leading-relaxed text-ivory/75">
+                  {h.contact.address.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </div>
+                <a
+                  href={`tel:${h.contact.phone.replace(/\s/g, "")}`}
+                  className="link-luxe mt-6 block text-sm"
+                >
+                  {h.contact.phone}
+                </a>
+                <a href={`mailto:${h.contact.email}`} className="link-luxe mt-2 block text-sm break-all">
+                  {h.contact.email}
+                </a>
+              </address>
+            ))}
+          </div>
 
-          <div className="lg:col-span-1">
+          <div className="min-w-0 lg:col-span-2">
             <p className="eyebrow text-ivory/60">Social</p>
             <ul className="mt-6 space-y-3">
               {["Instagram", "Journal", "LinkedIn", "Pinterest"].map((social) => (

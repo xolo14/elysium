@@ -10,138 +10,112 @@ export type GalleryAlbum = {
   images: GalleryImage[];
 };
 
-const madhapurFacadeImages: GalleryImage[] = [
-  { src: "/images/madhapur/facade/facade-01.png", caption: "Building facade, daytime" },
-  { src: "/images/madhapur/facade/facade-02.png", caption: "Facade at dusk" },
-  { src: "/images/madhapur/facade/facade-03.png", caption: "Illuminated entrance" },
-  { src: "/images/madhapur/facade/facade-04.png", caption: "Facade under the stars" },
-  { src: "/images/madhapur/facade/facade-05.png", caption: "Grand entrance walkway" },
-  { src: "/images/madhapur/facade/facade-06.png", caption: "Night facade, street view" },
-  { src: "/images/madhapur/facade/facade-07.png", caption: "Premier Suites exterior" },
-  { src: "/images/madhapur/facade/facade-08.png", caption: "Building facade, blue hour" },
+const hitecFacadeImages: GalleryImage[] = [
+  { src: "/images/hitec-city/facade/facade-01.png", caption: "Building facade, daytime" },
+  { src: "/images/hitec-city/facade/facade-02.png", caption: "Facade at dusk" },
+  { src: "/images/hitec-city/facade/facade-03.png", caption: "Illuminated entrance" },
+  { src: "/images/hitec-city/facade/facade-04.png", caption: "Facade under the stars" },
+  { src: "/images/hitec-city/facade/facade-05.png", caption: "Grand entrance walkway" },
+  { src: "/images/hitec-city/facade/facade-06.png", caption: "Night facade, street view" },
+  { src: "/images/hitec-city/facade/facade-07.png", caption: "Premier Suites exterior" },
+  { src: "/images/hitec-city/facade/facade-08.png", caption: "Building facade, blue hour" },
 ];
 
-const madhapurReceptionImages: GalleryImage[] = [
-  { src: "/images/madhapur/reception/reception-01.png", caption: "Reception desk and lobby" },
-  { src: "/images/madhapur/reception/reception-02.png", caption: "Front desk, wide view" },
-  { src: "/images/madhapur/reception/reception-03.png", caption: "Lobby seating area" },
-  { src: "/images/madhapur/reception/reception-04.png", caption: "Reception and waiting lounge" },
-  { src: "/images/madhapur/reception/reception-05.png", caption: "Front desk detail" },
-  { src: "/images/madhapur/reception/reception-06.png", caption: "Lobby and elevator" },
+const hitecReceptionImages: GalleryImage[] = [
+  { src: "/images/hitec-city/reception/reception-01.png", caption: "Reception desk and lobby" },
+  { src: "/images/hitec-city/reception/reception-02.png", caption: "Front desk, wide view" },
+  { src: "/images/hitec-city/reception/reception-03.png", caption: "Lobby seating area" },
+  { src: "/images/hitec-city/reception/reception-04.png", caption: "Reception and waiting lounge" },
+  { src: "/images/hitec-city/reception/reception-05.png", caption: "Front desk detail" },
+  { src: "/images/hitec-city/reception/reception-06.png", caption: "Lobby and elevator" },
 ];
 
-const madhapurLobbyStairsImages: GalleryImage[] = [
-  { src: "/images/madhapur/lobby-and-stairs/lobby-stairs-01.png", caption: "Corridor and staircase" },
-  { src: "/images/madhapur/lobby-and-stairs/lobby-stairs-02.png", caption: "Hallway to upper floors" },
-  { src: "/images/madhapur/lobby-and-stairs/lobby-stairs-03.png", caption: "Suite landing and stairs" },
-  { src: "/images/madhapur/lobby-and-stairs/lobby-stairs-04.png", caption: "Elevator lobby" },
-  { src: "/images/madhapur/lobby-and-stairs/lobby-stairs-05.png", caption: "Stairwell and suite entry" },
-  { src: "/images/madhapur/lobby-and-stairs/lobby-stairs-06.png", caption: "Lobby and stair landing" },
+const hitecLobbyStairsImages: GalleryImage[] = [
+  { src: "/images/hitec-city/lobby-and-stairs/lobby-stairs-01.png", caption: "Corridor and staircase" },
+  { src: "/images/hitec-city/lobby-and-stairs/lobby-stairs-02.png", caption: "Hallway to upper floors" },
+  { src: "/images/hitec-city/lobby-and-stairs/lobby-stairs-03.png", caption: "Suite landing and stairs" },
+  { src: "/images/hitec-city/lobby-and-stairs/lobby-stairs-04.png", caption: "Elevator lobby" },
+  { src: "/images/hitec-city/lobby-and-stairs/lobby-stairs-05.png", caption: "Stairwell and suite entry" },
+  { src: "/images/hitec-city/lobby-and-stairs/lobby-stairs-06.png", caption: "Lobby and stair landing" },
 ];
 
-const madhapurDiningAreaImages: GalleryImage[] = [
-  { src: "/images/madhapur/dining-area/dining-01.png", caption: "Dining room and lounge seating" },
-  { src: "/images/madhapur/dining-area/dining-02.png", caption: "Breakfast tables with booth seating" },
-  { src: "/images/madhapur/dining-area/dining-03.png", caption: "Dining area and buffet station" },
-  { src: "/images/madhapur/dining-area/dining-04.png", caption: "Breakfast buffet spread" },
-  { src: "/images/madhapur/dining-area/dining-05.png", caption: "Dining room overview" },
-  { src: "/images/madhapur/dining-area/dining-06.png", caption: "Marble tables and tufted bench" },
-  { src: "/images/madhapur/dining-area/dining-07.png", caption: "Dining area with glass partition" },
-  { src: "/images/madhapur/dining-area/dining-08.png", caption: "Buffet counter and wall art" },
-  { src: "/images/madhapur/dining-area/dining-09.png", caption: "Set tables and booth seating" },
-  { src: "/images/madhapur/dining-area/dining-10.png", caption: "Dining room wide view" },
-  { src: "/images/madhapur/dining-area/dining-11.png", caption: "Breakfast dining and wash area" },
-  { src: "/images/madhapur/dining-area/dining-12.png", caption: "Buffet and dining seating" },
+const hitecDiningAreaImages: GalleryImage[] = [
+  { src: "/images/hitec-city/dining-area/dining-01.png", caption: "Dining room and lounge seating" },
+  { src: "/images/hitec-city/dining-area/dining-02.png", caption: "Breakfast tables with booth seating" },
+  { src: "/images/hitec-city/dining-area/dining-03.png", caption: "Dining area and buffet station" },
+  { src: "/images/hitec-city/dining-area/dining-04.png", caption: "Breakfast buffet spread" },
+  { src: "/images/hitec-city/dining-area/dining-05.png", caption: "Dining room overview" },
+  { src: "/images/hitec-city/dining-area/dining-06.png", caption: "Marble tables and tufted bench" },
+  { src: "/images/hitec-city/dining-area/dining-07.png", caption: "Dining area with glass partition" },
+  { src: "/images/hitec-city/dining-area/dining-08.png", caption: "Buffet counter and wall art" },
+  { src: "/images/hitec-city/dining-area/dining-09.png", caption: "Set tables and booth seating" },
+  { src: "/images/hitec-city/dining-area/dining-10.png", caption: "Dining room wide view" },
+  { src: "/images/hitec-city/dining-area/dining-11.png", caption: "Breakfast dining and wash area" },
+  { src: "/images/hitec-city/dining-area/dining-12.png", caption: "Buffet and dining seating" },
 ];
 
-const madhapurRoomImages: GalleryImage[] = [
-  { src: "/images/madhapur/room/room-01.png", caption: "Suite interior" },
-  { src: "/images/madhapur/room/room-02.png", caption: "Studio suite living space" },
-  { src: "/images/madhapur/room/room-03.png", caption: "Bedroom view" },
-  { src: "/images/madhapur/room/room-04.png", caption: "Suite seating area" },
-  { src: "/images/madhapur/room/room-05.png", caption: "One bedroom suite" },
-  { src: "/images/madhapur/room/room-06.png", caption: "Living and dining nook" },
-  { src: "/images/madhapur/room/room-07.png", caption: "Suite bedroom" },
-  { src: "/images/madhapur/room/room-08.png", caption: "Room workspace" },
-  { src: "/images/madhapur/room/room-09.png", caption: "Suite wardrobe and bed" },
-  { src: "/images/madhapur/room/room-10.png", caption: "Deluxe studio room" },
-  { src: "/images/madhapur/room/room-11.png", caption: "Family studio layout" },
-  { src: "/images/madhapur/room/room-12.png", caption: "Suite living room" },
-  { src: "/images/madhapur/room/room-13.png", caption: "Bedroom with headboard lighting" },
-  { src: "/images/madhapur/room/room-14.png", caption: "Long stay apartment" },
-  { src: "/images/madhapur/room/room-15.png", caption: "Suite entrance and living area" },
-  { src: "/images/madhapur/room/room-16.png", caption: "In-room dining corner" },
-  { src: "/images/madhapur/room/room-17.png", caption: "Studio suite overview" },
-  { src: "/images/madhapur/room/room-18.png", caption: "Living area and bedroom" },
-  { src: "/images/madhapur/room/room-19.png", caption: "Living room and dining nook" },
-  { src: "/images/madhapur/room/room-20.png", caption: "Bedroom with swan towel art" },
-  { src: "/images/madhapur/room/room-21.png", caption: "Bedroom wide view" },
-  { src: "/images/madhapur/room/room-22.png", caption: "Living room seating" },
-  { src: "/images/madhapur/room/room-23.png", caption: "Bedroom with work desk" },
-  { src: "/images/madhapur/room/room-24.png", caption: "Bedroom opening to living area" },
-  { src: "/images/madhapur/room/room-25.png", caption: "King bedroom" },
-  { src: "/images/madhapur/room/room-26.png", caption: "Living area with wall art" },
-  { src: "/images/madhapur/room/room-27.png", caption: "In-suite kitchenette" },
-  { src: "/images/madhapur/room/room-28.png", caption: "Kitchenette sink and cooktop" },
-  { src: "/images/madhapur/room/room-29.png", caption: "Smart TV and entertainment wall" },
-  { src: "/images/madhapur/room/room-30.png", caption: "In-room dining and kitchenette" },
-  { src: "/images/madhapur/room/room-31.png", caption: "Sofa seating area" },
-  { src: "/images/madhapur/room/room-32.png", caption: "Bedroom with desk and wardrobe" },
-  { src: "/images/madhapur/room/room-33.png", caption: "Kitchenette with appliances" },
-  { src: "/images/madhapur/room/room-34.png", caption: "Suite bathroom" },
-  { src: "/images/madhapur/room/room-35.png", caption: "Bathroom vanity" },
-  { src: "/images/madhapur/room/room-36.png", caption: "Shower and bath area" },
-  { src: "/images/madhapur/room/room-37.png", caption: "Ensuite bathroom detail" },
+const hitecRoomImages: GalleryImage[] = [
+  { src: "/images/hitec-city/room/room-01.png", caption: "Suite interior" },
+  { src: "/images/hitec-city/room/room-02.png", caption: "Studio suite living space" },
+  { src: "/images/hitec-city/room/room-03.png", caption: "Bedroom view" },
+  { src: "/images/hitec-city/room/room-04.png", caption: "Suite seating area" },
+  { src: "/images/hitec-city/room/room-05.png", caption: "One bedroom suite" },
+  { src: "/images/hitec-city/room/room-06.png", caption: "Living and dining nook" },
+  { src: "/images/hitec-city/room/room-07.png", caption: "Suite bedroom" },
+  { src: "/images/hitec-city/room/room-08.png", caption: "Room workspace" },
+  { src: "/images/hitec-city/room/room-09.png", caption: "Suite wardrobe and bed" },
+  { src: "/images/hitec-city/room/room-10.png", caption: "Deluxe studio room" },
+  { src: "/images/hitec-city/room/room-11.png", caption: "Family studio layout" },
+  { src: "/images/hitec-city/room/room-12.png", caption: "Suite living room" },
+  { src: "/images/hitec-city/room/room-13.png", caption: "Bedroom with headboard lighting" },
+  { src: "/images/hitec-city/room/room-14.png", caption: "Long stay apartment" },
+  { src: "/images/hitec-city/room/room-15.png", caption: "Suite entrance and living area" },
+  { src: "/images/hitec-city/room/room-16.png", caption: "In-room dining corner" },
+  { src: "/images/hitec-city/room/room-17.png", caption: "Studio suite overview" },
+  { src: "/images/hitec-city/room/room-18.png", caption: "Living area and bedroom" },
+  { src: "/images/hitec-city/room/room-19.png", caption: "Living room and dining nook" },
+  { src: "/images/hitec-city/room/room-20.png", caption: "Bedroom with swan towel art" },
+  { src: "/images/hitec-city/room/room-21.png", caption: "Bedroom wide view" },
+  { src: "/images/hitec-city/room/room-22.png", caption: "Living room seating" },
+  { src: "/images/hitec-city/room/room-23.png", caption: "Bedroom with work desk" },
+  { src: "/images/hitec-city/room/room-24.png", caption: "Bedroom opening to living area" },
+  { src: "/images/hitec-city/room/room-25.png", caption: "King bedroom" },
+  { src: "/images/hitec-city/room/room-26.png", caption: "Living area with wall art" },
+  { src: "/images/hitec-city/room/room-27.png", caption: "In-suite kitchenette" },
+  { src: "/images/hitec-city/room/room-28.png", caption: "Kitchenette sink and cooktop" },
+  { src: "/images/hitec-city/room/room-29.png", caption: "Smart TV and entertainment wall" },
+  { src: "/images/hitec-city/room/room-30.png", caption: "In-room dining and kitchenette" },
+  { src: "/images/hitec-city/room/room-31.png", caption: "Sofa seating area" },
+  { src: "/images/hitec-city/room/room-32.png", caption: "Bedroom with desk and wardrobe" },
+  { src: "/images/hitec-city/room/room-33.png", caption: "Kitchenette with appliances" },
+  { src: "/images/hitec-city/room/room-34.png", caption: "Suite bathroom" },
+  { src: "/images/hitec-city/room/room-35.png", caption: "Bathroom vanity" },
+  { src: "/images/hitec-city/room/room-36.png", caption: "Shower and bath area" },
+  { src: "/images/hitec-city/room/room-37.png", caption: "Ensuite bathroom detail" },
 ];
 
-const madhapurWashroomImages: GalleryImage[] = [
-  { src: "/images/madhapur/washroom/washroom-01.png", caption: "Shower and vanity area" },
-  { src: "/images/madhapur/washroom/washroom-02.png", caption: "Biotique guest amenities" },
-  { src: "/images/madhapur/washroom/washroom-03.png", caption: "Marble washroom with wall-hung toilet" },
+const hitecWashroomImages: GalleryImage[] = [
+  { src: "/images/hitec-city/washroom/washroom-01.png", caption: "Shower and vanity area" },
+  { src: "/images/hitec-city/washroom/washroom-02.png", caption: "Biotique guest amenities" },
+  { src: "/images/hitec-city/washroom/washroom-03.png", caption: "Marble washroom with wall-hung toilet" },
 ];
 
 const madhapurAlbums: GalleryAlbum[] = [
   {
-    title: "Facade",
-    images: madhapurFacadeImages,
-  },
-  {
-    title: "Reception",
-    images: madhapurReceptionImages,
-  },
-  {
-    title: "Lobby and Stairs",
-    images: madhapurLobbyStairsImages,
-  },
-  {
-    title: "Dining Area",
-    images: madhapurDiningAreaImages,
-  },
-  {
-    title: "Room",
-    images: madhapurRoomImages,
-  },
-  {
-    title: "Washroom",
-    images: madhapurWashroomImages,
-  },
-];
-
-const hitecAlbums: GalleryAlbum[] = [
-  {
     title: "Exterior & Arrival",
     images: [
-      { src: "/images/image-26.png", caption: "Premier Suites, Hitec City" },
-      { src: "/images/image-13.png", caption: "Building facade" },
+      { src: "/images/image-6.png", caption: "Arrival, after dark" },
+      { src: "/images/image-7.png", caption: "Neighbourhood context" },
+      { src: "/images/hero-suite-living.png", caption: "Suite living" },
     ],
   },
   {
     title: "Suites & Rooms",
     images: [
-      { src: "/images/image-9.png", caption: "Suite bedroom" },
-      { src: "/images/image-14.png", caption: "Arched media wall lounge" },
-      { src: "/images/image-15.png", caption: "Full kitchen and dining" },
-      { src: "/images/image-10.png", caption: "Suite entrance lounge" },
+      { src: "/images/image-9.png", caption: "Deluxe Studio" },
+      { src: "/images/image-11.png", caption: "Studio Suite with kitchenette" },
+      { src: "/images/image-10.png", caption: "One Bedroom Suite living" },
+      { src: "/images/image-12.png", caption: "Family Studio dining" },
     ],
   },
   {
@@ -150,6 +124,33 @@ const hitecAlbums: GalleryAlbum[] = [
       { src: "/images/image-12.png", caption: "O Sorriso dining" },
       { src: "/images/image-25.png", caption: "Private dining room" },
     ],
+  },
+];
+
+const hitecAlbums: GalleryAlbum[] = [
+  {
+    title: "Facade",
+    images: hitecFacadeImages,
+  },
+  {
+    title: "Reception",
+    images: hitecReceptionImages,
+  },
+  {
+    title: "Lobby and Stairs",
+    images: hitecLobbyStairsImages,
+  },
+  {
+    title: "Dining Area",
+    images: hitecDiningAreaImages,
+  },
+  {
+    title: "Room",
+    images: hitecRoomImages,
+  },
+  {
+    title: "Washroom",
+    images: hitecWashroomImages,
   },
 ];
 
@@ -176,7 +177,7 @@ export function getHotelGalleryAlbums(hotelId: Hotel["id"]): GalleryAlbum[] {
 
 export function getHotelCarouselImages(hotel: Hotel): GalleryImage[] {
   const fromAlbums = getHotelGalleryAlbums(hotel.id).flatMap((album) => album.images);
-  if (hotel.id === "madhapur") {
+  if (hotel.id === "hitec") {
     return uniqueImages(fromAlbums);
   }
   const ordered = uniqueImages([{ src: hotel.hero, caption: hotel.name }, ...fromAlbums]);

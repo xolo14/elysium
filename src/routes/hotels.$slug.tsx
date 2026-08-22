@@ -6,6 +6,9 @@ import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import { HotelImageCarousel } from "@/components/HotelImageCarousel";
 import { createBooking } from "@/fns/bookings";
+import { DateRangePicker } from "@/components/booking/DateRangePicker";
+import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
+import { formatNice, nightsBetween } from "@/lib/booking-dates";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { Reveal } from "@/components/Reveal";
@@ -78,6 +81,7 @@ function HotelHero({ hotel }: { hotel: Hotel }) {
         hotelSlug={hotel.slug}
         hotelName={hotel.name}
         place={hotel.place}
+        layout="hero"
         className="h-full"
       />
     </section>
@@ -86,8 +90,8 @@ function HotelHero({ hotel }: { hotel: Hotel }) {
 
 function HotelSummary({ hotel }: { hotel: Hotel }) {
   return (
-    <section className="relative z-10 mx-auto -mt-16 max-w-[1400px] px-4 sm:px-10">
-      <div className="bg-forest px-6 py-10 text-ivory sm:px-12">
+    <section className="relative z-30 mx-auto -mt-20 max-w-[1400px] px-4 sm:-mt-24 sm:px-10">
+      <div className="border border-ivory/10 bg-forest px-6 py-10 text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.35)] sm:px-12 sm:py-12">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <p className="eyebrow text-ivory/60">{hotel.badge}</p>
@@ -207,39 +211,29 @@ function BookingPanel({
   suite: Suite;
   onClose: () => void;
 }) {
-  const tomorrow = useMemo(() => {
+  const today = useMemo(() => {
     const d = new Date();
-    d.setDate(d.getDate() + 1);
-    return d.toISOString().slice(0, 10);
-  }, []);
-  const defaultOut = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 3);
-    return d.toISOString().slice(0, 10);
+    d.setHours(0, 0, 0, 0);
+    return d;
   }, []);
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    checkIn: tomorrow,
-    checkOut: defaultOut,
-    guests: "2",
-  });
+  const [step, setStep] = useState<"dates" | "details">("dates");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState(2);
+  const [rooms, setRooms] = useState(1);
+  const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bookingId, setBookingId] = useState<string | null>(null);
 
-  const nights = useMemo(() => {
-    const a = new Date(form.checkIn).getTime();
-    const b = new Date(form.checkOut).getTime();
-    if (!Number.isFinite(a) || !Number.isFinite(b) || b <= a) return 1;
-    return Math.max(1, Math.round((b - a) / 86_400_000));
-  }, [form.checkIn, form.checkOut]);
+  const nights = checkIn && checkOut ? nightsBetween(checkIn, checkOut) : 0;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!checkIn || !checkOut) return;
+
     setSubmitting(true);
     setError(null);
 
@@ -251,9 +245,9 @@ function BookingPanel({
           guestName: form.name.trim(),
           guestEmail: form.email.trim(),
           guestPhone: form.phone.trim(),
-          checkIn: form.checkIn,
-          checkOut: form.checkOut,
-          guests: Number(form.guests) || 1,
+          checkIn,
+          checkOut,
+          guests,
         },
       });
       setBookingId(result.id);
@@ -267,7 +261,7 @@ function BookingPanel({
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-0 sm:items-center sm:p-6">
-      <div className="max-h-[92svh] w-full max-w-2xl overflow-y-auto bg-background p-6 sm:p-10">
+      <div className="max-h-[92svh] w-full max-w-3xl overflow-y-auto bg-background p-6 sm:p-10">
         <div className="flex items-start justify-between gap-6">
           <div>
             <p className="eyebrow text-muted-foreground">
@@ -285,8 +279,9 @@ function BookingPanel({
           <div className="mt-10 border border-border p-6">
             <p className="font-display text-2xl">Request received</p>
             <p className="mt-4 text-base leading-relaxed text-foreground/80">
-              Thank you, {form.name || "guest"}. Our front desk will confirm {suite.name} for{" "}
-              {nights} night{nights === 1 ? "" : "s"} at {hotel.name}, {hotel.place} on{" "}
+              Thank you, {form.name || "guest"}. Our front desk will confirm {rooms} room
+              {rooms === 1 ? "" : "s"} ({suite.name}) for {nights} night{nights === 1 ? "" : "s"},{" "}
+              {guests} guest{guests === 1 ? "" : "s"}, at {hotel.name}, {hotel.place} on{" "}
               {hotel.contact.phone}.
             </p>
             {bookingId && (
@@ -302,47 +297,75 @@ function BookingPanel({
             </a>
           </div>
         ) : (
-          <form onSubmit={onSubmit} className="mt-10 grid gap-5 sm:grid-cols-2">
-            {(
-              [
-                ["name", "Full name", "text"],
-                ["email", "Email", "email"],
-                ["phone", "Phone", "tel"],
-                ["guests", "Guests", "number"],
-                ["checkIn", "Check in", "date"],
-                ["checkOut", "Check out", "date"],
-              ] as const
-            ).map(([key, label, type]) => (
-              <label key={key} className="block">
-                <span className="eyebrow text-muted-foreground">{label}</span>
-                <input
-                  required
-                  type={type}
-                  min={type === "number" ? 1 : undefined}
-                  value={form[key]}
-                  onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                  className="mt-3 w-full border-b border-border bg-transparent pb-2 text-sm focus:border-foreground focus:outline-none"
+          <div className="mt-8">
+            <BookingStepBar step={step} />
+
+            {step === "dates" ? (
+              <div className="mt-6">
+                <DateRangePicker
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  minDate={today}
+                  onRangeChange={(inDate, outDate) => {
+                    setCheckIn(inDate);
+                    setCheckOut(outDate);
+                  }}
+                  onConfirm={() => setStep("details")}
                 />
-              </label>
-            ))}
-            <div className="sm:col-span-2 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
-              <p className="text-sm text-muted-foreground">
-                {nights} night{nights === 1 ? "" : "s"} · {form.guests} guests
-              </p>
-              {error && (
-                <p className="w-full text-sm text-destructive" role="alert">
-                  {error}
-                </p>
-              )}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="eyebrow border border-foreground/25 px-8 py-3 transition-colors hover:bg-forest hover:text-ivory disabled:opacity-60"
-              >
-                {submitting ? "Saving…" : "Confirm request"}
-              </button>
-            </div>
-          </form>
+              </div>
+            ) : (
+              <form onSubmit={onSubmit} className="mt-8">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
+                  <div>
+                    <p className="eyebrow text-muted-foreground">Selected dates</p>
+                    <p className="mt-2 text-sm">
+                      {formatNice(checkIn)} → {formatNice(checkOut)} · {nights} night
+                      {nights === 1 ? "" : "s"}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setStep("dates")}
+                    className="eyebrow text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    Change dates
+                  </button>
+                </div>
+
+                <div className="mt-8">
+                  <p className="eyebrow text-muted-foreground">Guest details</p>
+                  <div className="mt-6">
+                    <BookingDetailsFields
+                      guests={guests}
+                      rooms={rooms}
+                      form={form}
+                      onGuestsChange={setGuests}
+                      onRoomsChange={setRooms}
+                      onFormChange={(key, value) => setForm((f) => ({ ...f, [key]: value }))}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
+                  <p className="text-sm text-muted-foreground">
+                    {rooms} room{rooms === 1 ? "" : "s"} · {guests} guest{guests === 1 ? "" : "s"}
+                  </p>
+                  {error && (
+                    <p className="w-full text-sm text-destructive" role="alert">
+                      {error}
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="eyebrow border border-foreground/25 px-8 py-3 transition-colors hover:bg-forest hover:text-ivory disabled:opacity-60"
+                  >
+                    {submitting ? "Saving…" : "Confirm request"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         )}
       </div>
     </div>
