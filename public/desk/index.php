@@ -23,11 +23,19 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '')
 $loggedIn = desk_is_logged_in();
 $bookings = $loggedIn ? desk_load_bookings() : [];
 $dbReady = false;
+$dbStatus = 'Not configured';
 if ($loggedIn) {
-  try {
-    $dbReady = elysium_db_configured($config) && (bool) elysium_pdo($config);
-  } catch (Throwable $e) {
-    $dbReady = false;
+  if (!elysium_db_configured($config)) {
+    $dbStatus = 'Not configured — paste Neon URL in api/config.php';
+  } else {
+    try {
+      elysium_pdo($config)->query('SELECT 1');
+      $dbReady = true;
+      $dbStatus = 'Neon connected';
+    } catch (Throwable $e) {
+      $dbReady = false;
+      $dbStatus = 'Connection failed — ' . $e->getMessage();
+    }
   }
 }
 ?>
@@ -133,8 +141,8 @@ if ($loggedIn) {
         </form>
         <p class="note">
           Password = <code>admin_password</code> in <code>api/config.php</code>
-          <?php if (desk_password() === 'change-me' || desk_password() === 'Suites@26'): ?>
-            <br />Default in package: <strong><?= desk_h(desk_password()) ?></strong> — change it after first login.
+          <?php if (desk_password() === 'change-me'): ?>
+            <br />Default package password is still <strong>change-me</strong> — change it in api/config.php.
           <?php endif; ?>
           <br />Correct admin URL on shared hosting:
           <a href="./">/desk/</a> (not /admin)
@@ -154,9 +162,19 @@ if ($loggedIn) {
 
       <p class="note" style="margin-top:0;">
         Database:
-        <span class="pill"><?= $dbReady ? 'Neon connected' : 'Not connected — open Setup Neon DB' ?></span>
+        <span class="pill" style="<?= $dbReady ? '' : 'border-color:#c45c5c;color:#8b2e2e;' ?>"><?= desk_h($dbStatus) ?></span>
         · Source: <?= count($bookings) && (($bookings[0]['source'] ?? '') === 'neon') ? 'Neon' : 'Local files / Neon' ?>
       </p>
+      <?php if (!$dbReady): ?>
+        <div class="card" style="margin-bottom:1rem;">
+          <p style="margin:0 0 .75rem;"><strong>Fix Neon connection</strong></p>
+          <ol style="margin:0; padding-left:1.2rem; line-height:1.55; color:var(--muted);">
+            <li>Confirm <code>api/config.php</code> has your Neon <code>database_url</code>.</li>
+            <li>Hostinger must have PHP <code>pdo_pgsql</code> enabled (support can turn it on).</li>
+            <li>Open <a href="setup-database.php">Setup Neon DB</a> and click <strong>Run database setup</strong>.</li>
+          </ol>
+        </div>
+      <?php endif; ?>
 
       <div class="card">
         <?php if (count($bookings) === 0): ?>

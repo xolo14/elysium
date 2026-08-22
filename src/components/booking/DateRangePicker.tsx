@@ -107,7 +107,7 @@ export function DateRangePicker({
 
   const renderMonth = (year: number, month: number) => (
     <div className="min-w-0 flex-1">
-      <p className="mb-3 h-7 text-center font-display text-lg leading-7 text-accent sm:mb-4 sm:h-8 sm:text-xl sm:leading-8">
+      <p className="mb-3 h-7 text-center font-display text-lg leading-7 text-forest sm:mb-4 sm:h-8 sm:text-xl sm:leading-8">
         {monthLabel(year, month)}
       </p>
       <div
@@ -139,9 +139,9 @@ export function DateRangePicker({
                 "mx-auto flex h-10 w-10 items-center justify-center text-sm transition-colors sm:h-11 sm:w-11",
                 !inMonth && "invisible pointer-events-none",
                 disabled && inMonth && "cursor-not-allowed text-muted-foreground/35",
-                !disabled && !selected && !ranged && "rounded-full text-foreground/80 hover:bg-secondary",
-                ranged && !selected && "rounded-none bg-accent/15 text-foreground",
-                selected && "rounded-full bg-accent font-medium text-accent-foreground",
+                !disabled && !selected && !ranged && "text-foreground/80 hover:bg-secondary",
+                ranged && !selected && "bg-forest/10 text-foreground",
+                selected && "bg-forest font-medium text-ivory",
               )}
             >
               {date.getDate()}
@@ -153,13 +153,9 @@ export function DateRangePicker({
   );
 
   return (
-    <div className={cn("w-full overflow-hidden bg-background", className)}>
-      {/* Full-bleed brand header like Bloom date bar */}
-      <div className="bg-accent px-4 py-5 sm:px-8 sm:py-6">
-        <div className="mx-auto flex w-full max-w-4xl items-center gap-3 rounded-md bg-ivory px-4 py-3.5 text-forest shadow-sm sm:px-5">
-          <span className="text-lg" aria-hidden="true">
-            📅
-          </span>
+    <div className={cn("w-full overflow-hidden border border-border bg-background", className)}>
+      <div className="border-b border-border bg-forest px-4 py-5 sm:px-8 sm:py-6">
+        <div className="mx-auto flex w-full max-w-4xl items-center gap-3 border border-ivory/20 bg-ivory/10 px-4 py-3.5 text-ivory sm:px-5">
           <span className="text-sm font-medium sm:text-base">
             {canConfirm
               ? `${formatShort(checkIn)} → ${formatShort(checkOut)}`
@@ -168,13 +164,12 @@ export function DateRangePicker({
         </div>
       </div>
 
-      {/* Calendar sheet fills width */}
-      <div className="relative border border-t-0 border-border bg-background px-3 py-6 sm:px-6 sm:py-8 lg:px-10">
+      <div className="relative bg-background px-3 py-6 sm:px-6 sm:py-8 lg:px-10">
         <button
           type="button"
           onClick={goPrev}
           aria-label="Previous month"
-          className="absolute top-7 left-2 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-secondary sm:left-4 lg:left-6"
+          className="absolute top-7 left-2 z-10 inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-forest transition-colors hover:bg-secondary sm:left-4 lg:left-6"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -182,7 +177,7 @@ export function DateRangePicker({
           type="button"
           onClick={goNext}
           aria-label="Next month"
-          className="absolute top-7 right-2 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground transition-opacity hover:opacity-90 sm:right-4 lg:right-6"
+          className="absolute top-7 right-2 z-10 inline-flex h-9 w-9 items-center justify-center border border-forest bg-forest text-ivory transition-opacity hover:opacity-90 sm:right-4 lg:right-6"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -195,7 +190,7 @@ export function DateRangePicker({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border border-t-0 border-border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
+      <div className="flex flex-col gap-4 border-t border-border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
         <div className="mx-auto grid w-full max-w-4xl grid-cols-2 gap-6 sm:mx-0 sm:flex-1 sm:gap-10">
           <div>
             <p className="text-sm font-medium text-foreground sm:text-base">
@@ -214,7 +209,7 @@ export function DateRangePicker({
           type="button"
           disabled={!canConfirm}
           onClick={onConfirm}
-          className="eyebrow min-h-12 w-full shrink-0 rounded-md bg-accent px-10 py-3 text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+          className="eyebrow min-h-12 w-full shrink-0 border border-forest bg-forest px-10 py-3 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
         >
           Confirm
         </button>

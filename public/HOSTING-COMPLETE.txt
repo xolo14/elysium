@@ -12,6 +12,7 @@ UPLOAD TO: the subdomain document root for elysiumhotel.grootdigitals.com
 A) UPLOAD
 -----------------------------------------------------------
 1. Delete ALL old files in the subdomain root
+   (or at least replace api/, desk/, assets/, index.html, .htaccess)
 2. Extract dist.zip so these sit at the ROOT:
      index.html
      .htaccess
@@ -24,17 +25,22 @@ A) UPLOAD
    Hard refresh (Cmd+Shift+R) if needed
 
 -----------------------------------------------------------
-B) NEON + ADMIN (api/config.php)
+B) NEON (already filled in this package's api/config.php)
 -----------------------------------------------------------
-'database_url' => 'postgresql://...@ep-xxxx.neon.tech/neondb?sslmode=require',
-'admin_password' => 'your-secure-password',
-'booking_email' => 'elysium.hyd@gmail.com',
+This dist includes your Neon database_url + desk admin_password.
+
+If Desk still says "Not connected":
+1. Confirm api/config.php on the server has database_url set
+2. Ask Hostinger to enable PHP extension: pdo_pgsql
+3. Open Desk → Setup Neon DB → Run database setup
 
 -----------------------------------------------------------
-C) CREATE TABLES
+C) CREATE TABLES (required once)
 -----------------------------------------------------------
 https://elysiumhotel.grootdigitals.com/desk/
+Login with admin_password from api/config.php
 → Setup Neon DB → Run database setup
+Status should become: Neon connected
 
 -----------------------------------------------------------
 D) LINKS

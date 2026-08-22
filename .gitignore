@@ -29,6 +29,9 @@ elysium-hostinger-dist.zip
 # Shared hosting local booking dumps
 public/_bookings/*.json
 
+# Server secrets (use api/config.example.php as template)
+public/api/config.php
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars

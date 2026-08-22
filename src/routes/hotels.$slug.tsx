@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { X } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
@@ -287,7 +288,13 @@ function BookingPanel({
             <h3 className="mt-3 font-display text-3xl">{suite.name}</h3>
             <p className="mt-3 text-sm font-medium text-muted-foreground">{suite.rate}</p>
           </div>
-          <button onClick={onClose} className="eyebrow" aria-label="Close booking">
+          <button
+            type="button"
+            onClick={onClose}
+            className="eyebrow inline-flex items-center gap-2 text-forest transition-opacity hover:opacity-70"
+            aria-label="Close booking"
+          >
+            <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
             Close
           </button>
         </div>

@@ -37,6 +37,8 @@ function elysium_build_dsn(array $config): ?array
     $user = isset($parts['user']) ? rawurldecode($parts['user']) : '';
     $pass = isset($parts['pass']) ? rawurldecode($parts['pass']) : '';
     $db = isset($parts['path']) ? ltrim($parts['path'], '/') : 'neondb';
+    // Drop query params like channel_binding from the path segment if present
+    $db = explode('?', $db, 2)[0];
     $port = (string) ($parts['port'] ?? '5432');
     $sslmode = 'require';
 
@@ -47,6 +49,7 @@ function elysium_build_dsn(array $config): ?array
       }
     }
 
+    // PDO pgsql only needs sslmode in the DSN — ignore channel_binding etc.
     $dsn = sprintf(
       'pgsql:host=%s;port=%s;dbname=%s;sslmode=%s',
       $parts['host'],

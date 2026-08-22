@@ -1,27 +1,30 @@
-EDIT THESE FILES ON HOSTINGER
-=============================
+EDIT ON HOSTINGER — Neon + Desk
+================================
 
-1) Open File Manager → public_html/elysium/api/config.php
+1) File Manager → subdomain root → api/config.php
+   (If missing: copy from api/config.example.php)
 
-2) Set your values:
+2) Paste your Neon connection string:
 
    'database_url' => 'postgresql://USER:PASSWORD@HOST/neondb?sslmode=require',
+
+   Tip: use the pooled connection string from Neon.
+   sslmode=require is enough for PHP (ignore channel_binding).
+
+3) Set desk password:
+
    'admin_password' => 'your-secure-password',
-   'booking_email' => 'elysium.hyd@gmail.com',
 
-3) Save the file.
+4) Save, then open:
 
-DESK ADMIN (shared hosting)
----------------------------
-Open: https://YOUR-DOMAIN.com/elysium/desk/
+   https://elysiumhotel.grootdigitals.com/desk/
 
-Login with admin_password from config.php.
-Booking requests from the website appear in this list
-(and are also emailed to booking_email).
+5) Login → SETUP NEON DB → Run database setup
+
+   Status should show: Database: CONNECTED
 
 NOTES
 -----
-- Shared hosting bookings are emailed via book.php (uses booking_email).
-- Neon DATABASE_URL is for Node hosting / full React admin.
-- React /admin route is separate; use /elysium/desk/ on shared hosting.
-- Get your Neon URL from: https://console.neon.tech → Connection string
+- Bookings save to Neon when config is set (plus local _bookings/ backup).
+- Desk password is admin_password in api/config.php (not GitHub).
+- Get Neon URL: https://console.neon.tech → Connection string

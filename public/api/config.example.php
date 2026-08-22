@@ -1,12 +1,16 @@
 <?php
 /**
- * Copy to config.php and fill Neon + admin values.
+ * Copy this file to config.php and fill in Neon + admin values.
+ *
+ *   cp api/config.example.php api/config.php
+ *
+ * Get DATABASE_URL from: https://console.neon.tech → Connection details
  */
 return [
-  'database_url' => 'postgresql://neondb_owner:YOUR_PASSWORD@ep-xxxx.aws.neon.tech/neondb?sslmode=require',
+  'database_url' => 'postgresql://neondb_owner:YOUR_PASSWORD@ep-xxxx.ap-southeast-1.aws.neon.tech/neondb?sslmode=require',
 
   'neon' => [
-    'host' => 'ep-xxxx.aws.neon.tech',
+    'host' => 'ep-xxxx.ap-southeast-1.aws.neon.tech',
     'port' => '5432',
     'database' => 'neondb',
     'user' => 'neondb_owner',
