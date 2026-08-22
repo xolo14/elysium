@@ -4,7 +4,11 @@ import { useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
-import { HotelImageCarousel } from "@/components/HotelImageCarousel";
+import {
+  HotelGalleryBar,
+  HotelImageCarousel,
+  useHotelCarousel,
+} from "@/components/HotelImageCarousel";
 import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
 import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
@@ -57,8 +61,7 @@ function HotelPage() {
     <HotelProvider initialId={hotel.id}>
       <main className="bg-background">
         <Nav />
-        <HotelHero hotel={hotel} />
-        <HotelSummary hotel={hotel} />
+        <HotelIntro hotel={hotel} />
         <Rooms hotel={hotel} />
         <Amenities hotel={hotel} />
         <WhyBlock hotel={hotel} />
@@ -69,79 +72,93 @@ function HotelPage() {
   );
 }
 
-function HotelHero({ hotel }: { hotel: Hotel }) {
+function HotelIntro({ hotel }: { hotel: Hotel }) {
   const carouselImages = useMemo(() => getHotelCarouselImages(hotel), [hotel]);
+  const { slides, index, currentSlide, progress, goPrev, goNext } = useHotelCarousel(carouselImages);
 
   return (
-    <section className="relative z-20 h-[70svh] min-h-[520px] w-full overflow-hidden bg-forest">
-      <BrandLineCorner className="pointer-events-none absolute top-32 left-8 z-10 h-40 w-20 text-ivory/65 sm:left-12 lg:left-20 lg:h-52 lg:w-28" />
-      <HotelImageCarousel
-        key={hotel.id}
-        images={carouselImages}
-        hotelSlug={hotel.slug}
-        hotelName={hotel.name}
-        place={hotel.place}
-        layout="hero"
-        className="h-full"
-      />
-    </section>
-  );
-}
-
-function HotelSummary({ hotel }: { hotel: Hotel }) {
-  return (
-    <section className="relative z-30 mx-auto -mt-16 max-w-[1400px] px-4 sm:-mt-24 sm:px-10">
-      <div className="border border-ivory/10 bg-forest px-5 py-8 text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.35)] sm:px-12 sm:py-12">
-        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-7">
-            <p className="eyebrow text-ivory/60">{hotel.badge}</p>
-            <h1 className="mt-3 font-display text-[1.85rem] leading-tight sm:mt-4 sm:text-5xl">
-              {hotel.name}, {hotel.place}
-            </h1>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-ivory/75 sm:mt-6">
-              {hotel.summary}
-            </p>
-            <div className="mt-6 flex flex-wrap items-baseline gap-4 sm:mt-8 sm:gap-6">
-              <p className="font-display text-2xl sm:text-3xl">
-                {hotel.fromRate}
-                <span className="ml-2 text-xs tracking-widest text-ivory/60 uppercase">
-                  / night incl. taxes
-                </span>
-              </p>
-              <p className="eyebrow flex items-center gap-2 text-ivory/70">
-                <BrandStar className="h-2 w-2" /> {hotel.rating} guest rating
-              </p>
-            </div>
-          </div>
-          <ul className="space-y-3 border-ivory/20 lg:col-span-5 lg:border-l lg:pl-10">
-            {hotel.offers.map((o) => (
-              <li key={o} className="flex items-start gap-3 text-sm text-ivory/80">
-                <BrandStar className="mt-1.5 h-2 w-2 shrink-0" />
-                {o}
-              </li>
-            ))}
-            <li className="pt-4">
-              <a
-                href="#rooms"
-                className="eyebrow inline-flex items-center gap-3 border border-ivory/40 px-6 py-3 transition-colors hover:bg-ivory hover:text-forest"
-              >
-                View rooms & book
-              </a>
-            </li>
-          </ul>
-        </div>
+    <section className="relative">
+      <div className="relative z-20 h-[78svh] min-h-[560px] w-full overflow-hidden bg-forest">
+        <BrandLineCorner className="pointer-events-none absolute top-32 left-8 z-10 h-40 w-20 text-ivory/65 sm:left-12 lg:left-20 lg:h-52 lg:w-28" />
+        <HotelImageCarousel
+          key={hotel.id}
+          images={carouselImages}
+          hotelSlug={hotel.slug}
+          hotelName={hotel.name}
+          place={hotel.place}
+          layout="hero"
+          index={index}
+          progress={progress}
+          className="h-full w-full"
+        />
       </div>
 
-      <nav className="flex flex-wrap gap-x-8 gap-y-3 border-b border-border py-5">
-        <Link to="/" className="eyebrow font-semibold text-muted-foreground hover:text-foreground">
-          All hotels
-        </Link>
-        {tabs.map((t) => (
-          <a key={t.href} href={t.href} className="eyebrow font-semibold hover:text-muted-foreground">
-            {t.label}
-          </a>
-        ))}
-      </nav>
+      {/*
+        Match reference: glass gallery bar floats on the photo, then a short gap,
+        then the solid green summary card — two separate pieces, no collision.
+      */}
+      <div className="relative z-30 mx-auto -mt-20 max-w-[1400px] px-4 sm:-mt-28 sm:px-10">
+        <HotelGalleryBar
+          caption={currentSlide?.caption}
+          hotelSlug={hotel.slug}
+          slideCount={slides.length}
+          onPrev={goPrev}
+          onNext={goNext}
+          className="mb-3 border border-ivory/15 bg-forest/55 backdrop-blur-md sm:mb-4"
+        />
+
+        <div className="border border-ivory/10 bg-forest px-5 py-8 text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.35)] sm:px-12 sm:py-12">
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+            <div className="lg:col-span-7">
+              <p className="eyebrow text-ivory/60">{hotel.badge}</p>
+              <h1 className="mt-3 font-display text-[1.85rem] leading-tight sm:mt-4 sm:text-5xl">
+                {hotel.name}, {hotel.place}
+              </h1>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-ivory/75 sm:mt-6">
+                {hotel.summary}
+              </p>
+              <div className="mt-6 flex flex-wrap items-baseline gap-4 sm:mt-8 sm:gap-6">
+                <p className="font-display text-2xl sm:text-3xl">
+                  {hotel.fromRate}
+                  <span className="ml-2 text-xs tracking-widest text-ivory/60 uppercase">
+                    / night incl. taxes
+                  </span>
+                </p>
+                <p className="eyebrow flex items-center gap-2 text-ivory/70">
+                  <BrandStar className="h-2 w-2" /> {hotel.rating} guest rating
+                </p>
+              </div>
+            </div>
+            <ul className="space-y-3 border-ivory/20 lg:col-span-5 lg:border-l lg:pl-10">
+              {hotel.offers.map((o) => (
+                <li key={o} className="flex items-start gap-3 text-sm text-ivory/80">
+                  <BrandStar className="mt-1.5 h-2 w-2 shrink-0" />
+                  {o}
+                </li>
+              ))}
+              <li className="pt-4">
+                <a
+                  href="#rooms"
+                  className="eyebrow inline-flex items-center gap-3 border border-ivory/40 px-6 py-3 transition-colors hover:bg-ivory hover:text-forest"
+                >
+                  View rooms & book
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <nav className="flex flex-wrap gap-x-8 gap-y-3 border-b border-border py-5">
+          <Link to="/" className="eyebrow font-semibold text-muted-foreground hover:text-foreground">
+            All hotels
+          </Link>
+          {tabs.map((t) => (
+            <a key={t.href} href={t.href} className="eyebrow font-semibold hover:text-muted-foreground">
+              {t.label}
+            </a>
+          ))}
+        </nav>
+      </div>
     </section>
   );
 }

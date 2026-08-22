@@ -7,6 +7,103 @@ import { cn } from "@/lib/utils";
 
 const AUTOPLAY_MS = 2000;
 
+export function useHotelCarousel(
+  images: GalleryImage[],
+  options: { autoplay?: boolean } = {},
+) {
+  const { autoplay = true } = options;
+  const slides = useMemo(() => images.filter((image) => Boolean(image.src)), [images]);
+  const [index, setIndex] = useState(0);
+  const lastIndex = Math.max(0, slides.length - 1);
+  const currentSlide = slides[index];
+  const progress = slides.length > 0 ? ((index + 1) / slides.length) * 100 : 0;
+
+  const goPrev = () => setIndex((prev) => (prev <= 0 ? lastIndex : prev - 1));
+  const goNext = () => setIndex((prev) => (prev >= lastIndex ? 0 : prev + 1));
+
+  useEffect(() => {
+    setIndex(0);
+  }, [slides]);
+
+  useEffect(() => {
+    if (!autoplay || slides.length <= 1) return;
+
+    const timer = window.setInterval(() => {
+      setIndex((prev) => (prev >= lastIndex ? 0 : prev + 1));
+    }, AUTOPLAY_MS);
+
+    return () => window.clearInterval(timer);
+  }, [autoplay, lastIndex, slides.length]);
+
+  return { slides, index, currentSlide, progress, goPrev, goNext };
+}
+
+type HotelGalleryBarProps = {
+  caption?: string;
+  hotelSlug: string;
+  slideCount: number;
+  onPrev: () => void;
+  onNext: () => void;
+  className?: string;
+};
+
+/** Caption + gallery controls — floating bar or summary strip. */
+export function HotelGalleryBar({
+  caption,
+  hotelSlug,
+  slideCount,
+  onPrev,
+  onNext,
+  className,
+}: HotelGalleryBarProps) {
+  return (
+    <div
+      className={cn(
+        "flex w-full items-center justify-between gap-4 px-4 py-3.5 sm:px-5 sm:py-4",
+        className,
+      )}
+    >
+      <div className="min-w-0 flex-1">
+        {caption ? (
+          <p className="eyebrow max-w-[14rem] truncate text-ivory/90 sm:max-w-none">{caption}</p>
+        ) : null}
+      </div>
+
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <Link
+          to="/hotels/$slug/gallery"
+          params={{ slug: hotelSlug }}
+          preload="intent"
+          className="link-luxe eyebrow relative z-30 inline-flex min-h-9 shrink-0 items-center px-1 text-ivory transition-opacity hover:opacity-80"
+        >
+          Gallery
+        </Link>
+
+        {slideCount > 1 && (
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={onPrev}
+              aria-label="Previous image"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ivory/40 bg-forest/40 text-ivory transition-colors hover:bg-ivory hover:text-forest"
+            >
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={onNext}
+              aria-label="Next image"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90"
+            >
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 type HotelImageCarouselProps = {
   images: GalleryImage[];
   hotelSlug: string;
@@ -14,8 +111,11 @@ type HotelImageCarouselProps = {
   place: string;
   className?: string;
   overlay?: React.ReactNode;
-  /** Hotel detail hero: lifts controls above the overlapping summary card. */
+  /** Hero: photo only (gallery bar lives on the summary below). */
   layout?: "hero" | "default";
+  /** Controlled slide index when layout is hero and parent owns the carousel. */
+  index?: number;
+  progress?: number;
 };
 
 export function HotelImageCarousel({
@@ -26,30 +126,21 @@ export function HotelImageCarousel({
   className,
   overlay,
   layout = "default",
+  index: controlledIndex,
+  progress: controlledProgress,
 }: HotelImageCarouselProps) {
-  const slides = useMemo(() => images.filter((image) => Boolean(image.src)), [images]);
-  const [index, setIndex] = useState(0);
-  const lastIndex = Math.max(0, slides.length - 1);
-  const currentSlide = slides[index];
-  const progress = slides.length > 0 ? ((index + 1) / slides.length) * 100 : 0;
   const isHero = layout === "hero";
+  const isControlled = isHero && controlledIndex !== undefined;
+  const internal = useHotelCarousel(images, { autoplay: !isControlled });
 
-  const goPrev = () => setIndex((prev) => (prev <= 0 ? lastIndex : prev - 1));
-  const goNext = () => setIndex((prev) => (prev >= lastIndex ? 0 : prev + 1));
-
-  useEffect(() => {
-    setIndex(0);
-  }, [slides]);
-
-  useEffect(() => {
-    if (slides.length <= 1) return;
-
-    const timer = window.setInterval(() => {
-      setIndex((prev) => (prev >= lastIndex ? 0 : prev + 1));
-    }, AUTOPLAY_MS);
-
-    return () => window.clearInterval(timer);
-  }, [lastIndex, slides.length]);
+  const slides = internal.slides;
+  const index = isControlled ? controlledIndex : internal.index;
+  const progress = isControlled
+    ? (controlledProgress ?? internal.progress)
+    : internal.progress;
+  const currentSlide = slides[index];
+  const goPrev = internal.goPrev;
+  const goNext = internal.goNext;
 
   if (!slides.length) return null;
 
@@ -72,21 +163,15 @@ export function HotelImageCarousel({
         className={cn(
           "pointer-events-none absolute inset-0",
           isHero
-            ? "bg-[linear-gradient(to_top,rgba(8,20,17,0.72)_0%,rgba(8,20,17,0.15)_38%,rgba(8,20,17,0.05)_100%)]"
+            ? "bg-[linear-gradient(to_top,rgba(8,20,17,0.45)_0%,rgba(8,20,17,0.08)_32%,rgba(8,20,17,0.04)_100%)]"
             : "bg-[linear-gradient(to_top,rgba(8,20,17,0.65),rgba(8,20,17,0.08)_45%,rgba(8,20,17,0.25))]",
         )}
       />
 
       {overlay}
 
-      {/* Top progress — subtle, out of the way */}
       {slides.length > 1 && (
-        <div
-          className={cn(
-            "pointer-events-none absolute inset-x-0 top-0 z-20 h-0.5 bg-ivory/15",
-            isHero && "top-auto bottom-0",
-          )}
-        >
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-0.5 bg-ivory/15">
           <div
             className="h-full bg-ivory/80 transition-[width] duration-500 ease-out"
             style={{ width: `${progress}%` }}
@@ -99,80 +184,51 @@ export function HotelImageCarousel({
         </div>
       )}
 
-      <div
-        className={cn(
-          "pointer-events-auto absolute inset-x-0 z-30",
-          // Keep caption/controls above the overlapping hotel summary card
-          isHero
-            ? "bottom-[5.5rem] px-4 sm:bottom-28 sm:px-10"
-            : "bottom-0 px-5 pb-4 sm:px-8 sm:pb-5",
-        )}
-      >
-        <div
-          className={cn(
-            "flex items-center justify-between gap-4",
-            isHero &&
-              "border border-ivory/15 bg-forest/55 px-4 py-3 backdrop-blur-md sm:px-5 sm:py-4",
-          )}
-        >
-          <div className="min-w-0 flex-1">
-            {currentSlide?.caption && (
-              <p
-                className={cn(
-                  "text-ivory",
-                  isHero
-                    ? "eyebrow max-w-[14rem] truncate text-ivory/90 sm:max-w-none"
-                    : "truncate font-display text-lg sm:text-xl",
-                )}
-              >
-                {currentSlide.caption}
-              </p>
-            )}
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            <Link
-              to="/hotels/$slug/gallery"
-              params={{ slug: hotelSlug }}
-              preload="intent"
-              className={cn(
-                "link-luxe eyebrow relative z-30 inline-flex items-center text-ivory transition-opacity hover:opacity-80",
-                isHero ? "min-h-9 shrink-0 px-1" : "hidden min-h-11 sm:inline-flex",
+      {/* Default (non-hero) keeps controls on the image */}
+      {!isHero && (
+        <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-30 px-5 pb-4 sm:px-8 sm:pb-5">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              {currentSlide?.caption && (
+                <p className="truncate font-display text-lg text-ivory sm:text-xl">
+                  {currentSlide.caption}
+                </p>
               )}
-            >
-              {isHero ? "Gallery" : "View all images"}
-            </Link>
+            </div>
 
-            {slides.length > 1 && (
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={goPrev}
-                  aria-label="Previous image"
-                  className={cn(
-                    "inline-flex items-center justify-center rounded-full border border-ivory/40 text-ivory transition-colors hover:bg-ivory hover:text-forest",
-                    isHero ? "h-9 w-9 bg-forest/40" : "h-11 w-11 bg-forest/35 backdrop-blur-sm",
-                  )}
-                >
-                  <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={goNext}
-                  aria-label="Next image"
-                  className={cn(
-                    "inline-flex items-center justify-center rounded-full border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90",
-                    isHero ? "h-9 w-9" : "h-11 w-11",
-                  )}
-                >
-                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                </button>
-              </div>
-            )}
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <Link
+                to="/hotels/$slug/gallery"
+                params={{ slug: hotelSlug }}
+                preload="intent"
+                className="link-luxe eyebrow relative z-30 hidden min-h-11 items-center text-ivory transition-opacity hover:opacity-80 sm:inline-flex"
+              >
+                View all images
+              </Link>
+
+              {slides.length > 1 && (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={goPrev}
+                    aria-label="Previous image"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/40 bg-forest/35 text-ivory backdrop-blur-sm transition-colors hover:bg-ivory hover:text-forest"
+                  >
+                    <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goNext}
+                    aria-label="Next image"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90"
+                  >
+                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {!isHero && (
           <div className="mt-4 flex justify-end sm:hidden">
             <Link
               to="/hotels/$slug/gallery"
@@ -183,8 +239,8 @@ export function HotelImageCarousel({
               View all images
             </Link>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
