@@ -78,11 +78,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Elysium Studio Suites" },
+      { title: "Elysium Hotels" },
       {
         name: "description",
         content:
-          "Elysium Studio Suites — a luxury boutique hotel of two houses, on the Côte d'Azur and a Kyoto cedar ridge.",
+          "Elysium Hotels — luxury boutique stays in Hyderabad: Elysium Studio Suites, Madhapur and Elysium Premier Suites, Hitec City.",
       },
       { name: "author", content: "grootdigitals.com" },
       { property: "og:type", content: "website" },

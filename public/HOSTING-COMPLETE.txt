@@ -1,0 +1,45 @@
+# Elysium Hotels — complete Hostinger shared hosting guide
+===========================================================
+
+Your live URL: https://elysiumhotel.grootdigitals.com
+(subdomain root — assets use /assets/ not /elysium/assets/)
+
+PACKAGE: dist.zip
+UPLOAD TO: the subdomain document root for elysiumhotel.grootdigitals.com
+  (Hostinger File Manager → that subdomain's folder, usually its public_html)
+
+-----------------------------------------------------------
+A) UPLOAD
+-----------------------------------------------------------
+1. Delete ALL old files in the subdomain root
+2. Extract dist.zip so these sit at the ROOT:
+     index.html
+     .htaccess
+     assets/
+     api/
+     desk/
+     images/
+3. Do NOT nest inside another extra folder
+4. Open https://elysiumhotel.grootdigitals.com/
+   Hard refresh (Cmd+Shift+R) if needed
+
+-----------------------------------------------------------
+B) NEON + ADMIN (api/config.php)
+-----------------------------------------------------------
+'database_url' => 'postgresql://...@ep-xxxx.neon.tech/neondb?sslmode=require',
+'admin_password' => 'your-secure-password',
+'booking_email' => 'elysium.hyd@gmail.com',
+
+-----------------------------------------------------------
+C) CREATE TABLES
+-----------------------------------------------------------
+https://elysiumhotel.grootdigitals.com/desk/
+→ Setup Neon DB → Run database setup
+
+-----------------------------------------------------------
+D) LINKS
+-----------------------------------------------------------
+Site:  https://elysiumhotel.grootdigitals.com/
+Desk:  https://elysiumhotel.grootdigitals.com/desk/
+Book:  https://elysiumhotel.grootdigitals.com/book
+Admin redirect: /admin → /desk/

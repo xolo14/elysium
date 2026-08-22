@@ -38,7 +38,7 @@ export function Gallery() {
               ) : (
                 <BrandLineBurst className="pointer-events-none absolute top-3 right-3 h-9 w-9 text-ivory/70 transition-transform duration-700 group-hover:-rotate-12 sm:top-5 sm:right-5 sm:h-12 sm:w-12" />
               )}
-              <span className="absolute inset-x-3 bottom-3 flex translate-y-0 items-center gap-2 text-left opacity-100 transition-all duration-700 ease-luxe sm:inset-x-5 sm:bottom-5 sm:translate-y-4 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
+              <span className="absolute inset-x-3 bottom-1.5 flex translate-y-0 items-center gap-2 text-left opacity-100 transition-all duration-700 ease-luxe sm:inset-x-5 sm:bottom-2 sm:translate-y-3 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
                 <BrandStar className="h-2 w-2 shrink-0 text-ivory" />
                 <span className="eyebrow text-ivory">{g.caption}</span>
               </span>

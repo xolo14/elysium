@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useEffect, useState } from "react";
 import { navItems } from "@/data/hotels";
-import { BrandStar } from "@/lib/brand";
+import { BrandLockup, BrandStar } from "@/lib/brand";
 import { useHotel } from "@/context/hotel";
 import { cn } from "@/lib/utils";
 
@@ -51,14 +51,8 @@ export function Nav() {
           )}
         >
           <Link to="/" className="relative z-10 flex items-center">
-            <img
-              src={solid ? "/logo-dark.svg" : "/logo-light.svg"}
-              alt="Elysium Studio Suites"
-              width={144}
-              height={40}
-              className="h-8 w-auto"
-            />
-            <span className="sr-only">Elysium Studio Suites — home</span>
+            <BrandLockup className={cn(solid ? "text-foreground" : "text-ivory")} />
+            <span className="sr-only">Elysium Hotels — home</span>
           </Link>
 
           <ul className="hidden items-center gap-8 lg:flex">
@@ -169,13 +163,7 @@ export function Nav() {
           aria-label="Site menu"
         >
           <div className="flex items-start justify-between">
-            <img
-              src="/logo-light.svg"
-              alt="Elysium Studio Suites"
-              width={144}
-              height={40}
-              className="h-8 w-auto"
-            />
+            <BrandLockup className="text-ivory" />
             <button
               type="button"
               onClick={() => setOpen(false)}

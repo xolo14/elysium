@@ -6,6 +6,7 @@ import { BrandLineCorner } from "@/lib/brand";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { HotelSelector } from "@/components/sections/HotelSelector";
+import { SocialProof } from "@/components/sections/SocialProof";
 import { Suites } from "@/components/sections/Suites";
 import { Amenities } from "@/components/sections/Amenities";
 import { Experiences } from "@/components/sections/Experiences";
@@ -99,6 +100,7 @@ function Index() {
          <BrandLineCorner className="pointer-events-none absolute top-[calc(100svh+5rem)] left-5 z-10 hidden h-36 w-20 text-forest/45 lg:block" />
          <Hero />
          <HotelSelector />
+         <SocialProof />
          <WhyElysium />
         <Suites />
         <HouseContent />

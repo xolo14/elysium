@@ -83,7 +83,7 @@ function HotelGalleryPage() {
                       loading="lazy"
                       className="aspect-[4/3] h-full w-full object-cover transition-transform duration-[1200ms] ease-luxe group-hover:scale-[1.03]"
                     />
-                    <figcaption className="eyebrow px-3 py-3 text-foreground/70 sm:px-4">
+                    <figcaption className="eyebrow px-3 pt-4 pb-3 text-foreground/70 sm:px-4 sm:pt-5 sm:pb-4">
                       {image.caption}
                     </figcaption>
                   </figure>

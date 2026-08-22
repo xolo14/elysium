@@ -1,23 +1,36 @@
 # Elysium Luxury Digital
 
-Luxury boutique hotel site for Elysium Studio Suites.
+Luxury boutique hotel site for Elysium Hotels (Madhapur & Hitec City).
 
 **Created by [grootdigitals.com](https://grootdigitals.com)**
 
 ## Development
 
-You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+You need Node.js 20+ and npm.
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
 npm i
 npm run dev
 ```
 
-## Built with
+## Hostinger shared hosting (`public_html/elysium`)
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+Shared hosting cannot run Node. Use the static package:
+
+```sh
+npm run build:shared
+# then upload elysium-shared-hosting.zip
+```
+
+Site URL: `https://your-domain.com/elysium/`
+
+See `UPLOAD-STEPS.txt` inside the zip.
+
+## Hostinger Node.js / VPS
+
+```sh
+npm run build
+npm start
+```
+
+Use `elysium-hostinger-dist.zip` only on Node plans.

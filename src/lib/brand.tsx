@@ -123,10 +123,10 @@ export function BrandLockup({
   return (
     <span className={cn("flex items-center gap-3", className)}>
       <BrandSymbol className="h-7 w-7 shrink-0" />
-      <span className="flex flex-col gap-[3px]">
+      <span className="flex flex-col gap-[2px]">
         <BrandWordmark className="h-[13px]" animate={animate} />
-        <span className="font-sans text-[8px] tracking-[0.42em] uppercase opacity-70">
-          Studio Suites
+        <span className="font-sans text-[8px] tracking-[0.42em] uppercase opacity-80">
+          Hotels
         </span>
       </span>
     </span>

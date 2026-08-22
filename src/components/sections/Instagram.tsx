@@ -41,7 +41,7 @@ export function Instagram() {
                 className="h-full w-full object-cover transition-transform duration-[1400ms] ease-luxe group-hover:scale-[1.08]"
               />
               <span className="absolute inset-0 bg-forest/0 transition-colors duration-700 group-hover:bg-forest/40" />
-              <figcaption className="eyebrow absolute inset-x-3 bottom-3 text-ivory opacity-100 transition-opacity duration-700 sm:inset-x-4 sm:bottom-4 sm:opacity-0 sm:group-hover:opacity-100">
+              <figcaption className="eyebrow absolute inset-x-3 bottom-1.5 text-ivory opacity-100 transition-opacity duration-700 sm:inset-x-4 sm:bottom-2 sm:opacity-0 sm:group-hover:opacity-100">
                 {item.caption}
               </figcaption>
             </figure>

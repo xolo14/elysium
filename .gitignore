@@ -10,6 +10,13 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-hostinger/
+dist\ 2/
+dist\ 3/
+shared-hosting-elysium/
+dist.zip
+elysium-shared-hosting.zip
+elysium-hostinger-dist.zip
 .output
 .vinxi
 .tanstack/**
@@ -19,11 +26,14 @@ dist-ssr
 .env.*
 !.env.example
 
+# Shared hosting local booking dumps
+public/_bookings/*.json
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
 
-# Vercel
+# Leftover Vercel output (no longer used — Hostinger uses .output)
 .vercel
 
 # Editor directories and files
@@ -36,4 +46,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.vercel

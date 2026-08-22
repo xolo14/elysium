@@ -5,7 +5,7 @@ import { hotels, type Hotel, type Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import { HotelImageCarousel } from "@/components/HotelImageCarousel";
-import { createBooking } from "@/fns/bookings";
+import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
 import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
 import { formatNice, nightsBetween } from "@/lib/booking-dates";
@@ -90,17 +90,19 @@ function HotelHero({ hotel }: { hotel: Hotel }) {
 
 function HotelSummary({ hotel }: { hotel: Hotel }) {
   return (
-    <section className="relative z-30 mx-auto -mt-20 max-w-[1400px] px-4 sm:-mt-24 sm:px-10">
-      <div className="border border-ivory/10 bg-forest px-6 py-10 text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.35)] sm:px-12 sm:py-12">
-        <div className="grid gap-10 lg:grid-cols-12">
+    <section className="relative z-30 mx-auto -mt-16 max-w-[1400px] px-4 sm:-mt-24 sm:px-10">
+      <div className="border border-ivory/10 bg-forest px-5 py-8 text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.35)] sm:px-12 sm:py-12">
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
             <p className="eyebrow text-ivory/60">{hotel.badge}</p>
-            <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl">
+            <h1 className="mt-3 font-display text-[1.85rem] leading-tight sm:mt-4 sm:text-5xl">
               {hotel.name}, {hotel.place}
             </h1>
-            <p className="mt-6 max-w-xl text-sm leading-relaxed text-ivory/75">{hotel.summary}</p>
-            <div className="mt-8 flex flex-wrap items-baseline gap-6">
-              <p className="font-display text-3xl">
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-ivory/75 sm:mt-6">
+              {hotel.summary}
+            </p>
+            <div className="mt-6 flex flex-wrap items-baseline gap-4 sm:mt-8 sm:gap-6">
+              <p className="font-display text-2xl sm:text-3xl">
                 {hotel.fromRate}
                 <span className="ml-2 text-xs tracking-widest text-ivory/60 uppercase">
                   / night incl. taxes
@@ -238,8 +240,7 @@ function BookingPanel({
     setError(null);
 
     try {
-      const result = await createBooking({
-        data: {
+      const result = await submitBooking({
           hotelId: hotel.id,
           suiteName: suite.name,
           guestName: form.name.trim(),
@@ -248,8 +249,7 @@ function BookingPanel({
           checkIn,
           checkOut,
           guests,
-        },
-      });
+        });
       setBookingId(result.id);
       setSent(true);
     } catch (err) {
@@ -261,7 +261,7 @@ function BookingPanel({
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-0 sm:items-center sm:p-6">
-      <div className="max-h-[92svh] w-full max-w-3xl overflow-y-auto bg-background p-6 sm:p-10">
+      <div className="max-h-[92svh] w-full max-w-5xl overflow-y-auto bg-background p-4 sm:p-8">
         <div className="flex items-start justify-between gap-6">
           <div>
             <p className="eyebrow text-muted-foreground">

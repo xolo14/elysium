@@ -102,7 +102,10 @@ export function HotelImageCarousel({
       <div
         className={cn(
           "pointer-events-auto absolute inset-x-0 z-30",
-          isHero ? "bottom-24 px-4 sm:bottom-28 sm:px-10" : "bottom-0 px-5 pb-6 sm:px-8 sm:pb-8",
+          // Keep caption/controls above the overlapping hotel summary card
+          isHero
+            ? "bottom-[5.5rem] px-4 sm:bottom-28 sm:px-10"
+            : "bottom-0 px-5 pb-4 sm:px-8 sm:pb-5",
         )}
       >
         <div
@@ -116,10 +119,10 @@ export function HotelImageCarousel({
             {currentSlide?.caption && (
               <p
                 className={cn(
-                  "truncate text-ivory",
+                  "text-ivory",
                   isHero
-                    ? "eyebrow text-ivory/85"
-                    : "font-display text-lg sm:text-xl",
+                    ? "eyebrow max-w-[14rem] truncate text-ivory/90 sm:max-w-none"
+                    : "truncate font-display text-lg sm:text-xl",
                 )}
               >
                 {currentSlide.caption}

@@ -1,0 +1,26 @@
+# Elysium Hotels — Hostinger shared hosting
+# For subdomain root: elysiumhotel.grootdigitals.com  →  RewriteBase /
+# For subfolder: domain.com/elysium/                    →  RewriteBase /elysium/
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Keep PHP API + desk admin reachable
+  RewriteRule ^api/ - [L]
+  RewriteRule ^desk/ - [L]
+
+  # Legacy /admin → PHP desk (shared hosting)
+  RewriteRule ^admin/?$ /admin.php [L]
+  RewriteRule ^admin/.*$ /admin.php [L]
+
+  # Existing files/folders as-is
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # SPA fallback
+  RewriteRule ^ index.html [L]
+</IfModule>

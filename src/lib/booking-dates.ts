@@ -82,9 +82,10 @@ export function buildMonthCells(year: number, month: number) {
   for (let day = 1; day <= daysInMonth; day++) {
     cells.push({ date: new Date(year, month, day), inMonth: true });
   }
-  while (cells.length % 7 !== 0) {
+  // Always exactly 6 weeks (42 cells) so month changes never stretch the grid
+  while (cells.length < 42) {
     const last = cells[cells.length - 1]!.date;
     cells.push({ date: addDays(last, 1), inMonth: false });
   }
-  return cells;
+  return cells.slice(0, 42);
 }

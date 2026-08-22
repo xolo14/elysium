@@ -40,23 +40,14 @@ export function Hero() {
         style={{ opacity: fade }}
         className="relative z-10 flex h-full flex-col items-center justify-end px-5 pb-14 pt-28 text-center sm:justify-center sm:px-6 sm:pb-10 sm:pt-24"
       >
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-          className="eyebrow text-ivory/70"
-        >
-          {hotel.badge} — {hotel.established}
-        </motion.p>
-
-        <h1 className="mt-6 overflow-hidden sm:mt-8">
+        <h1 className="overflow-hidden">
           <motion.span
             initial={{ y: "110%" }}
             animate={{ y: "0%" }}
             transition={{ delay: 0.3, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
             className="block font-display text-[clamp(2.55rem,11vw,7.4vw)] leading-[0.9] tracking-[-0.02em] sm:text-[9vw] lg:text-[7.4vw]"
           >
-            Elysium Studio Suites
+            Elysium Hotels
           </motion.span>
         </h1>
 

@@ -41,7 +41,7 @@ export function Footer() {
           <p className="eyebrow text-ivory/60">Stay in touch</p>
           <h2 className="mt-5 flex w-full max-w-none flex-wrap items-center gap-x-[0.3em] gap-y-2 font-display text-[clamp(1.65rem,7vw,7rem)] font-bold leading-none sm:flex-nowrap sm:whitespace-nowrap">
             <BrandStar className="h-[0.52em] w-[0.52em] shrink-0 text-accent" />
-            <span>Elysium Studio Suites</span>
+            <span>Elysium Hotels</span>
           </h2>
         </Reveal>
 

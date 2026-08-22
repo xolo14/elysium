@@ -5,7 +5,7 @@ import { useHotel } from "@/context/hotel";
 import type { Suite } from "@/data/hotels";
 import { BrandStar } from "@/lib/brand";
 import { cn } from "@/lib/utils";
-import { createBooking } from "@/fns/bookings";
+import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
 import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
 import { formatNice, nightsBetween } from "@/lib/booking-dates";
@@ -58,8 +58,7 @@ export function Booking() {
     setError(null);
 
     try {
-      const result = await createBooking({
-        data: {
+      const result = await submitBooking({
           hotelId: hotel.id,
           suiteName: suite.name,
           guestName: form.name.trim(),
@@ -68,8 +67,7 @@ export function Booking() {
           checkIn,
           checkOut,
           guests,
-        },
-      });
+        });
       setBookingId(result.id);
       setSent(true);
     } catch (err) {
