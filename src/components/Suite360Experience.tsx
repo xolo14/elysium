@@ -1,10 +1,102 @@
-import { ArrowLeft, Rotate3D, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Rotate3D, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Suite360View } from "@/data/hotels";
 import { BrandStar } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 type Step = "select" | "view";
+
+/** Round arrow + 360° label (proper arrows, not &lt; &gt;). */
+function View360ArrowsCluster({
+  className,
+  tone = "ivory",
+}: {
+  className?: string;
+  tone?: "ivory" | "glass";
+}) {
+  const onIvory = tone === "ivory";
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-2 px-2.5 py-2 sm:gap-2.5 sm:px-3.5",
+        onIvory ? "bg-ivory text-forest" : "border border-ivory/50 bg-forest/50 text-ivory backdrop-blur-md",
+        className,
+      )}
+      aria-hidden="true"
+    >
+      <span
+        className={cn(
+          "inline-flex h-7 w-7 items-center justify-center rounded-full sm:h-8 sm:w-8",
+          onIvory ? "border border-forest/30 bg-forest/5" : "border border-ivory/45 bg-ivory/10",
+        )}
+      >
+        <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2.5} />
+      </span>
+      <span className="flex min-w-[2.75rem] flex-col items-center gap-0.5">
+        <Rotate3D className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2} />
+        <span className="text-[10px] font-semibold tracking-[0.2em] uppercase sm:text-[11px]">360°</span>
+      </span>
+      <span
+        className={cn(
+          "inline-flex h-7 w-7 items-center justify-center rounded-full sm:h-8 sm:w-8",
+          onIvory ? "border border-forest/30 bg-forest/5" : "border border-ivory/45 bg-ivory/10",
+        )}
+      >
+        <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" strokeWidth={2.5} />
+      </span>
+    </span>
+  );
+}
+
+/** Hero control: large preview with VIEW 360° watermark centered on the image. */
+export function View360HeroControl({
+  imageSrc,
+  onClick,
+  className,
+}: {
+  imageSrc: string;
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "group z-40 flex w-[12.5rem] flex-col overflow-hidden border border-ivory/30 bg-forest/40 text-left shadow-[0_16px_48px_rgba(8,20,17,0.45)] transition-opacity hover:opacity-95 sm:w-[15.5rem]",
+        className,
+      )}
+      aria-label="Open 360 degree suite preview"
+    >
+      <span className="relative aspect-[4/3] w-full overflow-hidden">
+        <img
+          src={imageSrc}
+          alt=""
+          className="h-full w-full object-cover transition-transform duration-700 ease-luxe group-hover:scale-105"
+        />
+        <span className="absolute inset-0 bg-forest/25" />
+        {/* Watermark centered on the preview image — no solid background */}
+        <span className="absolute inset-0 flex items-center justify-center p-3">
+          <span className="eyebrow inline-flex items-center gap-2 font-bold text-ivory drop-shadow-[0_2px_8px_rgba(8,20,17,0.85)] sm:gap-2.5">
+            <Rotate3D className="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" strokeWidth={2.25} aria-hidden="true" />
+            View 360°
+          </span>
+        </span>
+      </span>
+    </button>
+  );
+}
+
+/** Compact mark for overlays (selection cards, etc.). */
+export function View360ArrowsMark({
+  className,
+  tone = "ivory",
+}: {
+  className?: string;
+  tone?: "ivory" | "glass";
+}) {
+  return <View360ArrowsCluster className={className} tone={tone} />;
+}
 
 /**
  * Lightweight equirectangular drag viewer — used when `panorama` is set.
@@ -76,14 +168,12 @@ function EmbedViewer({ url, title }: { url: string; title: string }) {
 }
 
 function ViewerStage({ view }: { view: Suite360View }) {
-  // Prefer local equirectangular panorama when provided; otherwise hosted embed.
   if (view.panorama) {
     return <EquirectangularViewer src={view.panorama} alt={`${view.name} 360° panorama`} />;
   }
   if (view.embedUrl) {
     return <EmbedViewer url={view.embedUrl} title={view.name} />;
   }
-  // Polished fallback when neither asset is configured yet
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-forest px-6 text-center">
       {view.thumbnail ? (
@@ -226,14 +316,23 @@ export function Suite360Experience({
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-luxe group-hover:scale-[1.04]"
                   />
-                  <span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(8,20,17,0.88),rgba(8,20,17,0.25)_55%,rgba(8,20,17,0.35))]" />
+                  <span className="absolute inset-0 bg-[linear-gradient(to_top,rgba(8,20,17,0.88),rgba(8,20,17,0.2)_48%,rgba(8,20,17,0.3))]" />
+
+                  {/* Same transparent View 360° watermark as hero preview */}
+                  <span className="absolute inset-0 flex items-center justify-center p-4">
+                    <span className="eyebrow inline-flex items-center gap-2 font-bold text-ivory drop-shadow-[0_2px_8px_rgba(8,20,17,0.85)] transition-transform duration-700 ease-luxe group-hover:scale-105 sm:gap-2.5">
+                      <Rotate3D className="h-4 w-4 shrink-0 sm:h-5 sm:w-5" strokeWidth={2.25} aria-hidden="true" />
+                      View 360°
+                    </span>
+                  </span>
+
                   <span className="relative mt-auto flex flex-col gap-2 p-5 sm:p-6">
                     <span className="eyebrow flex items-center gap-2 text-ivory/70">
                       <BrandStar className="h-2 w-2" /> Explore in 360°
                     </span>
                     <span className="font-display text-2xl leading-tight sm:text-3xl">{view.name}</span>
                     <span className="text-sm text-ivory/75">{view.description}</span>
-                    <span className="eyebrow mt-3 inline-flex w-fit border border-ivory/40 px-4 py-2 transition-colors group-hover:bg-ivory group-hover:text-forest">
+                    <span className="eyebrow mt-3 inline-flex w-fit border border-ivory/40 px-4 py-2">
                       Explore 360°
                     </span>
                   </span>
@@ -269,7 +368,6 @@ export function Suite360Experience({
   );
 }
 
-/** Gallery control — optional export if needed outside HotelGalleryBar */
 export function View360GalleryButton({
   onClick,
   className,
@@ -281,14 +379,10 @@ export function View360GalleryButton({
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        "eyebrow relative z-30 inline-flex min-h-9 shrink-0 items-center gap-1.5 px-1 text-ivory transition-opacity hover:opacity-80",
-        className,
-      )}
+      className={cn("relative z-30 inline-flex shrink-0", className)}
       aria-label="View 360 degree suite experience"
     >
-      <BrandStar className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
-      View 360°
+      <View360ArrowsMark tone="ivory" />
     </button>
   );
 }

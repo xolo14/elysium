@@ -45,6 +45,8 @@ type HotelGalleryBarProps = {
   onPrev: () => void;
   onNext: () => void;
   className?: string;
+  /** Optional control shown before Gallery (e.g. View 360°). */
+  leadingAction?: React.ReactNode;
 };
 
 /** Caption + gallery controls — floating bar or summary strip. */
@@ -55,6 +57,7 @@ export function HotelGalleryBar({
   onPrev,
   onNext,
   className,
+  leadingAction,
 }: HotelGalleryBarProps) {
   return (
     <div
@@ -70,6 +73,7 @@ export function HotelGalleryBar({
       </div>
 
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        {leadingAction}
         <Link
           to="/hotels/$slug/gallery"
           params={{ slug: hotelSlug }}

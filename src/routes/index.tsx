@@ -14,6 +14,7 @@ import { Gallery } from "@/components/sections/Gallery";
 import { WhyElysium } from "@/components/sections/WhyElysium";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Instagram } from "@/components/sections/Instagram";
+import { Partnerships } from "@/components/sections/Partnerships";
 import { Footer } from "@/components/sections/Footer";
 
 const title = "Elysium Hotels Hyderabad — Studio & Premier Suites";
@@ -87,6 +88,7 @@ function HouseContent() {
       <Gallery />
       <Testimonials />
       <Instagram />
+      <Partnerships />
     </motion.div>
   );
 }

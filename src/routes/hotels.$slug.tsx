@@ -10,7 +10,7 @@ import {
   HotelImageCarousel,
   useHotelCarousel,
 } from "@/components/HotelImageCarousel";
-import { Suite360Experience } from "@/components/Suite360Experience";
+import { Suite360Experience, View360HeroControl } from "@/components/Suite360Experience";
 import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
 import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
@@ -102,36 +102,17 @@ function HotelIntro({
           index={index}
           progress={progress}
           className="h-full w-full"
-          overlay={
-            tours?.length ? (
-              <button
-                type="button"
-                onClick={() => setTourOpen(true)}
-                className="group pointer-events-auto absolute bottom-28 left-4 z-30 flex max-w-[min(100%-2rem,20rem)] items-stretch gap-3 border border-ivory/25 bg-forest/55 p-2 text-left text-ivory backdrop-blur-md transition-colors hover:border-ivory/50 hover:bg-forest/75 sm:bottom-32 sm:left-8 sm:gap-4 sm:p-2.5 lg:left-12"
-                aria-label="Open 360 degree suite preview"
-              >
-                <span className="relative h-16 w-16 shrink-0 overflow-hidden sm:h-20 sm:w-20">
-                  <img
-                    src={tours[0].thumbnail}
-                    alt=""
-                    className="h-full w-full object-cover transition-transform duration-700 ease-luxe group-hover:scale-105"
-                  />
-                  <span className="absolute inset-0 bg-forest/20" />
-                </span>
-                <span className="flex min-w-0 flex-col justify-center py-0.5 pr-2 sm:pr-3">
-                  <span className="eyebrow flex items-center gap-1.5 text-ivory/90">
-                    <span aria-hidden="true">✦</span> View 360°
-                  </span>
-                  <span className="mt-1 font-display text-base leading-snug sm:text-lg">
-                    Suite preview
-                  </span>
-                  <span className="mt-0.5 text-xs text-ivory/65">Tap to explore</span>
-                </span>
-              </button>
-            ) : null
-          }
         />
       </div>
+
+      {/* Large 360 preview on lower-left of scrolling hero images */}
+      {tours?.length ? (
+        <View360HeroControl
+          imageSrc={tours[0].thumbnail}
+          onClick={() => setTourOpen(true)}
+          className="absolute top-[calc(78svh-19rem)] left-4 sm:top-[calc(78svh-22rem)] sm:left-8 lg:left-12"
+        />
+      ) : null}
 
       {/*
         Match reference: glass gallery bar floats on the photo, then a short gap,

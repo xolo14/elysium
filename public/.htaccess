@@ -24,3 +24,11 @@ DirectoryIndex index.html
   # Client-router fallback for unknown paths (prerendered routes are real HTML files).
   RewriteRule ^ index.html [L]
 </IfModule>
+
+# Always revalidate HTML so deploys show up after hard refresh
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+  </FilesMatch>
+</IfModule>
