@@ -34,6 +34,14 @@ export type WhyPoint = {
 
 export type TrustPoint = { value: string; label: string };
 
+export type VirtualTour = {
+  title: string;
+  subtitle: string;
+  url: string;
+  /** Optional preview still while the 360 player loads */
+  poster?: string;
+};
+
 export type Hotel = {
   id: "madhapur" | "hitec";
   slug: string;
@@ -60,6 +68,8 @@ export type Hotel = {
   contact: { address: string[]; phone: string; email: string };
   coords: string;
   mapQuery: string;
+  /** Optional 360° tours (Panoee / similar). */
+  virtualTours?: VirtualTour[];
 };
 
 const sharedExperiences = (hotelDining: string) => [
@@ -383,6 +393,21 @@ export const hotels: Hotel[] = [
         amenities: ["Two bedrooms", "Two bathrooms", "Full kitchen", "Washer & dryer"],
         detail:
           "Our largest residence: two bedrooms, two bathrooms, a full kitchen with dining for six and two balconies — suited to relocating families and teams.",
+      },
+    ],
+
+    virtualTours: [
+      {
+        title: "Suite with Balcony",
+        subtitle: "Walk from the hall through to the balcony in 360°",
+        url: "https://tour.panoee.net/suite-with-balcony/1-hall-to-balcony",
+        poster: premierLiving,
+      },
+      {
+        title: "Suite Room",
+        subtitle: "Living area walkthrough in 360°",
+        url: "https://tour.panoee.net/elysium-premier-suites-suite-room/living-area",
+        poster: studioLiving,
       },
     ],
 

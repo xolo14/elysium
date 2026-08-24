@@ -31,8 +31,8 @@ This dist includes your Neon database_url + desk admin_password.
 
 If Desk still says "Not connected":
 1. Confirm api/config.php on the server has database_url set
-2. Ask Hostinger to enable PHP extension: pdo_pgsql
-3. Open Desk → Setup Neon DB → Run database setup
+2. Open Desk → Setup Neon DB → Run database setup
+   (Shared hosting uses Neon over HTTPS — pdo_pgsql is NOT required)
 
 -----------------------------------------------------------
 C) CREATE TABLES (required once)
@@ -40,7 +40,7 @@ C) CREATE TABLES (required once)
 https://elysiumhotel.grootdigitals.com/desk/
 Login with admin_password from api/config.php
 → Setup Neon DB → Run database setup
-Status should become: Neon connected
+Status should become: Neon connected (HTTPS)
 
 -----------------------------------------------------------
 D) LINKS

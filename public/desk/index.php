@@ -29,9 +29,10 @@ if ($loggedIn) {
     $dbStatus = 'Not configured — paste Neon URL in api/config.php';
   } else {
     try {
-      elysium_pdo($config)->query('SELECT 1');
+      elysium_sql('SELECT 1 AS ok', [], $config);
       $dbReady = true;
-      $dbStatus = 'Neon connected';
+      $via = elysium_db_transport($config) === 'neon_http' ? 'HTTPS' : 'PDO';
+      $dbStatus = 'Neon connected (' . $via . ')';
     } catch (Throwable $e) {
       $dbReady = false;
       $dbStatus = 'Connection failed — ' . $e->getMessage();
@@ -170,8 +171,8 @@ if ($loggedIn) {
           <p style="margin:0 0 .75rem;"><strong>Fix Neon connection</strong></p>
           <ol style="margin:0; padding-left:1.2rem; line-height:1.55; color:var(--muted);">
             <li>Confirm <code>api/config.php</code> has your Neon <code>database_url</code>.</li>
-            <li>Hostinger must have PHP <code>pdo_pgsql</code> enabled (support can turn it on).</li>
             <li>Open <a href="setup-database.php">Setup Neon DB</a> and click <strong>Run database setup</strong>.</li>
+            <li>This host uses Neon over HTTPS when PHP PostgreSQL PDO is unavailable.</li>
           </ol>
         </div>
       <?php endif; ?>

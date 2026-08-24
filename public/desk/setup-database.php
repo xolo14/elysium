@@ -13,9 +13,12 @@ $dbInfo = '';
 
 try {
   if (elysium_db_configured($config)) {
-    $pdo = elysium_pdo($config);
+    elysium_sql('SELECT 1 AS ok', [], $config);
     $dbOk = true;
-    $dbInfo = 'Connected to Neon successfully.';
+    $transport = elysium_db_transport($config);
+    $dbInfo = $transport === 'neon_http'
+      ? 'Connected to Neon via HTTPS (no pdo_pgsql needed).'
+      : 'Connected to Neon via PHP PDO.';
   } else {
     $errors[] = 'Neon credentials are empty. Edit api/config.php first (database_url or neon fields).';
   }
@@ -35,10 +38,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '')
     ];
 
     try {
-      $pdo = elysium_pdo($config);
       foreach ($files as $file) {
         $path = $sqlDir . '/' . $file;
-        $chunk = elysium_run_sql_file($pdo, $path);
+        $chunk = elysium_run_sql_file($path, $config);
         $results[$file] = $chunk;
         $failed = array_filter($chunk, static fn ($r) => empty($r['ok']));
         if ($failed) {
@@ -61,11 +63,10 @@ $pdoCheck = null;
 $counts = null;
 if ($dbOk) {
   try {
-    $pdoCheck = elysium_pdo($config);
     $counts = [
-      'hotels' => (int) $pdoCheck->query('SELECT COUNT(*) FROM hotels')->fetchColumn(),
-      'suites' => (int) $pdoCheck->query('SELECT COUNT(*) FROM suites')->fetchColumn(),
-      'bookings' => (int) $pdoCheck->query('SELECT COUNT(*) FROM bookings')->fetchColumn(),
+      'hotels' => (int) (elysium_sql('SELECT COUNT(*)::int AS n FROM hotels', [], $config)[0]['n'] ?? 0),
+      'suites' => (int) (elysium_sql('SELECT COUNT(*)::int AS n FROM suites', [], $config)[0]['n'] ?? 0),
+      'bookings' => (int) (elysium_sql('SELECT COUNT(*)::int AS n FROM bookings', [], $config)[0]['n'] ?? 0),
     ];
   } catch (Throwable $e) {
     // tables may not exist yet
@@ -113,6 +114,7 @@ if ($dbOk) {
         <li>Set <code>admin_password</code> in the same file</li>
         <li>Click <strong>Run database setup</strong> below</li>
       </ol>
+      <p class="eyebrow" style="margin-top:1rem;">Works without PHP pdo_pgsql (uses Neon HTTPS on shared hosting).</p>
       <p class="<?= $dbOk ? 'ok' : 'bad' ?>"><?= desk_h($dbOk ? $dbInfo : ($errors[0] ?? 'Not connected')) ?></p>
       <?php if ($counts): ?>
         <p>Current rows — hotels: <strong><?= (int) $counts['hotels'] ?></strong>,

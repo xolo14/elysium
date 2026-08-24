@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
@@ -49,20 +49,20 @@ export const Route = createFileRoute("/hotels/$slug")({
   component: HotelPage,
 });
 
-const tabs = [
-  { label: "Rooms", href: "#rooms" },
-  { label: "Amenities", href: "#amenities" },
-  { label: "Why Elysium", href: "#why" },
-  { label: "Contact", href: "#contact" },
-];
-
 function HotelPage() {
   const { hotel } = Route.useLoaderData();
+  const pageTabs = [
+    { label: "Rooms", href: "#rooms" },
+    { label: "Amenities", href: "#amenities" },
+    { label: "Why Elysium", href: "#why" },
+    { label: "Contact", href: "#contact" },
+  ];
+
   return (
     <HotelProvider initialId={hotel.id}>
       <main className="bg-background">
         <Nav />
-        <HotelIntro hotel={hotel} />
+        <HotelIntro hotel={hotel} tabs={pageTabs} />
         <Rooms hotel={hotel} />
         <Amenities hotel={hotel} />
         <WhyBlock hotel={hotel} />
@@ -73,9 +73,33 @@ function HotelPage() {
   );
 }
 
-function HotelIntro({ hotel }: { hotel: Hotel }) {
+function HotelIntro({
+  hotel,
+  tabs: navTabs,
+}: {
+  hotel: Hotel;
+  tabs: { label: string; href: string }[];
+}) {
   const carouselImages = useMemo(() => getHotelCarouselImages(hotel), [hotel]);
   const { slides, index, currentSlide, progress, goPrev, goNext } = useHotelCarousel(carouselImages);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [activeTour, setActiveTour] = useState(0);
+  const tours = hotel.virtualTours;
+  const tour = tours?.[activeTour] ?? tours?.[0];
+
+  useEffect(() => {
+    if (!tourOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setTourOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [tourOpen]);
 
   return (
     <section className="relative">
@@ -137,7 +161,16 @@ function HotelIntro({ hotel }: { hotel: Hotel }) {
                   {o}
                 </li>
               ))}
-              <li className="pt-4">
+              <li className="flex flex-wrap gap-3 pt-4">
+                {tours?.length ? (
+                  <button
+                    type="button"
+                    onClick={() => setTourOpen(true)}
+                    className="eyebrow inline-flex items-center gap-3 border border-ivory/40 px-6 py-3 transition-colors hover:bg-ivory hover:text-forest"
+                  >
+                    View 360° tour
+                  </button>
+                ) : null}
                 <a
                   href="#rooms"
                   className="eyebrow inline-flex items-center gap-3 border border-ivory/40 px-6 py-3 transition-colors hover:bg-ivory hover:text-forest"
@@ -153,13 +186,89 @@ function HotelIntro({ hotel }: { hotel: Hotel }) {
           <Link to="/" className="eyebrow font-semibold text-muted-foreground hover:text-foreground">
             All hotels
           </Link>
-          {tabs.map((t) => (
+          {navTabs.map((t) => (
             <a key={t.href} href={t.href} className="eyebrow font-semibold hover:text-muted-foreground">
               {t.label}
             </a>
           ))}
         </nav>
       </div>
+
+      {tours?.length && tourOpen && tour ? (
+        <div
+          className="fixed inset-0 z-[90] flex items-end justify-center bg-forest/75 p-0 sm:items-center sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${tour.title} 360° tour`}
+          onClick={() => setTourOpen(false)}
+        >
+          <div
+            className="flex max-h-[94svh] w-full max-w-5xl flex-col overflow-hidden border border-ivory/15 bg-forest text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.45)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ivory/15 px-4 py-3 sm:px-5">
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                {tours.map((item, idx) => (
+                  <button
+                    key={item.url}
+                    type="button"
+                    onClick={() => setActiveTour(idx)}
+                    className={cn(
+                      "eyebrow border px-3 py-2 transition-colors",
+                      idx === activeTour
+                        ? "border-ivory bg-ivory text-forest"
+                        : "border-ivory/30 text-ivory/75 hover:border-ivory/60 hover:text-ivory",
+                    )}
+                  >
+                    {item.title}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-4">
+                <a
+                  href={tour.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="eyebrow text-ivory/80 underline-offset-4 hover:text-ivory hover:underline"
+                >
+                  Open full screen
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setTourOpen(false)}
+                  className="eyebrow inline-flex items-center gap-2 text-ivory transition-opacity hover:opacity-70"
+                  aria-label="Close 360 tour"
+                >
+                  <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                  Close
+                </button>
+              </div>
+            </div>
+
+            <p className="px-4 pt-3 text-sm text-ivory/70 sm:px-5">{tour.subtitle}</p>
+
+            <div className="relative mx-4 mb-4 mt-3 aspect-[16/10] min-h-[280px] overflow-hidden border border-ivory/15 bg-forest/80 sm:mx-5 sm:mb-5">
+              {tour.poster ? (
+                <img
+                  src={tour.poster}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover opacity-35"
+                />
+              ) : null}
+              <iframe
+                key={tour.url}
+                title={`${tour.title} — 360° tour`}
+                src={tour.url}
+                className="absolute inset-0 z-[1] h-full w-full border-0"
+                allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

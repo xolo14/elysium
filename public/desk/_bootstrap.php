@@ -68,8 +68,7 @@ function desk_load_bookings(): array
 
   if (elysium_db_configured($config)) {
     try {
-      $pdo = elysium_pdo($config);
-      $rows = elysium_list_bookings($pdo, 150);
+      $rows = elysium_list_bookings(150, $config);
       return array_map(static function (array $r) {
         return [
           'id' => (string) $r['id'],
@@ -124,8 +123,7 @@ function desk_load_booking(string $id): ?array
 
   if (elysium_db_configured($config)) {
     try {
-      $pdo = elysium_pdo($config);
-      $r = elysium_get_booking($pdo, $id);
+      $r = elysium_get_booking($id, $config);
       if ($r) {
         return [
           'id' => (string) $r['id'],

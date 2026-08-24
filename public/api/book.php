@@ -56,8 +56,7 @@ $dbError = null;
 
 if (elysium_db_configured($config)) {
   try {
-    $pdo = elysium_pdo($config);
-    $id = elysium_create_booking($pdo, $data);
+    $id = elysium_create_booking($data, $config);
     $storedInNeon = true;
   } catch (Throwable $e) {
     $dbError = $e->getMessage();
