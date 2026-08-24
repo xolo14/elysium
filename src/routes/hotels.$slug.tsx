@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
@@ -10,14 +10,16 @@ import {
   HotelImageCarousel,
   useHotelCarousel,
 } from "@/components/HotelImageCarousel";
+import { Suite360Experience } from "@/components/Suite360Experience";
 import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
 import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
 import { formatNice, nightsBetween } from "@/lib/booking-dates";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
+import { SocialProof } from "@/components/sections/SocialProof";
 import { Reveal } from "@/components/Reveal";
-import { BrandLineCorner, BrandStar } from "@/lib/brand";
+import { BrandStar } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/hotels/$slug")({
@@ -55,6 +57,7 @@ function HotelPage() {
     { label: "Rooms", href: "#rooms" },
     { label: "Amenities", href: "#amenities" },
     { label: "Why Elysium", href: "#why" },
+    { label: "Trusted", href: "#trusted" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -67,6 +70,7 @@ function HotelPage() {
         <Amenities hotel={hotel} />
         <WhyBlock hotel={hotel} />
         <ContactBlock hotel={hotel} />
+        <SocialProof hotel={hotel} />
         <Footer />
       </main>
     </HotelProvider>
@@ -83,28 +87,11 @@ function HotelIntro({
   const carouselImages = useMemo(() => getHotelCarouselImages(hotel), [hotel]);
   const { slides, index, currentSlide, progress, goPrev, goNext } = useHotelCarousel(carouselImages);
   const [tourOpen, setTourOpen] = useState(false);
-  const [activeTour, setActiveTour] = useState(0);
   const tours = hotel.virtualTours;
-  const tour = tours?.[activeTour] ?? tours?.[0];
-
-  useEffect(() => {
-    if (!tourOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setTourOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [tourOpen]);
 
   return (
     <section className="relative">
       <div className="relative z-20 h-[78svh] min-h-[560px] w-full overflow-hidden bg-forest">
-        <BrandLineCorner className="pointer-events-none absolute top-32 left-8 z-10 h-40 w-20 text-ivory/65 sm:left-12 lg:left-20 lg:h-52 lg:w-28" />
         <HotelImageCarousel
           key={hotel.id}
           images={carouselImages}
@@ -115,6 +102,34 @@ function HotelIntro({
           index={index}
           progress={progress}
           className="h-full w-full"
+          overlay={
+            tours?.length ? (
+              <button
+                type="button"
+                onClick={() => setTourOpen(true)}
+                className="group pointer-events-auto absolute bottom-28 left-4 z-30 flex max-w-[min(100%-2rem,20rem)] items-stretch gap-3 border border-ivory/25 bg-forest/55 p-2 text-left text-ivory backdrop-blur-md transition-colors hover:border-ivory/50 hover:bg-forest/75 sm:bottom-32 sm:left-8 sm:gap-4 sm:p-2.5 lg:left-12"
+                aria-label="Open 360 degree suite preview"
+              >
+                <span className="relative h-16 w-16 shrink-0 overflow-hidden sm:h-20 sm:w-20">
+                  <img
+                    src={tours[0].thumbnail}
+                    alt=""
+                    className="h-full w-full object-cover transition-transform duration-700 ease-luxe group-hover:scale-105"
+                  />
+                  <span className="absolute inset-0 bg-forest/20" />
+                </span>
+                <span className="flex min-w-0 flex-col justify-center py-0.5 pr-2 sm:pr-3">
+                  <span className="eyebrow flex items-center gap-1.5 text-ivory/90">
+                    <span aria-hidden="true">✦</span> View 360°
+                  </span>
+                  <span className="mt-1 font-display text-base leading-snug sm:text-lg">
+                    Suite preview
+                  </span>
+                  <span className="mt-0.5 text-xs text-ivory/65">Tap to explore</span>
+                </span>
+              </button>
+            ) : null
+          }
         />
       </div>
 
@@ -161,16 +176,7 @@ function HotelIntro({
                   {o}
                 </li>
               ))}
-              <li className="flex flex-wrap gap-3 pt-4">
-                {tours?.length ? (
-                  <button
-                    type="button"
-                    onClick={() => setTourOpen(true)}
-                    className="eyebrow inline-flex items-center gap-3 border border-ivory/40 px-6 py-3 transition-colors hover:bg-ivory hover:text-forest"
-                  >
-                    View 360° tour
-                  </button>
-                ) : null}
+              <li className="pt-4">
                 <a
                   href="#rooms"
                   className="eyebrow inline-flex items-center gap-3 border border-ivory/40 px-6 py-3 transition-colors hover:bg-ivory hover:text-forest"
@@ -194,80 +200,12 @@ function HotelIntro({
         </nav>
       </div>
 
-      {tours?.length && tourOpen && tour ? (
-        <div
-          className="fixed inset-0 z-[90] flex items-end justify-center bg-forest/75 p-0 sm:items-center sm:p-6"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${tour.title} 360° tour`}
-          onClick={() => setTourOpen(false)}
-        >
-          <div
-            className="flex max-h-[94svh] w-full max-w-5xl flex-col overflow-hidden border border-ivory/15 bg-forest text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.45)]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ivory/15 px-4 py-3 sm:px-5">
-              <div className="flex min-w-0 flex-wrap items-center gap-2">
-                {tours.map((item, idx) => (
-                  <button
-                    key={item.url}
-                    type="button"
-                    onClick={() => setActiveTour(idx)}
-                    className={cn(
-                      "eyebrow border px-3 py-2 transition-colors",
-                      idx === activeTour
-                        ? "border-ivory bg-ivory text-forest"
-                        : "border-ivory/30 text-ivory/75 hover:border-ivory/60 hover:text-ivory",
-                    )}
-                  >
-                    {item.title}
-                  </button>
-                ))}
-              </div>
-              <div className="flex items-center gap-4">
-                <a
-                  href={tour.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="eyebrow text-ivory/80 underline-offset-4 hover:text-ivory hover:underline"
-                >
-                  Open full screen
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setTourOpen(false)}
-                  className="eyebrow inline-flex items-center gap-2 text-ivory transition-opacity hover:opacity-70"
-                  aria-label="Close 360 tour"
-                >
-                  <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                  Close
-                </button>
-              </div>
-            </div>
-
-            <p className="px-4 pt-3 text-sm text-ivory/70 sm:px-5">{tour.subtitle}</p>
-
-            <div className="relative mx-4 mb-4 mt-3 aspect-[16/10] min-h-[280px] overflow-hidden border border-ivory/15 bg-forest/80 sm:mx-5 sm:mb-5">
-              {tour.poster ? (
-                <img
-                  src={tour.poster}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full object-cover opacity-35"
-                />
-              ) : null}
-              <iframe
-                key={tour.url}
-                title={`${tour.title} — 360° tour`}
-                src={tour.url}
-                className="absolute inset-0 z-[1] h-full w-full border-0"
-                allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-          </div>
-        </div>
+      {tours?.length ? (
+        <Suite360Experience
+          views={tours}
+          open={tourOpen}
+          onClose={() => setTourOpen(false)}
+        />
       ) : null}
     </section>
   );

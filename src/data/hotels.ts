@@ -34,13 +34,25 @@ export type WhyPoint = {
 
 export type TrustPoint = { value: string; label: string };
 
-export type VirtualTour = {
-  title: string;
-  subtitle: string;
-  url: string;
-  /** Optional preview still while the 360 player loads */
-  poster?: string;
+export type Suite360View = {
+  id: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  /**
+   * Equirectangular 360° image path (e.g. `/images/hitec-city/360/balcony.jpg`).
+   * Prefer this when native panorama assets are available.
+   */
+  panorama?: string;
+  /**
+   * Hosted interactive tour embed (e.g. Panoee).
+   * Used when `panorama` is not set yet — replace or keep alongside real assets.
+   */
+  embedUrl?: string;
 };
+
+/** @deprecated Prefer Suite360View */
+export type VirtualTour = Suite360View;
 
 export type Hotel = {
   id: "madhapur" | "hitec";
@@ -68,8 +80,8 @@ export type Hotel = {
   contact: { address: string[]; phone: string; email: string };
   coords: string;
   mapQuery: string;
-  /** Optional 360° tours (Panoee / similar). */
-  virtualTours?: VirtualTour[];
+  /** Optional suite 360° experiences (Panoee embed and/or equirectangular panoramas). */
+  virtualTours?: Suite360View[];
 };
 
 const sharedExperiences = (hotelDining: string) => [
@@ -398,16 +410,22 @@ export const hotels: Hotel[] = [
 
     virtualTours: [
       {
-        title: "Suite with Balcony",
-        subtitle: "Walk from the hall through to the balcony in 360°",
-        url: "https://tour.panoee.net/suite-with-balcony/1-hall-to-balcony",
-        poster: premierLiving,
+        id: "balcony-suite",
+        name: "Suite With Balcony",
+        description: "Explore the suite and private balcony in 360°.",
+        thumbnail: premierLiving,
+        // Replace with a local equirectangular asset when available, e.g.:
+        // panorama: "/images/hitec-city/360/suite-with-balcony.jpg",
+        embedUrl: "https://tour.panoee.net/suite-with-balcony/1-hall-to-balcony",
       },
       {
-        title: "Suite Room",
-        subtitle: "Living area walkthrough in 360°",
-        url: "https://tour.panoee.net/elysium-premier-suites-suite-room/living-area",
-        poster: studioLiving,
+        id: "suite-room",
+        name: "Suite Room",
+        description: "Explore the suite room in 360°.",
+        thumbnail: studioLiving,
+        // Replace with a local equirectangular asset when available, e.g.:
+        // panorama: "/images/hitec-city/360/suite-room.jpg",
+        embedUrl: "https://tour.panoee.net/elysium-premier-suites-suite-room/living-area",
       },
     ],
 

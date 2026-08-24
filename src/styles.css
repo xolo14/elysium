@@ -259,6 +259,16 @@
   .marquee-track {
     animation: marquee 46s linear infinite;
   }
+
+  .marquee-rtl {
+    animation-name: marquee-rtl;
+    animation-duration: 55s;
+  }
+
+  .marquee-track:hover,
+  .marquee-rtl:hover {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes brand-glyph-in {
@@ -306,6 +316,16 @@
   }
 }
 
+/* Content drifts right → left (RTL scroll) */
+@keyframes marquee-rtl {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 @keyframes dash-draw {
   from {
     stroke-dashoffset: 1000;
@@ -328,6 +348,7 @@
 @media (prefers-reduced-motion: reduce) {
   .ken-burns,
   .marquee-track,
+  .marquee-rtl,
   .animate-drift,
   .animate-slow-spin {
     animation: none !important;

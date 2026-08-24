@@ -11,14 +11,33 @@ const sharedHosting = process.env.HOSTINGER_SHARED === "1";
  */
 const sharedBase = process.env.HOSTINGER_BASE || "/";
 
+/** Public marketing routes to prerender as full HTML (avoids empty-shell hydration #418). */
+const staticPages = [
+  "/",
+  "/book",
+  "/hotels/madhapur",
+  "/hotels/hitec-city",
+  "/hotels/madhapur/gallery",
+  "/hotels/hitec-city/gallery",
+];
+
 export default defineConfig({
   tanstackStart: sharedHosting
     ? {
+        // Full static prerender — do NOT use spa.maskPath "/" (that wrote an empty
+        // shell over index.html and triggered React hydration error #418 live).
         spa: {
-          enabled: true,
+          enabled: false,
         },
+        pages: staticPages.map((path) => ({
+          path,
+          prerender: { enabled: true, crawlLinks: path === "/" },
+        })),
         prerender: {
+          enabled: true,
           concurrency: 1,
+          crawlLinks: true,
+          failOnError: false,
         },
       }
     : {

@@ -25,14 +25,15 @@ A) UPLOAD
    Hard refresh (Cmd+Shift+R) if needed
 
 -----------------------------------------------------------
-B) NEON (already filled in this package's api/config.php)
+B) ADD SECRETS (required — not included in the package)
 -----------------------------------------------------------
-This dist includes your Neon database_url + desk admin_password.
+Edit api/config.php on the server and set:
 
-If Desk still says "Not connected":
-1. Confirm api/config.php on the server has database_url set
-2. Open Desk → Setup Neon DB → Run database setup
-   (Shared hosting uses Neon over HTTPS — pdo_pgsql is NOT required)
+  database_url   → Neon connection string (console.neon.tech)
+  admin_password → password for /desk/ login
+
+Optional neon[] fields (host/user/password) if you prefer splitting
+the URL; database_url alone is enough for Desk on shared hosting.
 
 -----------------------------------------------------------
 C) CREATE TABLES (required once)
@@ -42,10 +43,16 @@ Login with admin_password from api/config.php
 → Setup Neon DB → Run database setup
 Status should become: Neon connected (HTTPS)
 
+If Desk says "Not connected":
+1. Confirm api/config.php has database_url set
+2. Run Setup Neon DB again
+   (Shared hosting uses Neon over HTTPS — pdo_pgsql is NOT required)
+
 -----------------------------------------------------------
 D) LINKS
 -----------------------------------------------------------
 Site:  https://elysiumhotel.grootdigitals.com/
 Desk:  https://elysiumhotel.grootdigitals.com/desk/
 Book:  https://elysiumhotel.grootdigitals.com/book
-Admin redirect: /admin → /desk/
+
+Support: grootdigitals.com

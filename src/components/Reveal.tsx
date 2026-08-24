@@ -1,5 +1,6 @@
 import { motion, type Transition } from "motion/react";
 import type { ReactNode } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { cn } from "@/lib/utils";
 
 const ease: Transition["ease"] = [0.16, 1, 0.3, 1];
@@ -12,8 +13,14 @@ type RevealProps = {
   once?: boolean;
 };
 
-/** Soft upward fade — never leaves content stuck invisible */
+/** Soft upward fade — SSR/prerender stays visible to avoid hydration mismatch. */
 export function Reveal({ children, className, delay = 0, y = 28, once = true }: RevealProps) {
+  const hydrated = useHydrated();
+
+  if (!hydrated) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0.001, y }}
@@ -37,6 +44,20 @@ export function RevealLines({
   className?: string;
   lineClassName?: string;
 }) {
+  const hydrated = useHydrated();
+
+  if (!hydrated) {
+    return (
+      <div className={className}>
+        {lines.map((line) => (
+          <p key={line} className={cn("py-1", lineClassName)}>
+            {line}
+          </p>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
       {lines.map((line, i) => (
@@ -75,29 +96,41 @@ export function MaskImage({
   ratio?: string;
   priority?: boolean;
 }) {
+  const hydrated = useHydrated();
+
   return (
     <div
       className={cn("relative overflow-hidden bg-secondary", className)}
       style={ratio ? { aspectRatio: ratio } : undefined}
     >
-      <motion.img
-        src={src}
-        alt={alt}
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
-        initial={{ scale: 1.06, opacity: 0.85 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ duration: 1.2, ease }}
-        className={cn("h-full w-full object-cover", imgClassName)}
-        onError={(e) => {
-          const el = e.currentTarget;
-          if (!el.dataset.fallback) {
-            el.dataset.fallback = "1";
-            el.src = "/images/hero-suite-living.png";
-          }
-        }}
-      />
+      {hydrated ? (
+        <motion.img
+          src={src}
+          alt={alt}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          initial={{ scale: 1.06, opacity: 0.85 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 1.2, ease }}
+          className={cn("h-full w-full object-cover", imgClassName)}
+          onError={(e) => {
+            const el = e.currentTarget;
+            if (!el.dataset.fallback) {
+              el.dataset.fallback = "1";
+              el.src = "/images/hero-suite-living.png";
+            }
+          }}
+        />
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          className={cn("h-full w-full object-cover", imgClassName)}
+        />
+      )}
     </div>
   );
 }

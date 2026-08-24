@@ -26,6 +26,20 @@ export type SocialProofTile =
       layout: string;
     };
 
+export type SocialProofFeature = {
+  label: string;
+  note: string;
+};
+
+export const socialProofFeatures: SocialProofFeature[] = [
+  { label: "Direct rates", note: "Book with us — taxes included" },
+  { label: "Long-stay ready", note: "Kitchenettes & weekly service" },
+  { label: "Family-run", note: "Same front desk from check-in" },
+  { label: "Business stays", note: "Invoices & corporate billing" },
+  { label: "Guest rated", note: "4.7★+ across both houses" },
+  { label: "Prime locations", note: "Madhapur & Hitec City" },
+];
+
 export const socialProofTiles: SocialProofTile[] = [
   {
     kind: "award",
@@ -102,5 +116,31 @@ export const socialProofTiles: SocialProofTile[] = [
     src: "/images/image-14.png",
     alt: "Premier suite living room",
     layout: "lg:row-span-2 max-lg:hidden",
+  },
+  {
+    kind: "award",
+    title: "Preferred for relocating teams & project stays",
+    subtitle: "Flexible check-in and suite handovers",
+    source: "Corporate travel partners",
+    layout: "lg:col-span-2 lg:row-span-2",
+  },
+  {
+    kind: "quote",
+    quote: "Breakfast, kitchen, quiet rooms — everything we needed for a month near Hitec.",
+    source: "Booking.com guests",
+    tone: "light",
+    layout: "lg:row-span-2",
+  },
+  {
+    kind: "stat",
+    value: "2",
+    label: "Houses in Hyderabad’s tech corridor",
+    layout: "lg:row-span-1",
+  },
+  {
+    kind: "image",
+    src: "/images/hitec-city/reception/reception-01.png",
+    alt: "Reception and lobby",
+    layout: "lg:row-span-2",
   },
 ];

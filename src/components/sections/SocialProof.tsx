@@ -1,16 +1,21 @@
 import { Trophy } from "lucide-react";
-import { socialProofTiles, type SocialProofTile } from "@/data/social-proof";
+import type { Hotel } from "@/data/hotels";
+import {
+  socialProofFeatures,
+  socialProofTiles,
+  type SocialProofTile,
+} from "@/data/social-proof";
 import { BrandStar } from "@/lib/brand";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
-function Tile({ tile }: { tile: SocialProofTile }) {
+function Tile({ tile, className }: { tile: SocialProofTile; className?: string }) {
   const base =
     "relative h-full overflow-hidden rounded-2xl transition-transform duration-700 ease-luxe hover:scale-[1.015]";
 
   if (tile.kind === "image") {
     return (
-      <figure className={cn(base, "min-h-[9rem] sm:min-h-[11rem]")}>
+      <figure className={cn(base, "min-h-[11rem]", className)}>
         <img
           src={tile.src}
           alt={tile.alt}
@@ -26,7 +31,8 @@ function Tile({ tile }: { tile: SocialProofTile }) {
       <article
         className={cn(
           base,
-          "flex min-h-[14rem] flex-col justify-between bg-accent p-5 text-accent-foreground sm:p-6 lg:min-h-0",
+          "flex flex-col justify-between bg-accent p-5 text-accent-foreground sm:p-6",
+          className,
         )}
       >
         <Trophy className="h-7 w-7 shrink-0 opacity-90" strokeWidth={1.5} aria-hidden="true" />
@@ -44,7 +50,8 @@ function Tile({ tile }: { tile: SocialProofTile }) {
       <article
         className={cn(
           base,
-          "flex min-h-[7rem] flex-col justify-center bg-forest px-5 py-4 text-ivory sm:px-6",
+          "flex flex-col justify-center bg-forest px-5 py-4 text-ivory sm:px-6",
+          className,
         )}
       >
         <p className="font-display text-4xl leading-none sm:text-5xl">{tile.value}</p>
@@ -62,42 +69,86 @@ function Tile({ tile }: { tile: SocialProofTile }) {
 
   return (
     <blockquote
-      className={cn(
-        base,
-        "flex min-h-[10rem] flex-col justify-between p-5 sm:min-h-[11rem] sm:p-6",
-        toneClass,
-      )}
+      className={cn(base, "flex flex-col justify-between p-5 sm:p-6", toneClass, className)}
     >
-      <BrandStar
-        className={cn(
-          "h-3 w-3 shrink-0",
-          tile.tone === "forest" ? "text-accent" : "text-accent",
-        )}
-        aria-hidden="true"
-      />
+      <BrandStar className="h-3 w-3 shrink-0 text-accent" aria-hidden="true" />
       <p className="mt-4 font-display text-lg leading-snug sm:text-xl">&ldquo;{tile.quote}&rdquo;</p>
       <footer className="eyebrow mt-5 text-xs opacity-75">{tile.source}</footer>
     </blockquote>
   );
 }
 
-export function SocialProof() {
+function tileWidth(tile: SocialProofTile) {
+  if (tile.kind === "award") return "w-[18rem] sm:w-[22rem]";
+  if (tile.kind === "stat") return "w-[12rem] sm:w-[14rem]";
+  if (tile.kind === "quote") return "w-[16rem] sm:w-[20rem]";
+  return "w-[14rem] sm:w-[18rem]";
+}
+
+function AwardsMarquee({ tiles }: { tiles: SocialProofTile[] }) {
+  const loop = [...tiles, ...tiles];
+
   return (
-    <section className="relative overflow-hidden bg-secondary py-10 sm:py-16 lg:py-20">
+    <div
+      className="mt-8 overflow-hidden sm:mt-12"
+      aria-label="Awards, reviews and moments, scrolling"
+    >
+      <div className="marquee-track marquee-rtl flex w-max items-stretch gap-3 pr-3 sm:gap-4 sm:pr-4">
+        {loop.map((tile, i) => (
+          <div
+            key={`${tile.kind}-${i}`}
+            className={cn("h-56 shrink-0 sm:h-64 lg:h-72", tileWidth(tile))}
+          >
+            <Tile tile={tile} className="h-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function SocialProof({ hotel }: { hotel?: Hotel }) {
+  const features = hotel
+    ? [
+        { label: `${hotel.rating}★`, note: "Guest rating for this house" },
+        { label: hotel.fromRate, note: "From / night incl. taxes" },
+        ...hotel.offers.slice(0, 2).map((o) => ({ label: "Included", note: o })),
+        { label: "Direct book", note: "Reserve this suite on-site" },
+        { label: hotel.place, note: hotel.region },
+      ]
+    : socialProofFeatures;
+
+  const subtitle = hotel
+    ? `Moments and guest trust from ${hotel.name}, ${hotel.place}.`
+    : "Awards, reviews and house moments from both Elysium properties.";
+
+  return (
+    <section id="trusted" className="relative overflow-hidden bg-secondary py-10 sm:py-16 lg:py-20">
       <div className="relative mx-auto max-w-[1600px] px-4 sm:px-10">
-        <Reveal className="max-w-xl">
+        <Reveal className="max-w-2xl">
           <p className="eyebrow text-muted-foreground">Trusted by guests</p>
           <h2 className="display-title mt-2 sm:mt-5">Awards, reviews & moments</h2>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/70 sm:text-base">
+            {subtitle}
+          </p>
         </Reveal>
 
-        <div className="mt-8 grid auto-rows-[minmax(7rem,auto)] grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:grid-cols-4 lg:auto-rows-[minmax(120px,1fr)]">
-          {socialProofTiles.map((tile, i) => (
-            <Reveal key={`${tile.kind}-${i}`} delay={i * 0.04} className={cn("h-full", tile.layout)}>
-              <Tile tile={tile} />
-            </Reveal>
-          ))}
-        </div>
+        <Reveal delay={0.06}>
+          <ul className="mt-8 flex gap-3 overflow-x-auto pb-1 sm:mt-10 sm:flex-wrap sm:overflow-visible">
+            {features.map((feature) => (
+              <li
+                key={`${feature.label}-${feature.note}`}
+                className="min-w-[10.5rem] shrink-0 border border-border bg-background px-4 py-3 sm:min-w-0"
+              >
+                <p className="eyebrow text-muted-foreground">{feature.label}</p>
+                <p className="mt-1.5 text-sm leading-snug text-foreground/80">{feature.note}</p>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
+
+      <AwardsMarquee tiles={socialProofTiles} />
     </section>
   );
 }
