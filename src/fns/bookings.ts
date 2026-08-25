@@ -10,6 +10,7 @@ const createBookingInput = z.object({
   checkIn: z.string().date(),
   checkOut: z.string().date(),
   guests: z.number().int().min(1).max(6),
+  rooms: z.number().int().min(1).max(10).optional(),
 });
 
 function nightsBetween(checkIn: string, checkOut: string) {

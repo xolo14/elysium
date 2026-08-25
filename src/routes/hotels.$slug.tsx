@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
@@ -58,7 +58,7 @@ function HotelPage() {
     { label: "Amenities", href: "#amenities" },
     { label: "Why Elysium", href: "#why" },
     { label: "Trusted", href: "#trusted" },
-    { label: "Contact", href: "#contact" },
+    { label: "Contact", href: "#front-desk" },
   ];
 
   return (
@@ -105,13 +105,15 @@ function HotelIntro({
         />
       </div>
 
-      {/* Large 360 preview on lower-left of scrolling hero images */}
+      {/* Large 360 preview — inside hero frame so it stays clear of the gallery bar */}
       {tours?.length ? (
-        <View360HeroControl
-          imageSrc={tours[0].thumbnail}
-          onClick={() => setTourOpen(true)}
-          className="absolute top-[calc(78svh-19rem)] left-4 sm:top-[calc(78svh-22rem)] sm:left-8 lg:left-12"
-        />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-40 h-[78svh] min-h-[560px]">
+          <View360HeroControl
+            imageSrc={tours[0].thumbnail}
+            onClick={() => setTourOpen(true)}
+            className="pointer-events-auto absolute bottom-28 left-4 sm:bottom-32 sm:left-8 lg:left-12"
+          />
+        </div>
       ) : null}
 
       {/*
@@ -295,6 +297,7 @@ function BookingPanel({
           checkIn,
           checkOut,
           guests,
+          rooms,
         });
       setBookingId(result.id);
       setSent(true);
@@ -305,9 +308,31 @@ function BookingPanel({
     }
   };
 
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-0 sm:items-center sm:p-6">
-      <div className="max-h-[92svh] w-full max-w-5xl overflow-y-auto bg-background p-4 sm:p-8">
+    <div
+      className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-0 sm:items-center sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Book ${suite.name}`}
+      onClick={onClose}
+    >
+      <div
+        className="max-h-[92svh] w-full max-w-5xl overflow-y-auto bg-background p-4 sm:p-8"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-start justify-between gap-6">
           <div>
             <p className="eyebrow text-muted-foreground">
@@ -530,7 +555,7 @@ function WhyBlock({ hotel }: { hotel: Hotel }) {
 
 function ContactBlock({ hotel }: { hotel: Hotel }) {
   return (
-    <section id="contact" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
+    <section id="front-desk" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
       <Reveal>
         <p className="eyebrow text-muted-foreground">Contact</p>
         <h2 className="mt-5 font-display text-4xl sm:text-5xl">Reach the front desk</h2>

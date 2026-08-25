@@ -67,6 +67,7 @@ export function Booking() {
           checkIn,
           checkOut,
           guests,
+          rooms,
         });
       setBookingId(result.id);
       setSent(true);

@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
 import { BrandStar } from "@/lib/brand";
 import { Reveal } from "@/components/Reveal";
@@ -21,9 +20,14 @@ export function Instagram() {
               @elysiumstudiosuites
             </h2>
           </div>
-          <Link to="/book" className="link-luxe eyebrow flex items-center gap-2">
+          <a
+            href="https://www.instagram.com/elysiumstudiosuites/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-luxe eyebrow flex items-center gap-2"
+          >
             <BrandStar className="h-2.5 w-2.5 text-accent" /> Follow the houses
-          </Link>
+          </a>
         </Reveal>
       </div>
 

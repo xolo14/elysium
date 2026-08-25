@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 function Tile({ tile, className }: { tile: SocialProofTile; className?: string }) {
   const base =
-    "relative h-full overflow-hidden rounded-2xl transition-transform duration-700 ease-luxe hover:scale-[1.015]";
+    "relative h-full overflow-hidden transition-transform duration-700 ease-luxe hover:scale-[1.015]";
 
   if (tile.kind === "image") {
     return (
@@ -71,7 +71,13 @@ function Tile({ tile, className }: { tile: SocialProofTile; className?: string }
     <blockquote
       className={cn(base, "flex flex-col justify-between p-5 sm:p-6", toneClass, className)}
     >
-      <BrandStar className="h-3 w-3 shrink-0 text-accent" aria-hidden="true" />
+      <BrandStar
+        className={cn(
+          "h-3 w-3 shrink-0",
+          tile.tone === "accent" ? "text-forest" : "text-accent",
+        )}
+        aria-hidden="true"
+      />
       <p className="mt-4 font-display text-lg leading-snug sm:text-xl">&ldquo;{tile.quote}&rdquo;</p>
       <footer className="eyebrow mt-5 text-xs opacity-75">{tile.source}</footer>
     </blockquote>

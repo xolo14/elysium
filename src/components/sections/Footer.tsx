@@ -1,14 +1,10 @@
-import { useState } from "react";
 import { useHotel } from "@/context/hotel";
 import { navItems } from "@/data/hotels";
 import { BrandLockup, BrandStar } from "@/lib/brand";
 import { Reveal } from "@/components/Reveal";
 
-
 export function Footer() {
   const { hotel, hotels } = useHotel();
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
 
   return (
     <footer
@@ -47,32 +43,15 @@ export function Footer() {
 
         <Reveal delay={0.1} className="mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-12">
           <div className="min-w-0 lg:col-span-3">
-            <p className="eyebrow text-ivory/60">Newsletter</p>
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                setSent(true);
-              }}
-              className="mt-6 flex flex-col gap-3 border-b border-ivory/30 pb-3 sm:flex-row sm:items-center sm:gap-4"
+            <p className="eyebrow text-ivory/60">Write to us</p>
+            <a
+              href="mailto:elysium.hyd@gmail.com?subject=Elysium%20enquiry"
+              className="mt-6 inline-flex border border-ivory/30 px-5 py-3 transition-colors hover:bg-ivory hover:text-forest"
             >
-              <label htmlFor="newsletter" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="newsletter"
-                type="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="your@email.com"
-                className="w-full bg-transparent text-sm placeholder:text-ivory/40 focus:outline-none"
-              />
-              <button type="submit" className="eyebrow min-h-11 shrink-0 self-end sm:self-auto">
-                {sent ? "Thank you" : "Subscribe"}
-              </button>
-            </form>
+              <span className="eyebrow">elysium.hyd@gmail.com</span>
+            </a>
             <p className="mt-4 text-xs leading-relaxed text-ivory/50">
-              Occasional letters about openings, residencies and quiet seasons.
+              Reservations, corporate stays, partnerships and press — one inbox for both houses.
             </p>
           </div>
 
@@ -121,13 +100,21 @@ export function Footer() {
           <div className="min-w-0 lg:col-span-2">
             <p className="eyebrow text-ivory/60">Social</p>
             <ul className="mt-6 space-y-3">
-              {["Instagram", "Journal", "LinkedIn", "Pinterest"].map((social) => (
-                <li key={social}>
-                  <a href="#contact" className="link-luxe text-sm">
-                    {social}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a
+                  href="https://www.instagram.com/elysiumstudiosuites/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-luxe text-sm"
+                >
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href="mailto:elysium.hyd@gmail.com" className="link-luxe text-sm">
+                  Email
+                </a>
+              </li>
             </ul>
           </div>
         </Reveal>

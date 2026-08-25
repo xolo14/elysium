@@ -188,8 +188,7 @@ function ViewerStage({ view }: { view: Suite360View }) {
         <Rotate3D className="mx-auto h-8 w-8 text-ivory/70" strokeWidth={1.25} />
         <p className="mt-4 font-display text-2xl text-ivory">{view.name}</p>
         <p className="mt-2 text-sm text-ivory/70">
-          360° panorama coming soon. Add a <code className="text-ivory/90">panorama</code> image or{" "}
-          <code className="text-ivory/90">embedUrl</code> in hotel data.
+          This 360° tour is being prepared. Please check back shortly, or call the front desk to arrange a walkthrough.
         </p>
       </div>
     </div>
@@ -279,10 +278,11 @@ export function Suite360Experience({
                 Back
               </button>
             ) : (
-              <p id="suite-360-title" className="eyebrow text-ivory/60">
-                Explore the suite
-              </p>
+              <p className="eyebrow text-ivory/60">Explore the suite</p>
             )}
+            <h2 id="suite-360-title" className="sr-only">
+              {step === "view" && active ? `${active.name} 360° experience` : "Explore the suite in 360°"}
+            </h2>
           </div>
           <button
             ref={closeRef}
@@ -358,7 +358,11 @@ export function Suite360Experience({
                 {active.name} · 360° experience
               </p>
               <p className="text-xs text-ivory/55">
-                {active.panorama ? "Drag to look around" : "Drag inside the tour to look around"}
+                {active.panorama
+                  ? "Drag to look around"
+                  : active.embedUrl
+                    ? "Use the controls inside the tour to look around"
+                    : "Tour coming soon"}
               </p>
             </div>
           </div>

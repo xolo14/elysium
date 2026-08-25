@@ -9,6 +9,7 @@ export type BookingSubmitInput = {
   checkIn: string;
   checkOut: string;
   guests: number;
+  rooms?: number;
 };
 
 export type BookingSubmitResult = {

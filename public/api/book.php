@@ -78,6 +78,7 @@ $lines = [
   'Check-in: ' . $data['checkIn'],
   'Check-out: ' . $data['checkOut'],
   'Guests: ' . $data['guests'],
+  'Rooms: ' . ($data['rooms'] ?? 1),
 ];
 if ($dbError) {
   $lines[] = 'DB note: ' . $dbError;
