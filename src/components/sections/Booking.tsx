@@ -98,7 +98,7 @@ export function Booking() {
             <h1 className="mt-5 max-w-3xl font-display text-[clamp(2.75rem,6.5vw,5rem)] leading-[0.92] tracking-[-0.02em]">
               Book your stay
             </h1>
-            <p className="mt-5 max-w-md text-base text-ivory/70">
+            <p className="mt-5 max-w-md text-sm text-ivory/70">
               Direct rates include taxes, breakfast and Wi‑Fi. Free cancellation up to 24 hours
               before arrival.
             </p>
@@ -171,7 +171,7 @@ export function Booking() {
             >
               <p className="eyebrow text-muted-foreground">Confirmed request</p>
               <h2 className="mt-4 font-display text-3xl sm:text-4xl">Thank you, {form.name}</h2>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-foreground/75">
+              <p className="mt-5 max-w-xl text-sm leading-relaxed text-foreground/75">
                 We have your request for {rooms} room{rooms === 1 ? "" : "s"} ({suite.name}) at{" "}
                 {hotel.name} — {nights} night{nights === 1 ? "" : "s"}, {formatNice(checkIn)} to{" "}
                 {formatNice(checkOut)}, {guests} guest{guests === 1 ? "" : "s"}. Our desk will call{" "}
@@ -294,7 +294,7 @@ export function Booking() {
                                     {s.size} · {s.capacity} · {s.view}
                                   </span>
                                 </span>
-                                <span className="shrink-0 self-start font-display text-base sm:self-center sm:text-lg">
+                                <span className="shrink-0 self-start font-display text-sm sm:self-center sm:text-lg">
                                   {s.rate}
                                 </span>
                               </button>

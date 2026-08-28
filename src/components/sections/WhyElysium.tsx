@@ -104,20 +104,27 @@ function StackCard({
   );
 }
 
-export function WhyElysium() {
+export function WhyElysium({ embedded = false }: { embedded?: boolean }) {
   const { hotel } = useHotel();
 
   return (
-    <section id="why" className="relative bg-forest pt-14 pb-6 text-ivory sm:pt-16 lg:pt-24 lg:pb-10">
+    <section
+      {...(embedded ? {} : { id: "why" })}
+      className={
+        embedded
+          ? "relative bg-forest pt-8 pb-6 text-ivory sm:pt-10 lg:pt-12 lg:pb-8"
+          : "relative bg-forest pt-12 pb-6 text-ivory sm:pt-14 lg:pt-16 lg:pb-8"
+      }
+    >
       <BrandLineCorner className="pointer-events-none absolute top-12 right-8 hidden h-32 w-16 rotate-180 text-ivory/25 lg:right-16 lg:block" />
       <div className="mx-auto max-w-[1600px] px-5 sm:px-10">
         <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
           <div className="min-w-0">
             <div className="lg:sticky lg:top-24 lg:pb-8">
-              <p className="max-w-sm text-base leading-relaxed text-ivory/70">
+              <p className="max-w-sm text-sm leading-relaxed text-ivory/70">
                 {hotel.name} is built around the details that make serviced living feel like home.
               </p>
-              <div aria-label="Four reasons to choose Elysium" className="mt-8 select-none lg:mt-16">
+              <div aria-label="Four reasons to choose Elysium" className="mt-6 select-none lg:mt-10">
                 <p className="font-display text-[clamp(4.25rem,20vw,20rem)] font-bold leading-[0.72] tracking-[-0.06em] text-ivory lg:text-[clamp(8rem,16vw,20rem)]">
                   4B
                 </p>
@@ -138,16 +145,19 @@ export function WhyElysium() {
 
             {/* Sticky stack — no overflow / no extra vh padding (that caused the Balcony gap) */}
             <div className="relative min-w-0">
-              {fourBs.map((item, index) => (
-                <StackCard
-                  key={item.title}
-                  item={item}
-                  index={index}
-                  isLast={index === fourBs.length - 1}
-                  image={hotel.gallery[index]?.image}
-                  hotelName={hotel.name}
-                />
-              ))}
+              {fourBs.map((item, index) => {
+                const image = hotel.gallery[index]?.image;
+                return (
+                  <StackCard
+                    key={item.title}
+                    item={item}
+                    index={index}
+                    isLast={index === fourBs.length - 1}
+                    {...(image ? { image } : {})}
+                    hotelName={hotel.name}
+                  />
+                );
+              })}
             </div>
           </div>
         </div>

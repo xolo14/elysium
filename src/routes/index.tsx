@@ -1,19 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { HotelProvider, useHotel } from "@/context/hotel";
-import { BrandLineCorner } from "@/lib/brand";
 
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
+import { ValueStay } from "@/components/sections/ValueStay";
 import { HotelSelector } from "@/components/sections/HotelSelector";
-import { SocialProof } from "@/components/sections/SocialProof";
-import { Suites } from "@/components/sections/Suites";
+import { WhatMakesUs } from "@/components/sections/WhatMakesUs";
+import { FourBHighlight } from "@/components/sections/FourBHighlight";
 import { Amenities } from "@/components/sections/Amenities";
-import { Experiences } from "@/components/sections/Experiences";
-import { Gallery } from "@/components/sections/Gallery";
-import { WhyElysium } from "@/components/sections/WhyElysium";
-import { Testimonials } from "@/components/sections/Testimonials";
-import { Instagram } from "@/components/sections/Instagram";
+import { SocialProof } from "@/components/sections/SocialProof";
+import { MediaLogos } from "@/components/sections/MediaLogos";
 import { Partnerships } from "@/components/sections/Partnerships";
 import { Footer } from "@/components/sections/Footer";
 
@@ -56,7 +53,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-/** Cross-fade veil played while the visitor changes house. */
 function SwitchVeil() {
   const { switching } = useHotel();
   return (
@@ -74,38 +70,21 @@ function SwitchVeil() {
   );
 }
 
-function HouseContent() {
-  const { hotelId } = useHotel();
-  return (
-    <motion.div
-      key={hotelId}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <Amenities />
-      <Experiences />
-      <Gallery />
-      <Testimonials />
-      <Instagram />
-      <Partnerships />
-    </motion.div>
-  );
-}
-
 function Index() {
   return (
     <HotelProvider>
       <SwitchVeil />
       <Nav />
-       <main className="relative">
-         <BrandLineCorner className="pointer-events-none absolute top-[calc(100svh+5rem)] left-5 z-10 hidden h-36 w-20 text-forest/45 lg:block" />
-         <Hero />
-         <HotelSelector />
-         <SocialProof />
-         <WhyElysium />
-        <Suites />
-        <HouseContent />
+      <main className="relative">
+        <Hero />
+        <HotelSelector />
+        <WhatMakesUs />
+        <FourBHighlight />
+        <ValueStay />
+        <Amenities />
+        <SocialProof />
+        <MediaLogos />
+        <Partnerships />
       </main>
       <Footer />
     </HotelProvider>

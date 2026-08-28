@@ -14,6 +14,7 @@ const sharedBase = process.env.HOSTINGER_BASE || "/";
 /** Public marketing routes to prerender as full HTML (avoids empty-shell hydration #418). */
 const staticPages = [
   "/",
+  "/about",
   "/book",
   "/hotels/madhapur",
   "/hotels/hitec-city",

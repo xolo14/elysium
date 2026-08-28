@@ -52,7 +52,7 @@ export function Story() {
             <RevealLines
               lines={hotel.about.lines}
               className="mt-12 max-w-2xl space-y-5"
-              lineClassName="text-base leading-relaxed text-foreground/75 lg:text-lg"
+              lineClassName="text-sm leading-relaxed text-foreground/75 lg:text-lg"
             />
 
             {/* Trust numbers — counting into place */}
@@ -86,7 +86,7 @@ export function Story() {
                   <BrandStar className="mt-1.5 h-2.5 w-2.5 shrink-0 text-accent" />
                   <div>
                     <p className="font-display text-xl">{p.title}</p>
-                    <p className="mt-2 text-base leading-relaxed text-foreground/70">{p.copy}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground/70">{p.copy}</p>
                   </div>
                 </motion.li>
               ))}
@@ -95,16 +95,16 @@ export function Story() {
             <Reveal delay={0.1} className="mt-14 border-t border-border pt-8">
               <address className="not-italic">
                 <p className="eyebrow text-muted-foreground">Registered address</p>
-                <div className="mt-4 space-y-1 text-base text-foreground/75">
+                <div className="mt-4 space-y-1 text-sm text-foreground/75">
                   {hotel.contact.address.map((l) => (
                     <p key={l}>{l}</p>
                   ))}
                 </div>
                 <div className="mt-5 flex flex-wrap gap-6">
-                  <a href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`} className="link-luxe text-base">
+                  <a href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`} className="link-luxe text-sm">
                     {hotel.contact.phone}
                   </a>
-                  <a href={`mailto:${hotel.contact.email}`} className="link-luxe text-base">
+                  <a href={`mailto:${hotel.contact.email}`} className="link-luxe text-sm">
                     {hotel.contact.email}
                   </a>
                 </div>

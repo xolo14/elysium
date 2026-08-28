@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { X } from "lucide-react";
-import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
+import { hotelFaqs } from "@/data/faqs";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import {
@@ -14,13 +14,14 @@ import { Suite360Experience, View360HeroControl } from "@/components/Suite360Exp
 import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
 import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
-import { formatNice, nightsBetween } from "@/lib/booking-dates";
+import { formatNice, nightsBetween, toInputDate } from "@/lib/booking-dates";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { SocialProof } from "@/components/sections/SocialProof";
+import { AmenitiesGrid } from "@/components/sections/Amenities";
+import { FourBHighlight } from "@/components/sections/FourBHighlight";
 import { Reveal } from "@/components/Reveal";
 import { BrandStar } from "@/lib/brand";
-import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/hotels/$slug")({
   loader: ({ params }) => {
@@ -54,11 +55,12 @@ export const Route = createFileRoute("/hotels/$slug")({
 function HotelPage() {
   const { hotel } = Route.useLoaderData();
   const pageTabs = [
+    { label: "Photos", href: "#photos" },
     { label: "Rooms", href: "#rooms" },
     { label: "Amenities", href: "#amenities" },
-    { label: "Why Elysium", href: "#why" },
-    { label: "Trusted", href: "#trusted" },
-    { label: "Contact", href: "#front-desk" },
+    { label: "Reviews", href: "#reviews" },
+    { label: "Location", href: "#location" },
+    { label: "FAQs", href: "#faqs" },
   ];
 
   return (
@@ -68,8 +70,11 @@ function HotelPage() {
         <HotelIntro hotel={hotel} tabs={pageTabs} />
         <Rooms hotel={hotel} />
         <Amenities hotel={hotel} />
-        <WhyBlock hotel={hotel} />
-        <ContactBlock hotel={hotel} />
+        <FourBHighlight />
+        <Reviews hotel={hotel} />
+        <LocationBlock hotel={hotel} />
+        <FaqBlock />
+        <DiscoverOther currentId={hotel.id} />
         <SocialProof hotel={hotel} />
         <Footer />
       </main>
@@ -89,9 +94,22 @@ function HotelIntro({
   const [tourOpen, setTourOpen] = useState(false);
   const tours = hotel.virtualTours;
 
+  const today = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return toInputDate(d);
+  }, []);
+  const [checkIn, setCheckIn] = useState(today);
+  const [checkOut, setCheckOut] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return toInputDate(d);
+  });
+  const [guests, setGuests] = useState(2);
+
   return (
-    <section className="relative">
-      <div className="relative z-20 h-[78svh] min-h-[560px] w-full overflow-hidden bg-forest">
+    <section id="photos" className="relative">
+      <div className="relative z-20 h-[70svh] min-h-[480px] w-full overflow-hidden bg-forest sm:h-[78svh] sm:min-h-[560px]">
         <HotelImageCarousel
           key={hotel.id}
           images={carouselImages}
@@ -103,24 +121,20 @@ function HotelIntro({
           progress={progress}
           className="h-full w-full"
         />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest/70 via-transparent to-forest/20" />
       </div>
 
-      {/* Large 360 preview — inside hero frame so it stays clear of the gallery bar */}
-      {tours?.length ? (
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-40 h-[78svh] min-h-[560px]">
+      {tours && tours.length > 0 ? (
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-40 h-[70svh] min-h-[480px] sm:h-[78svh] sm:min-h-[560px]">
           <View360HeroControl
-            imageSrc={tours[0].thumbnail}
+            imageSrc={tours[0]!.thumbnail}
             onClick={() => setTourOpen(true)}
-            className="pointer-events-auto absolute bottom-28 left-4 sm:bottom-32 sm:left-8 lg:left-12"
+            className="pointer-events-auto absolute bottom-36 left-4 sm:bottom-40 sm:left-8 lg:left-12"
           />
         </div>
       ) : null}
 
-      {/*
-        Match reference: glass gallery bar floats on the photo, then a short gap,
-        then the solid green summary card — two separate pieces, no collision.
-      */}
-      <div className="relative z-30 mx-auto -mt-20 max-w-[1400px] px-4 sm:-mt-28 sm:px-10">
+      <div className="relative z-30 mx-auto -mt-24 max-w-[1400px] px-4 sm:-mt-28 sm:px-10">
         <HotelGalleryBar
           caption={currentSlide?.caption}
           hotelSlug={hotel.slug}
@@ -130,48 +144,96 @@ function HotelIntro({
           className="mb-3 border border-ivory/15 bg-forest/55 backdrop-blur-md sm:mb-4"
         />
 
-        <div className="border border-ivory/10 bg-forest px-5 py-8 text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.35)] sm:px-12 sm:py-12">
-          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-            <div className="lg:col-span-7">
-              <p className="eyebrow text-ivory/60">{hotel.badge}</p>
-              <h1 className="mt-3 font-display text-[1.85rem] leading-tight sm:mt-4 sm:text-5xl">
-                {hotel.name}, {hotel.place}
-              </h1>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-ivory/75 sm:mt-6">
-                {hotel.summary}
+        {/* Bloom-style booking strip */}
+        <div className="border border-forest/10 bg-forest text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.25)]">
+          <div className="grid gap-0 lg:grid-cols-[1.4fr_1fr_1fr_0.7fr_auto]">
+            <div className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
+              <p className="eyebrow text-ivory/60">Property</p>
+              <p className="mt-1 font-display text-xl leading-tight sm:text-2xl">
+                {hotel.name}
               </p>
-              <div className="mt-6 flex flex-wrap items-baseline gap-4 sm:mt-8 sm:gap-6">
-                <p className="font-display text-2xl sm:text-3xl">
-                  {hotel.fromRate}
-                  <span className="ml-2 text-xs tracking-widest text-ivory/60 uppercase">
-                    / night incl. taxes
-                  </span>
-                </p>
-                <p className="eyebrow flex items-center gap-2 text-ivory/70">
-                  <BrandStar className="h-2 w-2" /> {hotel.rating} guest rating
-                </p>
-              </div>
+              <p className="mt-1 flex items-center gap-2 text-sm text-ivory/70">
+                <BrandStar className="h-2 w-2" />
+                {hotel.rating}/5 · {hotel.place}
+              </p>
             </div>
-            <ul className="space-y-3 border-ivory/20 lg:col-span-5 lg:border-l lg:pl-10">
-              {hotel.offers.map((o) => (
-                <li key={o} className="flex items-start gap-3 text-sm text-ivory/80">
-                  <BrandStar className="mt-1.5 h-2 w-2 shrink-0" />
-                  {o}
-                </li>
-              ))}
-              <li className="pt-4">
-                <a
-                  href="#rooms"
-                  className="eyebrow inline-flex items-center gap-3 border border-ivory/40 px-6 py-3 transition-colors hover:bg-ivory hover:text-forest"
-                >
-                  View rooms & book
-                </a>
-              </li>
-            </ul>
+            <label className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
+              <span className="eyebrow text-ivory/60">Check-in</span>
+              <input
+                type="date"
+                min={today}
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                className="mt-1 w-full bg-transparent text-sm text-ivory outline-none [color-scheme:dark]"
+              />
+            </label>
+            <label className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
+              <span className="eyebrow text-ivory/60">Check-out</span>
+              <input
+                type="date"
+                min={checkIn || today}
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                className="mt-1 w-full bg-transparent text-sm text-ivory outline-none [color-scheme:dark]"
+              />
+            </label>
+            <label className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
+              <span className="eyebrow text-ivory/60">Guests</span>
+              <select
+                value={guests}
+                onChange={(e) => setGuests(Number(e.target.value))}
+                className="mt-1 w-full bg-transparent text-sm text-ivory outline-none [color-scheme:dark]"
+              >
+                {[1, 2, 3, 4].map((n) => (
+                  <option key={n} value={n} className="bg-forest text-ivory">
+                    {n} guest{n === 1 ? "" : "s"}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="flex items-stretch p-2">
+              <a
+                href="#rooms"
+                className="flex min-h-12 w-full items-center justify-center bg-ivory px-8 text-forest transition-opacity hover:opacity-90"
+              >
+                <span className="eyebrow">Search</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <nav className="flex flex-wrap gap-x-8 gap-y-3 border-b border-border py-5">
+        <div className="mt-8 bg-background px-5 py-8 sm:px-10 sm:py-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0 max-w-2xl">
+              <h1 className="font-display text-[1.85rem] leading-tight sm:text-5xl">
+                {hotel.name}
+              </h1>
+              <p className="mt-2 flex items-center gap-2 text-sm text-foreground/70">
+                <BrandStar className="h-2.5 w-2.5 text-forest" />
+                {hotel.rating}/5 · {hotel.place}, Hyderabad
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
+                {hotel.summary}
+              </p>
+            </div>
+            <div className="shrink-0 lg:text-right">
+              <p className="font-display text-3xl sm:text-4xl">{hotel.fromRate}</p>
+              <p className="mt-1 text-xs tracking-[0.14em] text-muted-foreground uppercase">
+                / night onwards · Incl. taxes
+              </p>
+              <ul className="mt-5 flex flex-col gap-2 lg:items-end">
+                {hotel.offers.slice(0, 3).map((o) => (
+                  <li key={o} className="flex items-center gap-2 text-sm text-foreground/70">
+                    <BrandStar className="h-2 w-2 text-forest" />
+                    {o}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex flex-wrap gap-x-7 gap-y-3 border-b border-border py-5">
           <Link to="/" className="eyebrow font-semibold text-muted-foreground hover:text-foreground">
             All hotels
           </Link>
@@ -184,11 +246,7 @@ function HotelIntro({
       </div>
 
       {tours?.length ? (
-        <Suite360Experience
-          views={tours}
-          open={tourOpen}
-          onClose={() => setTourOpen(false)}
-        />
+        <Suite360Experience views={tours} open={tourOpen} onClose={() => setTourOpen(false)} />
       ) : null}
     </section>
   );
@@ -201,44 +259,44 @@ function Rooms({ hotel }: { hotel: Hotel }) {
     <section id="rooms" data-anchor="booking" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
       <span id="booking" className="block" />
       <Reveal>
-        <p className="eyebrow text-muted-foreground">Rooms</p>
-        <h2 className="mt-5 font-display text-4xl sm:text-5xl">Choose your suite</h2>
+        <h2 className="font-display text-4xl text-forest sm:text-5xl">Rooms</h2>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Book directly to request Early Check-in / Late Check-out, as per availability.
+        </p>
       </Reveal>
 
-      <div className="mt-14 space-y-6">
+      <div className="mt-10 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
         {hotel.suites.map((s, idx) => (
-          <Reveal key={s.name} delay={idx * 0.06}>
-            <article className="grid gap-8 border border-border p-5 sm:grid-cols-12 sm:p-6">
-              <div className="sm:col-span-5">
-                <img
-                  src={s.image}
-                  alt={`${s.name} at ${hotel.name}, ${hotel.place}`}
-                  loading="lazy"
-                  className="aspect-[4/3] w-full object-cover"
-                />
-              </div>
-              <div className="sm:col-span-7 sm:flex sm:flex-col">
-                <h3 className="font-display text-2xl">{s.name}</h3>
-                <p className="mt-3 text-sm font-medium text-muted-foreground">
-                  {s.size} · {s.capacity} · {s.view}
+          <Reveal key={s.name} delay={idx * 0.05}>
+            <article className="flex h-full flex-col border border-border bg-background">
+              <img
+                src={s.image}
+                alt={`${s.name} at ${hotel.name}, ${hotel.place}`}
+                loading="lazy"
+                className="aspect-[4/3] w-full object-cover"
+              />
+              <div className="flex flex-1 flex-col p-5">
+                <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                  {s.capacity}
                 </p>
-                <p className="mt-4 text-base leading-relaxed text-foreground/80">{s.detail}</p>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {s.amenities.map((a) => (
-                    <li key={a} className="border border-border px-3 py-1.5 text-xs">
-                      {a}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-auto flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5 sm:mt-8">
-                  <p className="font-display text-xl">{s.rate}</p>
-                  <button
-                    onClick={() => setSelected(s)}
-                    className="eyebrow border border-foreground/25 px-6 py-3 transition-colors hover:bg-forest hover:text-ivory"
-                  >
-                    Book this room
-                  </button>
-                </div>
+                <h3 className="mt-1 font-display text-xl">{s.name}</h3>
+                <p className="mt-2 text-xs font-medium text-muted-foreground">
+                  {s.size} · {s.view} view
+                </p>
+                <p className="mt-auto pt-5 font-display text-lg">
+                  {s.rate.replace(" / night", "")}
+                  <span className="ml-1 text-xs font-sans font-normal tracking-wide text-muted-foreground uppercase">
+                    onwards
+                  </span>
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">Incl. taxes</p>
+                <button
+                  type="button"
+                  onClick={() => setSelected(s)}
+                  className="eyebrow mt-4 w-full bg-forest py-3 text-ivory transition-colors hover:bg-forest/90"
+                >
+                  Book
+                </button>
               </div>
             </article>
           </Reveal>
@@ -289,16 +347,16 @@ function BookingPanel({
 
     try {
       const result = await submitBooking({
-          hotelId: hotel.id,
-          suiteName: suite.name,
-          guestName: form.name.trim(),
-          guestEmail: form.email.trim(),
-          guestPhone: form.phone.trim(),
-          checkIn,
-          checkOut,
-          guests,
-          rooms,
-        });
+        hotelId: hotel.id,
+        suiteName: suite.name,
+        guestName: form.name.trim(),
+        guestEmail: form.email.trim(),
+        guestPhone: form.phone.trim(),
+        checkIn,
+        checkOut,
+        guests,
+        rooms,
+      });
       setBookingId(result.id);
       setSent(true);
     } catch (err) {
@@ -355,7 +413,7 @@ function BookingPanel({
         {sent ? (
           <div className="mt-10 border border-border p-6">
             <p className="font-display text-2xl">Request received</p>
-            <p className="mt-4 text-base leading-relaxed text-foreground/80">
+            <p className="mt-4 text-sm leading-relaxed text-foreground/80">
               Thank you, {form.name || "guest"}. Our front desk will confirm {rooms} room
               {rooms === 1 ? "" : "s"} ({suite.name}) for {nights} night{nights === 1 ? "" : "s"},{" "}
               {guests} guest{guests === 1 ? "" : "s"}, at {hotel.name}, {hotel.place} on{" "}
@@ -451,138 +509,165 @@ function BookingPanel({
 
 function Amenities({ hotel }: { hotel: Hotel }) {
   return (
-    <section id="amenities" className="border-y border-border bg-background py-16">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-10">
+    <section id="amenities" className="border-y border-border bg-background py-10 sm:py-12">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-10">
         <Reveal>
-          <p className="eyebrow text-muted-foreground">Amenities</p>
-          <h2 className="mt-5 font-display text-4xl sm:text-5xl">Included in every stay</h2>
+          <p className="eyebrow tracking-[0.28em] text-forest/55">Amenities</p>
         </Reveal>
-        <ul className="mt-14 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-          {hotel.amenities.map((a, i) => (
-            <Reveal key={a.label} delay={i * 0.04}>
-              <li className="border-t border-border pt-5">
-                <p className="font-display text-xl">{a.label}</p>
-                <p className="mt-3 text-sm font-medium text-muted-foreground">{a.note}</p>
-              </li>
-            </Reveal>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-function WhyBlock({ hotel }: { hotel: Hotel }) {
-  const [open, setOpen] = useState(0);
-  return (
-    <section id="why" className="bg-forest py-16 text-ivory">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-10">
-        <Reveal>
-          <p className="eyebrow text-ivory/60">Why Elysium</p>
-          <h2 className="mt-5 font-display text-4xl sm:text-5xl">
-            What we promise at {hotel.place}
-          </h2>
-        </Reveal>
-
-        <ul className="mt-14">
-          {hotel.why.map((p, i) => (
-            <motion.li
-              key={p.index}
-              initial={{ opacity: 0, y: 36 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10% 0px" }}
-              transition={{ duration: 0.95, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-              onMouseEnter={() => setOpen(i)}
-              className="border-t border-ivory/15 last:border-b"
-            >
-              <button
-                type="button"
-                onFocus={() => setOpen(i)}
-                onClick={() => setOpen(i)}
-                aria-expanded={open === i}
-                className="flex w-full items-baseline gap-6 py-7 text-left sm:gap-10"
-              >
-                <span
-                  className={cn(
-                    "eyebrow shrink-0 transition-colors duration-700",
-                    open === i ? "text-accent" : "text-ivory/40",
-                  )}
-                >
-                  {p.index}
-                </span>
-                <span className="flex-1">
-                  <span className="flex flex-wrap items-baseline justify-between gap-4">
-                    <span className="font-display text-2xl sm:text-3xl">{p.title}</span>
-                    <span className="text-right">
-                      <span className="block font-display text-xl">{p.metric}</span>
-                      <span className="eyebrow block text-ivory/50">{p.metricLabel}</span>
-                    </span>
-                  </span>
-                  <motion.span
-                    initial={false}
-                    animate={{ height: open === i ? "auto" : 0, opacity: open === i ? 1 : 0 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                    className="block overflow-hidden"
-                  >
-                    <span className="mt-4 block max-w-2xl text-base leading-relaxed text-ivory/75">
-                      {p.copy}
-                    </span>
-                  </motion.span>
-                </span>
-                <BrandStar
-                  className={cn(
-                    "mt-2 h-2.5 w-2.5 shrink-0 transition-transform duration-700",
-                    open === i ? "rotate-90 text-accent" : "text-ivory/40",
-                  )}
-                />
-              </button>
-            </motion.li>
-          ))}
-        </ul>
-
-        <div className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4">
-          {hotel.trust.map((t) => (
-            <div key={t.label} className="border-t border-ivory/20 pt-5">
-              <p className="font-display text-3xl">{t.value}</p>
-              <p className="mt-3 text-sm text-ivory/70">{t.label}</p>
-            </div>
-          ))}
+        <div className="mt-7 sm:mt-8">
+          <AmenitiesGrid hotel={hotel} />
         </div>
       </div>
     </section>
   );
 }
 
-function ContactBlock({ hotel }: { hotel: Hotel }) {
+function Reviews({ hotel }: { hotel: Hotel }) {
   return (
-    <section id="front-desk" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
+    <section id="reviews" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
       <Reveal>
-        <p className="eyebrow text-muted-foreground">Contact</p>
-        <h2 className="mt-5 font-display text-4xl sm:text-5xl">Reach the front desk</h2>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 className="font-display text-4xl text-forest sm:text-5xl">Reviews</h2>
+          <p className="eyebrow flex items-center gap-2 text-muted-foreground">
+            <BrandStar className="h-2.5 w-2.5 text-forest" />
+            {hotel.rating}/5 guest rating
+          </p>
+        </div>
       </Reveal>
-      <div className="mt-12 grid gap-10 lg:grid-cols-12">
-        <address className="not-italic lg:col-span-6">
-          <div className="space-y-1 text-base leading-relaxed text-foreground/80">
-            {hotel.contact.address.map((l) => (
-              <p key={l}>{l}</p>
-            ))}
-          </div>
-          <div className="mt-6 flex flex-wrap gap-8">
-            <a href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`} className="link-luxe text-base">
-              {hotel.contact.phone}
-            </a>
-            <a href={`mailto:${hotel.contact.email}`} className="link-luxe text-base">
-              {hotel.contact.email}
-            </a>
-          </div>
-        </address>
-        <div className="lg:col-span-6">
-          <a
-            href="#rooms"
-            className="eyebrow inline-flex items-center gap-3 border border-foreground/25 px-7 py-4 transition-colors hover:bg-forest hover:text-ivory"
-          >
-            <BrandStar className="h-2.5 w-2.5" /> Book a suite
-          </a>
+
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {hotel.testimonials.map((t, i) => (
+          <Reveal key={t.name} delay={i * 0.06}>
+            <blockquote className="flex h-full flex-col border border-border p-6">
+              <div className="flex gap-1 text-forest">
+                {Array.from({ length: 5 }).map((_, s) => (
+                  <BrandStar key={s} className="h-2.5 w-2.5" />
+                ))}
+              </div>
+              <p className="mt-5 flex-1 text-sm leading-relaxed text-foreground/80">“{t.quote}”</p>
+              <footer className="mt-6 border-t border-border pt-4">
+                <cite className="not-italic font-display text-lg">{t.name}</cite>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t.origin} · {t.stay}
+                </p>
+              </footer>
+            </blockquote>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function LocationBlock({ hotel }: { hotel: Hotel }) {
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(hotel.mapQuery)}&output=embed`;
+
+  return (
+    <section id="location" className="border-y border-border bg-background py-16">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-10">
+        <Reveal>
+          <h2 className="font-display text-4xl text-forest sm:text-5xl">Location</h2>
+        </Reveal>
+        <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-14">
+          <Reveal>
+            <address className="not-italic">
+              <div className="space-y-1 text-sm leading-relaxed text-foreground/80">
+                {hotel.contact.address.map((l) => (
+                  <p key={l}>{l}</p>
+                ))}
+              </div>
+              <div className="mt-8 space-y-3 text-sm text-foreground/70">
+                <p>Near Hitec City & Madhapur business corridor</p>
+                <p>Airport transfer available on request</p>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-6">
+                <a
+                  href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
+                  className="link-luxe text-sm"
+                >
+                  {hotel.contact.phone}
+                </a>
+                <a href={`mailto:${hotel.contact.email}`} className="link-luxe text-sm">
+                  {hotel.contact.email}
+                </a>
+              </div>
+              <p className="mt-8 text-sm text-muted-foreground">
+                Check-in from 2:00 pm · Check-out by 11:00 am
+              </p>
+            </address>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <div className="aspect-[4/3] overflow-hidden border border-border bg-secondary">
+              <iframe
+                title={`Map — ${hotel.name}`}
+                src={mapSrc}
+                className="h-full w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FaqBlock() {
+  return (
+    <section id="faqs" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
+      <Reveal>
+        <h2 className="font-display text-4xl text-forest sm:text-5xl">Frequently asked questions</h2>
+      </Reveal>
+      <dl className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
+        {hotelFaqs.map((item, i) => (
+          <Reveal key={item.q} delay={i * 0.04}>
+            <div>
+              <dt className="font-display text-xl leading-snug">{item.q}</dt>
+              <dd className="mt-3 text-sm leading-relaxed text-foreground/75">{item.a}</dd>
+            </div>
+          </Reveal>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
+function DiscoverOther({ currentId }: { currentId: Hotel["id"] }) {
+  const others = hotels.filter((h) => h.id !== currentId);
+
+  return (
+    <section className="border-t border-border bg-secondary py-16">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-10">
+        <Reveal>
+          <h2 className="font-display text-4xl text-forest sm:text-5xl">Living across Hyderabad</h2>
+        </Reveal>
+        <div className="mt-10 grid gap-8 sm:grid-cols-2">
+          {others.map((h, i) => (
+            <Reveal key={h.id} delay={i * 0.06}>
+              <article className="group overflow-hidden border border-border bg-background">
+                <Link to="/hotels/$slug" params={{ slug: h.slug }} className="block">
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <img
+                      src={h.hero}
+                      alt={`${h.name}, ${h.place}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-1000 ease-luxe group-hover:scale-[1.04]"
+                    />
+                  </div>
+                  <div className="flex items-end justify-between gap-4 p-5">
+                    <div>
+                      <p className="eyebrow text-muted-foreground">{h.place}</p>
+                      <h3 className="mt-1 font-display text-2xl">{h.name}</h3>
+                    </div>
+                    <span className="eyebrow border border-foreground/20 px-4 py-2 transition-colors group-hover:bg-forest group-hover:text-ivory">
+                      View
+                    </span>
+                  </div>
+                </Link>
+              </article>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

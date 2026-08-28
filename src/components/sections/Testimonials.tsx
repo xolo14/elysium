@@ -29,7 +29,7 @@ export function Testimonials() {
                 >
                   &ldquo;
                 </span>
-                <blockquote className="mt-4 text-base leading-relaxed text-foreground/75">
+                <blockquote className="mt-4 text-sm leading-relaxed text-foreground/75">
                   {t.quote}
                 </blockquote>
                 <figcaption className="mt-8 border-t border-border pt-5">

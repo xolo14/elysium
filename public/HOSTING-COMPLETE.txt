@@ -12,7 +12,7 @@ UPLOAD TO: the subdomain document root for elysiumhotel.grootdigitals.com
 A) UPLOAD
 -----------------------------------------------------------
 1. Delete ALL old files in the subdomain root
-   (or at least replace api/, desk/, assets/, index.html, .htaccess)
+   (especially delete the whole assets/ folder — old CSS keeps loading otherwise)
 2. Extract dist.zip so these sit at the ROOT:
      index.html
      .htaccess
@@ -21,8 +21,12 @@ A) UPLOAD
      desk/
      images/
 3. Do NOT nest inside another extra folder
-4. Open https://elysiumhotel.grootdigitals.com/
-   Hard refresh (Cmd+Shift+R) if needed
+4. In Hostinger → clear LiteSpeed / website cache if enabled
+5. Open https://elysiumhotel.grootdigitals.com/
+   Hard refresh (Cmd+Shift+R) or test in a private window
+6. Verify deploy: View Page Source → confirm
+     /assets/styles-*.css
+   matches a file that exists in your assets/ folder on the server
 
 -----------------------------------------------------------
 B) ADD SECRETS (required — not included in the package)

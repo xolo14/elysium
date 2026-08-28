@@ -1,143 +1,114 @@
+import { Link } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
 import { navItems } from "@/data/hotels";
 import { BrandLockup, BrandStar } from "@/lib/brand";
 import { Reveal } from "@/components/Reveal";
 
+/** Footer in logo forest — matches brand mark #06332C. */
 export function Footer() {
   const { hotel, hotels } = useHotel();
 
   return (
-    <footer
-      id="contact"
-      className="relative flex flex-col justify-between overflow-hidden bg-forest text-ivory"
-    >
-      <img
-        src={hotel.hero}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        className="ken-burns absolute inset-0 h-full w-full object-cover opacity-25"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-forest/85 via-forest/80 to-forest" />
-
-      {/* Brand four-point star lattice — exact motif from the brand sheet */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
-        style={{
-          backgroundImage: `url("/images/footer-lattice.png")`,
-          backgroundSize: "760px 360px",
-          backgroundRepeat: "repeat",
-        }}
-      />
-
-
-      <div className="relative mx-auto w-full max-w-[1600px] px-6 pt-20 sm:px-10">
+    <footer id="contact" className="relative overflow-hidden bg-forest text-ivory">
+      <div className="relative mx-auto w-full max-w-[1200px] px-5 pt-12 sm:px-10 sm:pt-14">
         <Reveal>
-          <p className="eyebrow text-ivory/60">Stay in touch</p>
-          <h2 className="mt-5 flex w-full max-w-none flex-wrap items-center gap-x-[0.3em] gap-y-2 font-display text-[clamp(1.65rem,7vw,7rem)] font-bold leading-none sm:flex-nowrap sm:whitespace-nowrap">
-            <BrandStar className="h-[0.52em] w-[0.52em] shrink-0 text-accent" />
-            <span>Elysium Hotels</span>
-          </h2>
-        </Reveal>
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
+            <div className="lg:col-span-4">
+              <BrandLockup className="text-ivory" />
+              <p className="mt-5 max-w-xs text-sm leading-relaxed text-ivory/70">
+                Serviced suites in Madhapur &amp; Hitec City — quiet rooms, breakfast, and a front desk
+                that answers.
+              </p>
+            </div>
 
-        <Reveal delay={0.1} className="mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-12">
-          <div className="min-w-0 lg:col-span-3">
-            <p className="eyebrow text-ivory/60">Write to us</p>
-            <a
-              href="mailto:elysium.hyd@gmail.com?subject=Elysium%20enquiry"
-              className="mt-6 inline-flex border border-ivory/30 px-5 py-3 transition-colors hover:bg-ivory hover:text-forest"
-            >
-              <span className="eyebrow">elysium.hyd@gmail.com</span>
-            </a>
-            <p className="mt-4 text-xs leading-relaxed text-ivory/50">
-              Reservations, corporate stays, partnerships and press — one inbox for both houses.
-            </p>
-          </div>
+            <nav className="lg:col-span-2">
+              <p className="eyebrow text-ivory/50">Explore</p>
+              <ul className="mt-4 space-y-2.5">
+                {navItems.map((item) => (
+                  <li key={item.href}>
+                    {item.href.startsWith("/") && !item.href.startsWith("/#") ? (
+                      <Link
+                        to={item.href}
+                        className="text-sm font-medium text-ivory/80 hover:text-ivory"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a href={item.href} className="text-sm font-medium text-ivory/80 hover:text-ivory">
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
+                <li>
+                  <Link to="/book" className="text-sm font-medium text-ivory/80 hover:text-ivory">
+                    Book
+                  </Link>
+                </li>
+              </ul>
+            </nav>
 
-          <nav className="min-w-0 lg:col-span-2">
-            <p className="eyebrow text-ivory/60">Navigate</p>
-            <ul className="mt-6 space-y-3">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <a href={item.href} className="link-luxe font-display text-xl">
-                    {item.label}
+            <div className="grid gap-8 sm:grid-cols-2 lg:col-span-4">
+              {hotels.map((h) => (
+                <address key={h.id} className="not-italic">
+                  <p className="eyebrow text-ivory/50">{h.place}</p>
+                  <a
+                    href={`/hotels/${h.slug}`}
+                    className="mt-2 block font-display text-lg leading-snug hover:opacity-80"
+                  >
+                    {h.name}
+                  </a>
+                  <a
+                    href={`tel:${h.contact.phone.replace(/\s/g, "")}`}
+                    className="mt-3 block text-sm text-ivory/70 hover:text-ivory"
+                  >
+                    {h.contact.phone}
+                  </a>
+                </address>
+              ))}
+            </div>
+
+            <div className="lg:col-span-2">
+              <p className="eyebrow text-ivory/50">Connect</p>
+              <ul className="mt-4 space-y-2.5">
+                <li>
+                  <a
+                    href="https://www.instagram.com/elysiumstudiosuites/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-ivory/80 hover:text-ivory"
+                  >
+                    Instagram
                   </a>
                 </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="grid min-w-0 gap-10 sm:grid-cols-2 md:col-span-2 lg:col-span-5 lg:gap-x-10">
-            {hotels.map((h) => (
-              <address key={h.id} className="not-italic min-w-0">
-                <p className="eyebrow text-ivory/60">{h.place}</p>
-                <a
-                  href={`/hotels/${h.slug}`}
-                  className="link-luxe mt-3 block font-display text-lg leading-snug font-semibold lg:text-xl"
-                >
-                  {h.name}
-                </a>
-                <p className="mt-2 text-sm text-ivory/55">{h.region}</p>
-                <div className="mt-6 space-y-1 text-sm leading-relaxed text-ivory/75">
-                  {h.contact.address.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                </div>
-                <a
-                  href={`tel:${h.contact.phone.replace(/\s/g, "")}`}
-                  className="link-luxe mt-6 block text-sm"
-                >
-                  {h.contact.phone}
-                </a>
-                <a href={`mailto:${h.contact.email}`} className="link-luxe mt-2 block text-sm break-all">
-                  {h.contact.email}
-                </a>
-              </address>
-            ))}
-          </div>
-
-          <div className="min-w-0 lg:col-span-2">
-            <p className="eyebrow text-ivory/60">Social</p>
-            <ul className="mt-6 space-y-3">
-              <li>
-                <a
-                  href="https://www.instagram.com/elysiumstudiosuites/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link-luxe text-sm"
-                >
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href="mailto:elysium.hyd@gmail.com" className="link-luxe text-sm">
-                  Email
-                </a>
-              </li>
-            </ul>
+                <li>
+                  <a
+                    href="mailto:elysium.hyd@gmail.com"
+                    className="text-sm font-medium text-ivory/80 hover:text-ivory"
+                  >
+                    Email
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </Reveal>
       </div>
 
-      <div className="relative mx-auto mt-14 w-full max-w-[1600px] px-6 pb-8 sm:px-10">
-        <div className="hairline" />
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-6">
-          <BrandLockup />
-          <div className="flex flex-col items-end gap-2 text-right">
-            <p className="eyebrow flex items-center gap-3 text-ivory/50">
-              <BrandStar className="h-2 w-2 animate-slow-spin" />
-              {hotel.established} — All rights reserved
-            </p>
-            <a
-              href="https://grootdigitals.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-luxe text-xs text-ivory/45"
-            >
-              Created by grootdigitals.com
-            </a>
-          </div>
+      <div className="relative mx-auto mt-8 w-full max-w-[1200px] border-t border-ivory/15 px-5 py-5 sm:px-10">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p className="eyebrow flex items-center gap-2 text-ivory/50">
+            <BrandStar className="h-2 w-2" />
+            {hotel.established} — All rights reserved
+          </p>
+          <a
+            href="https://grootdigitals.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-ivory/45 hover:text-ivory/70"
+          >
+            Created by grootdigitals.com
+          </a>
         </div>
       </div>
     </footer>
