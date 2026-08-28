@@ -54,7 +54,7 @@ export const socialProofTiles: SocialProofTile[] = [
     kind: "award",
     title: "Voted a top place to stay for business in Hyderabad",
     subtitle: "Guest satisfaction across both houses",
-    source: "Elysium Guest Choice",
+    source: "House standard",
     layout: "col-span-2 row-span-2",
   },
   {
@@ -98,7 +98,7 @@ export const socialProofTiles: SocialProofTile[] = [
   {
     kind: "quote",
     quote: "Clean rooms, well designed — perfect for a six-week project stay.",
-    source: "Google Reviews",
+    source: "Direct guests",
     tone: "forest",
     layout: "col-span-2 sm:col-span-1 row-span-2",
   },
@@ -150,7 +150,7 @@ export const socialProofTiles: SocialProofTile[] = [
   {
     kind: "quote",
     quote: "Breakfast, kitchen, quiet rooms — everything we needed for a month near Hitec.",
-    source: "Booking.com guests",
+    source: "Long-stay guests",
     tone: "forest",
     layout: "col-span-1 row-span-2",
   },

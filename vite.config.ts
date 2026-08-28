@@ -16,6 +16,8 @@ const staticPages = [
   "/",
   "/about",
   "/book",
+  "/privacy",
+  "/terms",
   "/hotels/madhapur",
   "/hotels/hitec-city",
   "/hotels/madhapur/gallery",

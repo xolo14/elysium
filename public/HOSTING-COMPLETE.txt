@@ -20,6 +20,8 @@ A) UPLOAD
      api/
      desk/
      images/
+     sitemap.xml
+     robots.txt
 3. Do NOT nest inside another extra folder
 4. In Hostinger → clear LiteSpeed / website cache if enabled
 5. Open https://elysiumhotel.grootdigitals.com/
@@ -58,5 +60,7 @@ D) LINKS
 Site:  https://elysiumhotel.grootdigitals.com/
 Desk:  https://elysiumhotel.grootdigitals.com/desk/
 Book:  https://elysiumhotel.grootdigitals.com/book
+About: https://elysiumhotel.grootdigitals.com/about
+Privacy / Terms linked in footer
 
 Support: grootdigitals.com

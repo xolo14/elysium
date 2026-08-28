@@ -3,6 +3,7 @@ import { useHotel } from "@/context/hotel";
 import { navItems } from "@/data/hotels";
 import { BrandLockup, BrandStar } from "@/lib/brand";
 import { Reveal } from "@/components/Reveal";
+import { SITE_EMAIL } from "@/lib/site";
 
 /** Footer in logo forest — matches brand mark #06332C. */
 export function Footer() {
@@ -45,6 +46,11 @@ export function Footer() {
                     Book
                   </Link>
                 </li>
+                <li>
+                  <a href="/#faqs" className="text-sm font-medium text-ivory/80 hover:text-ivory">
+                    FAQs
+                  </a>
+                </li>
               </ul>
             </nav>
 
@@ -52,12 +58,13 @@ export function Footer() {
               {hotels.map((h) => (
                 <address key={h.id} className="not-italic">
                   <p className="eyebrow text-ivory/50">{h.place}</p>
-                  <a
-                    href={`/hotels/${h.slug}`}
+                  <Link
+                    to="/hotels/$slug"
+                    params={{ slug: h.slug }}
                     className="mt-2 block font-display text-lg leading-snug hover:opacity-80"
                   >
                     {h.name}
-                  </a>
+                  </Link>
                   <a
                     href={`tel:${h.contact.phone.replace(/\s/g, "")}`}
                     className="mt-3 block text-sm text-ivory/70 hover:text-ivory"
@@ -83,7 +90,7 @@ export function Footer() {
                 </li>
                 <li>
                   <a
-                    href="mailto:elysium.hyd@gmail.com"
+                    href={`mailto:${SITE_EMAIL}`}
                     className="text-sm font-medium text-ivory/80 hover:text-ivory"
                   >
                     Email
@@ -99,16 +106,24 @@ export function Footer() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="eyebrow flex items-center gap-2 text-ivory/50">
             <BrandStar className="h-2 w-2" />
-            {hotel.established} — All rights reserved
+            © {hotel.established} Elysium Hotels — All rights reserved
           </p>
-          <a
-            href="https://grootdigitals.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-ivory/45 hover:text-ivory/70"
-          >
-            Created by grootdigitals.com
-          </a>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ivory/45">
+            <Link to="/privacy" className="hover:text-ivory/70">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-ivory/70">
+              Terms
+            </Link>
+            <a
+              href="https://grootdigitals.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-ivory/70"
+            >
+              Created by grootdigitals.com
+            </a>
+          </div>
         </div>
       </div>
     </footer>

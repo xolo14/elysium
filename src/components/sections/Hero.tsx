@@ -26,7 +26,10 @@ export function Hero() {
     const chosen = hotels.find((h) => h.id === pick) ?? hotels[0];
     if (!chosen) return;
     selectHotel(chosen.id);
-    void navigate({ to: "/hotels/$slug", params: { slug: chosen.slug } });
+    void navigate({
+      to: "/book",
+      search: { hotel: chosen.slug },
+    });
   };
 
   return (

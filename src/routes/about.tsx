@@ -3,22 +3,15 @@ import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { AboutPage } from "@/components/sections/AboutPage";
 import { Footer } from "@/components/sections/Footer";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { pageMeta } from "@/lib/site";
 
 const title = "About Elysium Hotels — Madhapur & Hitec City";
 const description =
   "About Elysium: two serviced-suite houses in Hyderabad, one 4B standard, and hospitality kept personal for guests, corporates and partners.";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => pageMeta({ title, description, path: "/about" }),
   component: AboutRoute,
 });
 
@@ -30,6 +23,7 @@ function AboutRoute() {
         <AboutPage />
       </main>
       <Footer />
+      <WhatsAppFloat />
     </HotelProvider>
   );
 }

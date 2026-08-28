@@ -11,8 +11,11 @@ import { FourBHighlight } from "@/components/sections/FourBHighlight";
 import { Amenities } from "@/components/sections/Amenities";
 import { SocialProof } from "@/components/sections/SocialProof";
 import { MediaLogos } from "@/components/sections/MediaLogos";
+import { FaqBand } from "@/components/sections/FaqBand";
 import { Partnerships } from "@/components/sections/Partnerships";
 import { Footer } from "@/components/sections/Footer";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { pageMeta, SITE_EMAIL } from "@/lib/site";
 
 const title = "Elysium Hotels Hyderabad — Studio & Premier Suites";
 const description =
@@ -20,14 +23,7 @@ const description =
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+    ...pageMeta({ title, description, path: "/" }),
     scripts: [
       {
         type: "application/ld+json",
@@ -36,8 +32,9 @@ export const Route = createFileRoute("/")({
           "@type": "Hotel",
           name: "Elysium Hotels",
           description,
-          telephone: "+91 96 7629 3369",
-          email: "elysium.hyd@gmail.com",
+          telephone: "+91 98887 65776",
+          email: SITE_EMAIL,
+          url: "https://elysiumhotel.grootdigitals.com/",
           address: {
             "@type": "PostalAddress",
             streetAddress: "Plot no. 744, Road No. 40, Ayyappa Society, Madhapur",
@@ -46,6 +43,11 @@ export const Route = createFileRoute("/")({
             postalCode: "500081",
             addressCountry: "IN",
           },
+          amenityFeature: [
+            { "@type": "LocationFeatureSpecification", name: "Free Wi-Fi" },
+            { "@type": "LocationFeatureSpecification", name: "Complimentary breakfast" },
+            { "@type": "LocationFeatureSpecification", name: "Kitchenette" },
+          ],
         }),
       },
     ],
@@ -84,9 +86,11 @@ function Index() {
         <Amenities />
         <SocialProof />
         <MediaLogos />
+        <FaqBand />
         <Partnerships />
       </main>
       <Footer />
+      <WhatsAppFloat />
     </HotelProvider>
   );
 }

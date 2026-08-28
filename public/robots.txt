@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://elysiumhotel.grootdigitals.com/sitemap.xml

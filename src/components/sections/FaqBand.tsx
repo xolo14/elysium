@@ -1,0 +1,57 @@
+import { useState } from "react";
+import { hotelFaqs } from "@/data/faqs";
+import { Reveal } from "@/components/Reveal";
+import { BrandStar } from "@/lib/brand";
+import { cn } from "@/lib/utils";
+
+/** Compact FAQ accordion for the homepage. */
+export function FaqBand() {
+  const [open, setOpen] = useState<number | null>(0);
+
+  return (
+    <section id="faqs" className="relative overflow-hidden bg-background py-14 sm:py-16 lg:py-20">
+      <div className="mx-auto max-w-[800px] px-5 sm:px-10">
+        <Reveal>
+          <p className="eyebrow text-muted-foreground">Before you book</p>
+          <h2 className="mt-3 font-display text-[clamp(2rem,4.5vw,3rem)] leading-[0.95] tracking-[-0.02em] text-forest">
+            Frequently asked questions
+          </h2>
+          <p className="mt-3 max-w-lg text-sm leading-relaxed text-foreground/65 sm:text-base">
+            Practical answers for both houses — Madhapur and Hitec City.
+          </p>
+        </Reveal>
+
+        <ul className="mt-10 divide-y divide-border border-y border-border">
+          {hotelFaqs.map((item, i) => {
+            const isOpen = open === i;
+            return (
+              <li key={item.q}>
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="flex w-full items-start justify-between gap-4 py-5 text-left"
+                >
+                  <span className="font-display text-base leading-snug text-forest sm:text-lg">
+                    {item.q}
+                  </span>
+                  <BrandStar
+                    className={cn(
+                      "mt-1.5 h-3 w-3 shrink-0 text-forest/50 transition-transform duration-500",
+                      isOpen && "rotate-45",
+                    )}
+                  />
+                </button>
+                {isOpen ? (
+                  <p className="pb-5 text-sm leading-relaxed text-foreground/70 sm:text-base">
+                    {item.a}
+                  </p>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}

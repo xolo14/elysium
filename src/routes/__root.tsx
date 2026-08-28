@@ -15,21 +15,28 @@ import { reportRuntimeError } from "../lib/error-reporting";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-forest px-5 text-ivory">
+      <p className="eyebrow text-ivory/50">Elysium Hotels</p>
+      <h1 className="mt-4 font-display text-[clamp(4rem,18vw,8rem)] leading-none tracking-[-0.04em]">
+        404
+      </h1>
+      <h2 className="mt-4 font-display text-2xl sm:text-3xl">This page has checked out</h2>
+      <p className="mt-3 max-w-sm text-center text-sm leading-relaxed text-ivory/70">
+        The link may be outdated, or the room never existed. Head home or book a stay at either house.
+      </p>
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <Link
+          to="/"
+          className="eyebrow inline-flex min-h-12 items-center bg-ivory px-6 text-forest transition-opacity hover:opacity-90"
+        >
+          Go home
+        </Link>
+        <Link
+          to="/book"
+          className="eyebrow inline-flex min-h-12 items-center border border-ivory/40 px-6 text-ivory transition-colors hover:bg-ivory/10"
+        >
+          Book a stay
+        </Link>
       </div>
     </div>
   );

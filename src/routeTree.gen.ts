@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminHistoryRouteImport } from './routes/admin.history'
@@ -32,6 +34,16 @@ const AboutRoute = AboutRouteImport.update({
 const BookRoute = BookRouteImport.update({
   id: '/book',
   path: '/book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WhyRoute = WhyRouteImport.update({
@@ -69,6 +81,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/book': typeof BookRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
@@ -80,6 +94,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/book': typeof BookRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
@@ -92,6 +108,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/book': typeof BookRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
@@ -105,6 +123,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/book'
+    | '/privacy'
+    | '/terms'
     | '/why'
     | '/admin/history'
     | '/admin/login'
@@ -116,6 +136,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/book'
+    | '/privacy'
+    | '/terms'
     | '/why'
     | '/admin/history'
     | '/admin/login'
@@ -127,6 +149,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/book'
+    | '/privacy'
+    | '/terms'
     | '/why'
     | '/admin/history'
     | '/admin/login'
@@ -139,6 +163,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   BookRoute: typeof BookRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   WhyRoute: typeof WhyRoute
   AdminHistoryRoute: typeof AdminHistoryRoute
   AdminLoginRoute: typeof AdminLoginRoute
@@ -168,6 +194,20 @@ declare module '@tanstack/react-router' {
       path: '/book'
       fullPath: '/book'
       preLoaderRoute: typeof BookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/why': {
@@ -219,6 +259,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   BookRoute: BookRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   WhyRoute: WhyRoute,
   AdminHistoryRoute: AdminHistoryRoute,
   AdminLoginRoute: AdminLoginRoute,

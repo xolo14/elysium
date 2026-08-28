@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { hotels, type Hotel, type Suite } from "@/data/hotels";
@@ -20,8 +20,10 @@ import { Footer } from "@/components/sections/Footer";
 import { SocialProof } from "@/components/sections/SocialProof";
 import { AmenitiesGrid } from "@/components/sections/Amenities";
 import { FourBHighlight } from "@/components/sections/FourBHighlight";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { Reveal } from "@/components/Reveal";
 import { BrandStar } from "@/lib/brand";
+import { pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/hotels/$slug")({
   loader: ({ params }) => {
@@ -36,18 +38,12 @@ export const Route = createFileRoute("/hotels/$slug")({
     const h = loaderData.hotel;
     const title = `${h.name}, ${h.place} — Rooms & Booking`;
     const description = `${h.summary} Rooms from ${h.fromRate} per night in ${h.region}. Book direct with Elysium Hotels.`;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "website" },
-        { property: "og:image", content: h.hero },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: h.hero },
-      ],
-    };
+    return pageMeta({
+      title,
+      description,
+      path: `/hotels/${h.slug}`,
+      image: h.hero,
+    });
   },
   component: HotelPage,
 });
@@ -77,6 +73,7 @@ function HotelPage() {
         <DiscoverOther currentId={hotel.id} />
         <SocialProof hotel={hotel} />
         <Footer />
+        <WhatsAppFloat />
       </main>
     </HotelProvider>
   );
@@ -89,6 +86,7 @@ function HotelIntro({
   hotel: Hotel;
   tabs: { label: string; href: string }[];
 }) {
+  const navigate = useNavigate();
   const carouselImages = useMemo(() => getHotelCarouselImages(hotel), [hotel]);
   const { slides, index, currentSlide, progress, goPrev, goNext } = useHotelCarousel(carouselImages);
   const [tourOpen, setTourOpen] = useState(false);
@@ -106,6 +104,18 @@ function HotelIntro({
     return toInputDate(d);
   });
   const [guests, setGuests] = useState(2);
+
+  const onSearchStay = () => {
+    void navigate({
+      to: "/book",
+      search: {
+        hotel: hotel.slug,
+        checkIn: checkIn || undefined,
+        checkOut: checkOut || undefined,
+        guests,
+      },
+    });
+  };
 
   return (
     <section id="photos" className="relative">
@@ -192,12 +202,13 @@ function HotelIntro({
               </select>
             </label>
             <div className="flex items-stretch p-2">
-              <a
-                href="#rooms"
+              <button
+                type="button"
+                onClick={onSearchStay}
                 className="flex min-h-12 w-full items-center justify-center bg-ivory px-8 text-forest transition-opacity hover:opacity-90"
               >
                 <span className="eyebrow">Search</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>

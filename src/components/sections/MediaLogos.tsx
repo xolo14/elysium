@@ -1,26 +1,28 @@
 import { Reveal } from "@/components/Reveal";
+import { BrandStar } from "@/lib/brand";
 
-const logos = [
-  "Traveler",
-  "GQ",
-  "Condé Nast",
-  "CNN Travel",
-  "Lonely Planet",
-  "Forbes",
+const promises = [
+  "Direct rates",
+  "Breakfast included",
+  "GST invoices",
+  "Long-stay ready",
+  "24-hour front desk",
+  "Two Hyderabad houses",
 ];
 
-/** Quiet press strip — Bloom media bar, Elysium tone. */
+/** Honest trust strip — no fake press brands. */
 export function MediaLogos() {
   return (
-    <section aria-label="As featured in" className="border-y border-border bg-background py-8 sm:py-10">
+    <section aria-label="Why book direct" className="border-y border-border bg-background py-8 sm:py-10">
       <div className="mx-auto max-w-[1200px] px-5 sm:px-10">
         <Reveal>
-          <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 sm:gap-x-14">
-            {logos.map((name) => (
+          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12">
+            {promises.map((name) => (
               <li
                 key={name}
-                className="font-display text-lg tracking-wide text-foreground/25 sm:text-xl"
+                className="flex items-center gap-2 font-display text-base tracking-wide text-foreground/40 sm:text-lg"
               >
+                <BrandStar className="h-2.5 w-2.5 text-forest/35" />
                 {name}
               </li>
             ))}

@@ -16,7 +16,17 @@ function parseRate(rate: string) {
   return Number(rate.replace(/[^\d]/g, "")) || 0;
 }
 
-export function Booking() {
+export function Booking({
+  initialHotelSlug,
+  initialCheckIn,
+  initialCheckOut,
+  initialGuests,
+}: {
+  initialHotelSlug?: string;
+  initialCheckIn?: string;
+  initialCheckOut?: string;
+  initialGuests?: number;
+} = {}) {
   const { hotel, hotels, hotelId, selectHotel } = useHotel();
 
   const today = useMemo(() => {
@@ -27,9 +37,9 @@ export function Booking() {
 
   const [step, setStep] = useState<"dates" | "details">("dates");
   const [suite, setSuite] = useState<Suite>(hotel.suites[0]!);
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState(2);
+  const [checkIn, setCheckIn] = useState(initialCheckIn ?? "");
+  const [checkOut, setCheckOut] = useState(initialCheckOut ?? "");
+  const [guests, setGuests] = useState(initialGuests && initialGuests >= 1 ? initialGuests : 2);
   const [rooms, setRooms] = useState(1);
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [sent, setSent] = useState(false);
@@ -38,10 +48,14 @@ export function Booking() {
   const [bookingId, setBookingId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!initialHotelSlug) return;
+    const match = hotels.find((h) => h.slug === initialHotelSlug || h.id === initialHotelSlug);
+    if (match && match.id !== hotelId) selectHotel(match.id);
+  }, [initialHotelSlug, hotels, hotelId, selectHotel]);
+
+  useEffect(() => {
     setSuite(hotel.suites[0]!);
     setStep("dates");
-    setCheckIn("");
-    setCheckOut("");
     setSent(false);
     setError(null);
     setBookingId(null);
@@ -372,6 +386,17 @@ export function Booking() {
                             {submitting ? "Saving request…" : "Request reservation"}
                           </span>
                         </button>
+                        <p className="mt-4 text-center text-xs leading-relaxed text-muted-foreground">
+                          By requesting a stay you agree to our{" "}
+                          <Link to="/terms" className="underline underline-offset-2 hover:text-foreground">
+                            Terms
+                          </Link>{" "}
+                          and{" "}
+                          <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground">
+                            Privacy Policy
+                          </Link>
+                          . The desk will confirm availability.
+                        </p>
 
                         <a
                           href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}

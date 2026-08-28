@@ -6,7 +6,9 @@ import { getHotelGalleryAlbums } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { Reveal } from "@/components/Reveal";
+import { pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/hotels/$slug_/gallery")({
   loader: ({ params }) => {
@@ -23,15 +25,12 @@ export const Route = createFileRoute("/hotels/$slug_/gallery")({
     }
     const title = `${loaderData.hotel.name} — Photo Gallery`;
     const description = `View all photos of ${loaderData.hotel.name} in ${loaderData.hotel.place}. Suites, dining, exterior and more.`;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "website" },
-      ],
-    };
+    return pageMeta({
+      title,
+      description,
+      path: `/hotels/${loaderData.hotel.slug}/gallery`,
+      image: loaderData.hotel.hero,
+    });
   },
   component: HotelGalleryPage,
 });
@@ -95,6 +94,7 @@ function HotelGalleryPage() {
       </div>
 
       <Footer />
+      <WhatsAppFloat />
       </main>
     </HotelProvider>
   );

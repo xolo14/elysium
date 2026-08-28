@@ -226,16 +226,17 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* Press */}
+      {/* Guest voice */}
       <section className="bg-secondary py-12 sm:py-14">
         <div className="mx-auto max-w-[1000px] px-5 sm:px-10">
           <Reveal>
             <blockquote className="grid gap-8 border border-border bg-background p-8 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-12 sm:p-10">
-              <p className="font-display text-2xl tracking-wide text-forest/40 sm:text-3xl">Traveler</p>
+              <p className="font-display text-2xl tracking-wide text-forest/40 sm:text-3xl">4.7★</p>
               <div>
                 <p className="font-display text-2xl leading-snug text-forest sm:text-3xl">
                   “A calm alternative for long stays near Hitec City.”
                 </p>
+                <p className="mt-3 text-sm text-muted-foreground">From guests across both houses</p>
                 <Link
                   to="/"
                   hash="trusted"
