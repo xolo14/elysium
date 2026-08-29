@@ -7,13 +7,13 @@ export function HotelSelector() {
   const { hotels, selectHotel } = useHotel();
 
   return (
-    <section id="properties" className="relative overflow-hidden bg-background py-12 sm:py-14 lg:py-16">
+    <section id="properties" className="relative overflow-hidden bg-background section-pad">
       <div className="page-wrap relative">
         <Reveal>
-          <h2 className="font-display text-[clamp(2.25rem,5vw,3.75rem)] leading-[0.95] tracking-[-0.02em] text-forest">
+          <h2 className="display-nav text-[clamp(2.25rem,5vw,3.75rem)] text-forest">
             Living across Hyderabad
           </h2>
-          <p className="mt-3 text-sm text-foreground/65 sm:text-base">
+          <p className="mt-3 prose-quiet sm:text-base">
             Madhapur &amp; Hitec City.
           </p>
           <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
@@ -65,7 +65,7 @@ export function HotelSelector() {
                     to="/book"
                     search={{ hotel: h.slug }}
                     onClick={() => selectHotel(h.id)}
-                    className="eyebrow shrink-0 rounded-[10px] bg-forest px-4 py-2.5 text-ivory transition-colors hover:bg-forest/90"
+                    className="btn-primary shrink-0 px-4 py-2.5 text-[13px]"
                   >
                     Book Now
                   </Link>

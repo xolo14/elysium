@@ -5,10 +5,10 @@ import { BrandStar } from "@/lib/brand";
 /** Bloom membership / value band — Elysium long-stay offer. */
 export function ValueStay() {
   return (
-    <section id="value" className="relative overflow-hidden bg-secondary py-14 sm:py-16 lg:py-20">
+    <section id="value" className="relative overflow-hidden bg-secondary section-pad">
       <div className="page-wrap grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <Reveal>
-          <h2 className="font-display text-[clamp(2.4rem,5.5vw,3.85rem)] leading-[0.95] tracking-[-0.02em] text-bronze">
+          <h2 className="display-nav text-[clamp(2.4rem,5.5vw,3.85rem)] text-bronze">
             The more you stay,
             <br />
             the less you pay.
@@ -27,7 +27,7 @@ export function ValueStay() {
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="eyebrow text-ivory/55">Elysium Value Stay</p>
-                <p className="mt-3 font-display text-3xl leading-tight sm:text-4xl">
+                <p className="mt-3 display-nav text-3xl text-ivory sm:text-4xl">
                   Stay longer.
                   <br />
                   Pay less.

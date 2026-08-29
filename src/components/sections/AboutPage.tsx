@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { hotels } from "@/data/hotels";
 import { Reveal } from "@/components/Reveal";
-import { BrandStar } from "@/lib/brand";
 
 const stats = [
   { value: "2", label: "Houses" },
@@ -28,19 +27,18 @@ export function AboutPage() {
       <section className="bg-ivory pt-28 pb-16 sm:pt-32 sm:pb-20">
         <div className="page-wrap text-center">
           <Reveal>
-            <h1 className="mx-auto max-w-3xl font-display text-[clamp(2.4rem,6vw,4.25rem)] leading-[0.95] tracking-[-0.02em] text-forest">
+            <h1 className="display-nav mx-auto max-w-3xl text-[clamp(2.4rem,6vw,4.25rem)] text-forest">
               Be one of a few,
               <br />
               not one of a thousand.
             </h1>
-            <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-foreground/70 sm:text-base">
+            <p className="mx-auto mt-6 max-w-md prose-quiet sm:text-base">
               Two houses in Hyderabad. One standard.
             </p>
             <a
               href="mailto:elysium.hyd@gmail.com?subject=About%20Elysium"
-              className="eyebrow mt-8 inline-flex items-center gap-2 rounded-[10px] bg-forest px-8 py-4 text-ivory transition-opacity hover:opacity-90"
+              className="btn-primary mt-8"
             >
-              <BrandStar className="h-3 w-3" />
               Get in touch
             </a>
           </Reveal>
@@ -58,7 +56,7 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-background py-14 sm:py-16 lg:py-20">
+      <section className="bg-background section-pad">
         <div className="page-wrap">
           <Reveal>
             <div className="relative aspect-[16/10] overflow-hidden rounded-[10px] bg-secondary sm:aspect-[21/10]">
@@ -97,10 +95,10 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-ivory py-14 sm:py-16 lg:py-20">
+      <section className="bg-ivory section-pad">
         <div className="page-wrap">
           <Reveal>
-            <h2 className="max-w-xl font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[0.95] tracking-[-0.02em] text-forest">
+            <h2 className="max-w-xl display-nav text-[clamp(2rem,4.5vw,3.25rem)] text-forest">
               A house that stays personal.
             </h2>
           </Reveal>
@@ -121,7 +119,7 @@ export function AboutPage() {
         <div className="mx-auto grid max-w-[1200px] lg:grid-cols-2">
           <Reveal className="flex flex-col justify-center bg-forest px-8 py-14 text-ivory sm:px-12 sm:py-16">
             <p className="eyebrow text-ivory/55">Recognition</p>
-            <h2 className="mt-4 font-display text-[clamp(2rem,4vw,3rem)] leading-[0.95]">
+            <h2 className="mt-4 display-nav text-[clamp(2rem,4vw,3rem)]">
               Built for guests who return.
             </h2>
             <p className="mt-5 max-w-sm text-sm text-ivory/75">

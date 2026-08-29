@@ -15,6 +15,7 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminHistoryRouteImport } from './routes/admin.history'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -51,6 +52,11 @@ const WhyRoute = WhyRouteImport.update({
   path: '/why',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/account': typeof AccountRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/account': typeof AccountRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/account': typeof AccountRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/why'
+    | '/account'
     | '/admin/history'
     | '/admin/login'
     | '/hotels/$slug'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/why'
+    | '/account'
     | '/admin/history'
     | '/admin/login'
     | '/hotels/$slug'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/why'
+    | '/account'
     | '/admin/history'
     | '/admin/login'
     | '/hotels/$slug'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   WhyRoute: typeof WhyRoute
+  AccountRoute: typeof AccountRoute
   AdminHistoryRoute: typeof AdminHistoryRoute
   AdminLoginRoute: typeof AdminLoginRoute
   HotelsSlugRoute: typeof HotelsSlugRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WhyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -262,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   WhyRoute: WhyRoute,
+  AccountRoute: AccountRoute,
   AdminHistoryRoute: AdminHistoryRoute,
   AdminLoginRoute: AdminLoginRoute,
   HotelsSlugRoute: HotelsSlugRoute,

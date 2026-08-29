@@ -530,6 +530,6 @@ export const hotels: Hotel[] = [
 ];
 
 export const navItems = [
-  { label: "Why Elysium", href: "/why" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Why Elysium?", href: "/why" },
+  { label: "Developers & Owners", href: "/#partners" },
 ];

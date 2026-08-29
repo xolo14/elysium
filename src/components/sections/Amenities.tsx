@@ -190,10 +190,10 @@ export function Amenities() {
   const { hotel } = useHotel();
 
   return (
-    <section id="amenities" className="relative overflow-hidden bg-background py-12 sm:py-14 lg:py-16">
+    <section id="amenities" className="relative overflow-hidden bg-background section-pad">
       <div className="page-wrap relative">
         <Reveal>
-          <h2 className="font-display text-[clamp(2rem,4vw,3rem)] leading-tight tracking-[-0.02em] text-forest">
+          <h2 className="display-nav text-[clamp(2rem,4vw,3rem)] text-forest">
             Amenities
           </h2>
           <p className="mt-2 text-sm text-foreground/65">Both houses. Same standard.</p>

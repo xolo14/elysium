@@ -9,11 +9,11 @@ export function FaqBand() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faqs" className="relative overflow-hidden bg-background py-14 sm:py-16 lg:py-20">
+    <section id="faqs" className="relative overflow-hidden bg-background section-pad">
       <div className="page-wrap max-w-[800px]">
         <Reveal>
           <p className="eyebrow text-muted-foreground">Before you book</p>
-          <h2 className="mt-3 font-display text-[clamp(2rem,4.5vw,3rem)] leading-[0.95] tracking-[-0.02em] text-forest">
+          <h2 className="mt-3 display-nav text-[clamp(2rem,4.5vw,3rem)] text-forest">
             Frequently asked questions
           </h2>
           <p className="mt-3 text-sm text-foreground/65">Madhapur and Hitec City.</p>

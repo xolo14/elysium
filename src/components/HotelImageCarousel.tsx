@@ -167,7 +167,7 @@ export function HotelImageCarousel({
         className={cn(
           "pointer-events-none absolute inset-0",
           isHero
-            ? "bg-[linear-gradient(to_top,rgba(8,20,17,0.45)_0%,rgba(8,20,17,0.08)_32%,rgba(8,20,17,0.04)_100%)]"
+            ? "bg-[linear-gradient(to_bottom,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.12)_24%,transparent_40%),linear-gradient(to_top,rgba(8,20,17,0.45)_0%,rgba(8,20,17,0.08)_32%,rgba(8,20,17,0.04)_100%)]"
             : "bg-[linear-gradient(to_top,rgba(8,20,17,0.65),rgba(8,20,17,0.08)_45%,rgba(8,20,17,0.25))]",
         )}
       />

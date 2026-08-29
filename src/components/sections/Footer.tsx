@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
 import { navItems } from "@/data/hotels";
-import { BrandLockup, BrandStar } from "@/lib/brand";
+import { BrandStar } from "@/lib/brand";
 import { Reveal } from "@/components/Reveal";
 import { SITE_EMAIL } from "@/lib/site";
 
@@ -15,8 +15,10 @@ export function Footer() {
         <Reveal>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-4">
-              <BrandLockup className="text-ivory" />
-              <p className="mt-5 max-w-xs text-sm leading-relaxed text-ivory/70">
+              <Link to="/" className="nav-mark text-ivory">
+                elysium
+              </Link>
+              <p className="mt-5 max-w-xs prose-quiet text-ivory/70">
                 Serviced suites in Madhapur &amp; Hitec City.
               </p>
             </div>
@@ -40,6 +42,11 @@ export function Footer() {
                     )}
                   </li>
                 ))}
+                <li>
+                  <a href="/#contact" className="text-sm font-medium text-ivory/80 hover:text-ivory">
+                    Contact
+                  </a>
+                </li>
                 <li>
                   <Link to="/book" className="text-sm font-medium text-ivory/80 hover:text-ivory">
                     Book

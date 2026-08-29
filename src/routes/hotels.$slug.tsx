@@ -201,7 +201,7 @@ function HotelIntro({
               <button
                 type="button"
                 onClick={onSearchStay}
-                className="flex min-h-12 w-full items-center justify-center rounded-[8px] bg-ivory px-8 text-forest transition-opacity hover:opacity-90"
+                className="btn-primary w-full min-h-12 bg-ivory px-8 !text-forest"
               >
                 <span className="eyebrow">Search</span>
               </button>
@@ -212,7 +212,7 @@ function HotelIntro({
         <div className="mt-8 rounded-[10px] bg-background px-5 py-8 sm:px-10 sm:py-10">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 max-w-2xl">
-              <h1 className="font-display text-[1.85rem] leading-tight sm:text-5xl">
+              <h1 className="display-nav text-[clamp(1.85rem,4vw,3rem)] text-forest">
                 {hotel.name}
               </h1>
               <p className="mt-2 flex items-center gap-2 text-sm text-foreground/70">

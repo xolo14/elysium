@@ -4,10 +4,11 @@ import { useMemo, useState } from "react";
 import {
   addDays,
   buildMonthCells,
-  formatShort,
+  formatStayDate,
   isAfterDay,
   isBeforeDay,
   monthLabel,
+  nightsBetween,
   sameDay,
   startOfDay,
   toInputDate,
@@ -23,7 +24,8 @@ type DateRangePickerProps = {
   onConfirm?: () => void;
   minDate?: Date;
   className?: string;
-  compact?: boolean;
+  /** Bloom-style yellow range + sun confirm bar */
+  bloom?: boolean;
 };
 
 export function DateRangePicker({
@@ -33,7 +35,7 @@ export function DateRangePicker({
   onConfirm,
   minDate,
   className,
-  compact = false,
+  bloom = false,
 }: DateRangePickerProps) {
   const today = useMemo(() => startOfDay(minDate ?? new Date()), [minDate]);
   const checkInDate = useMemo(
@@ -56,6 +58,7 @@ export function DateRangePicker({
   }, [viewMonth]);
 
   const canConfirm = Boolean(checkIn && checkOut && checkOut > checkIn);
+  const nights = canConfirm ? nightsBetween(checkIn, checkOut) : 0;
 
   const selectDate = (date: Date) => {
     if (isBeforeDay(date, today)) return;
@@ -111,35 +114,31 @@ export function DateRangePicker({
     <div className="min-w-0 flex-1">
       <p
         className={cn(
-          "text-center font-display leading-none text-forest",
-          compact ? "mb-2 text-sm" : "mb-3 h-7 text-lg leading-7 sm:mb-4 sm:h-8 sm:text-xl sm:leading-8",
+          "mb-3 text-center font-nav text-base leading-none font-extrabold sm:mb-4 sm:text-lg",
+          bloom ? "text-sun" : "font-display text-forest",
         )}
       >
         {monthLabel(year, month)}
       </p>
       <div
         className="grid grid-cols-7 text-center"
-        style={{
-          gridTemplateRows: compact ? "1.15rem repeat(6, 1.85rem)" : "1.75rem repeat(6, 2.75rem)",
-        }}
+        style={{ gridTemplateRows: "1.75rem repeat(6, 2.65rem)" }}
       >
         {WEEKDAYS.map((day, i) => (
           <span
             key={`${year}-${month}-wd-${i}`}
-            className={cn(
-              "flex items-center justify-center font-semibold tracking-[0.12em] text-muted-foreground uppercase",
-              compact ? "text-[0.58rem]" : "text-[0.65rem]",
-            )}
+            className="flex items-center justify-center text-[0.7rem] font-semibold text-neutral-400"
           >
             {day}
           </span>
         ))}
         {buildMonthCells(year, month).map(({ date, inMonth }, cellIndex) => {
           const disabled = !inMonth || isBeforeDay(date, today);
-          const selected =
-            (checkInDate && sameDay(date, checkInDate)) ||
-            (checkOutDate && sameDay(date, checkOutDate));
+          const isStart = Boolean(checkInDate && sameDay(date, checkInDate) && inMonth);
+          const isEnd = Boolean(checkOutDate && sameDay(date, checkOutDate) && inMonth);
+          const selected = isStart || isEnd;
           const ranged = inRange(date) && inMonth;
+          const mid = ranged && !selected;
 
           return (
             <button
@@ -148,16 +147,34 @@ export function DateRangePicker({
               disabled={disabled}
               onClick={() => selectDate(date)}
               className={cn(
-                "mx-auto flex items-center justify-center rounded-[6px] transition-colors",
-                compact ? "h-7 w-7 text-xs" : "h-10 w-10 text-sm sm:h-11 sm:w-11",
+                "relative mx-auto flex h-10 w-full items-center justify-center text-sm transition-colors sm:h-11",
                 !inMonth && "invisible pointer-events-none",
-                disabled && inMonth && "cursor-not-allowed text-muted-foreground/35",
-                !disabled && !selected && !ranged && "text-foreground/80 hover:bg-secondary",
-                ranged && !selected && "bg-forest/10 text-foreground",
-                selected && "bg-forest font-medium text-ivory",
+                disabled && inMonth && "cursor-not-allowed text-neutral-300",
+                !disabled && !selected && !mid && "text-neutral-700",
+                bloom && mid && "bg-sun text-ivory",
+                bloom && isStart && checkOutDate && "bg-gradient-to-r from-transparent from-50% to-sun to-50%",
+                bloom && isEnd && checkInDate && "bg-gradient-to-l from-transparent from-50% to-sun to-50%",
+                !bloom && mid && "bg-forest/10 text-foreground",
+                bloom && selected && "z-[1]",
               )}
             >
-              {date.getDate()}
+              {bloom && selected ? (
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-sun bg-white font-semibold text-neutral-800 sm:h-10 sm:w-10">
+                  {date.getDate()}
+                </span>
+              ) : bloom && mid ? (
+                <span className="font-semibold">{date.getDate()}</span>
+              ) : (
+                <span
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-full sm:h-10 sm:w-10",
+                    !bloom && selected && "bg-forest font-medium text-ivory",
+                    !disabled && !selected && "hover:bg-neutral-100",
+                  )}
+                >
+                  {date.getDate()}
+                </span>
+              )}
             </button>
           );
         })}
@@ -166,27 +183,21 @@ export function DateRangePicker({
   );
 
   return (
-    <div className={cn("w-full overflow-hidden bg-background", !compact && "border border-border", className)}>
-      {!compact ? (
-        <div className="border-b border-border bg-forest px-4 py-5 sm:px-8 sm:py-6">
-          <div className="mx-auto flex w-full max-w-4xl items-center gap-3 rounded-[10px] border border-ivory/20 bg-ivory/10 px-4 py-3.5 text-ivory sm:px-5">
-            <span className="text-sm font-medium sm:text-base">
-              {canConfirm
-                ? `${formatShort(checkIn)} → ${formatShort(checkOut)}`
-                : "Pick check-in & check-out dates"}
-            </span>
-          </div>
-        </div>
-      ) : null}
-
-      <div className={cn("relative bg-background", compact ? "px-1 py-1" : "px-3 py-6 sm:px-6 sm:py-8 lg:px-10")}>
+    <div
+      className={cn(
+        "flex w-full flex-col overflow-hidden bg-white",
+        bloom ? "rounded-[20px]" : "border border-border",
+        className,
+      )}
+    >
+      <div className="relative flex-1 px-3 py-6 sm:px-6 sm:py-8 lg:px-8">
         <button
           type="button"
           onClick={goPrev}
           aria-label="Previous month"
           className={cn(
-            "absolute z-10 inline-flex items-center justify-center rounded-[8px] border border-border bg-background text-forest transition-colors hover:bg-secondary",
-            compact ? "top-0 left-0 h-7 w-7" : "top-7 left-2 h-9 w-9 sm:left-4 lg:left-6",
+            "absolute top-6 left-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full sm:left-5",
+            bloom ? "bg-neutral-200 text-neutral-500" : "border border-border bg-background text-forest",
           )}
         >
           <ChevronLeft className="h-4 w-4" />
@@ -196,47 +207,64 @@ export function DateRangePicker({
           onClick={goNext}
           aria-label="Next month"
           className={cn(
-            "absolute z-10 inline-flex items-center justify-center rounded-[8px] border border-forest bg-forest text-ivory transition-opacity hover:opacity-90",
-            compact ? "top-0 right-0 h-7 w-7" : "top-7 right-2 h-9 w-9 sm:right-4 lg:right-6",
+            "absolute top-6 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full sm:right-5",
+            bloom ? "bg-sun text-ivory" : "border border-forest bg-forest text-ivory",
           )}
         >
           <ChevronRight className="h-4 w-4" />
         </button>
 
-        <div
-          className={cn(
-            "flex w-full flex-col items-stretch",
-            compact ? "gap-4 px-8 pt-1 lg:flex-row lg:gap-6" : "mx-auto max-w-4xl gap-8 px-8 sm:px-10 lg:flex-row lg:items-start lg:gap-14 lg:px-12",
-          )}
-        >
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-8 sm:px-10 lg:flex-row lg:gap-12 lg:px-12">
           {renderMonth(viewMonth.year, viewMonth.month)}
-          <div className={cn("min-w-0 flex-1", compact ? "hidden xl:block" : "hidden lg:block")}>
+          <div className="hidden min-w-0 flex-1 lg:block">
             {renderMonth(secondMonth.year, secondMonth.month)}
           </div>
         </div>
       </div>
 
-      {!compact && onConfirm ? (
-        <div className="flex flex-col gap-4 border-t border-border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
-          <div className="mx-auto grid w-full max-w-4xl grid-cols-2 gap-6 sm:mx-0 sm:flex-1 sm:gap-10">
-            <div>
-              <p className="text-sm font-medium text-foreground sm:text-base">
-                {checkIn ? formatShort(checkIn) : "Select date"}
-              </p>
-              <p className="eyebrow mt-1 text-muted-foreground">Check-in</p>
+      {onConfirm ? (
+        <div
+          className={cn(
+            "flex flex-col gap-4 border-t px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-8 sm:py-5",
+            bloom ? "border-neutral-100" : "border-border",
+          )}
+        >
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-4 sm:gap-6">
+            <div className="flex min-w-0 items-start gap-3 sm:gap-5">
+              <div>
+                <p className="font-nav text-sm font-extrabold text-neutral-800 sm:text-base">
+                  {checkIn ? formatStayDate(checkIn) : "Select date"}
+                </p>
+                <p className="mt-0.5 text-xs text-neutral-400">Check-in</p>
+              </div>
+              <span className="mt-1 text-forest" aria-hidden="true">
+                →
+              </span>
+              <div>
+                <p className="font-nav text-sm font-extrabold text-neutral-800 sm:text-base">
+                  {checkOut ? formatStayDate(checkOut) : "Select date"}
+                </p>
+                <p className="mt-0.5 text-xs text-neutral-400">Check-out</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-foreground sm:text-base">
-                {checkOut ? formatShort(checkOut) : "Select date"}
-              </p>
-              <p className="eyebrow mt-1 text-muted-foreground">Check-out</p>
-            </div>
+            {nights > 0 ? (
+              <span className="rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-semibold text-neutral-600">
+                {nights} Night{nights === 1 ? "" : "s"}
+              </span>
+            ) : null}
+            <p className="hidden items-center gap-1.5 text-xs font-semibold text-forest sm:flex lg:text-[13px]">
+              <span aria-hidden="true">⚡</span>
+              Book Direct for Lowest Prices!
+            </p>
           </div>
           <button
             type="button"
             disabled={!canConfirm}
             onClick={onConfirm}
-            className="eyebrow min-h-12 w-full shrink-0 rounded-[10px] border border-forest bg-forest px-10 py-3 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+            className={cn(
+              "nav-cta min-h-12 w-full shrink-0 rounded-[10px] px-10 py-3 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto",
+              bloom ? "bg-sun" : "bg-forest",
+            )}
           >
             Confirm
           </button>

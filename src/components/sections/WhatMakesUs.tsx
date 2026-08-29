@@ -26,10 +26,10 @@ const pillars = [
 /** Bloom “What makes us” band — Elysium forest theme. */
 export function WhatMakesUs() {
   return (
-    <section id="makes-us" className="relative overflow-hidden bg-forest py-14 text-ivory sm:py-16 lg:py-20">
+    <section id="makes-us" className="relative overflow-hidden bg-forest text-ivory section-pad">
       <div className="page-wrap">
         <Reveal>
-          <h2 className="text-center font-display text-[clamp(2.25rem,5vw,3.5rem)] leading-[0.95] tracking-[-0.02em]">
+          <h2 className="text-center display-nav text-[clamp(2.25rem,5vw,3.5rem)]">
             What makes us Elysium?
           </h2>
           <p className="mx-auto mt-4 max-w-md text-center text-sm text-ivory/70">

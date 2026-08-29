@@ -28,6 +28,12 @@
   font-weight: 400;
   font-display: swap;
 }
+@font-face {
+  font-family: "Nunito";
+  src: url("/fonts/Nunito-Variable.ttf") format("truetype");
+  font-weight: 200 1000;
+  font-display: swap;
+}
 
 
 /*
@@ -36,7 +42,7 @@
  *   Forest Green  #06332C  (logo)
  *   Bronze        #826135
  *   Warm Ivory    #F7F4E9
- * Type: geometric sans (DM Sans) site-wide — matches nav “Our houses”.
+ * Type: Nunito in the header (Bloom-style rounded bold), DM Sans site-wide.
  */
 
 @theme inline {
@@ -51,6 +57,7 @@
   --font-display: "DM Sans", "Myriad Pro", system-ui, sans-serif;
   --font-sans: "DM Sans", "Myriad Pro", system-ui, sans-serif;
   --font-hero: "Carla Sans", "Acumin", sans-serif;
+  --font-nav: "Nunito", "DM Sans", system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -78,6 +85,7 @@
   --color-bronze: var(--bronze);
   --color-forest: var(--forest);
   --color-forest-deep: var(--forest-deep);
+  --color-sun: var(--sun);
 
   --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -91,6 +99,7 @@
   /* Accent = logo forest #06332C (was orange sand) */
   --sand: oklch(0.2897 0.0485 179.75);
   --bronze: oklch(0.5166 0.0741 72.84);
+  --sun: #e8bc22;
   --forest: oklch(0.2897 0.0485 179.75);
   --forest-deep: oklch(0.2 0.035 180);
 
@@ -180,20 +189,135 @@
     font-family: var(--font-hero);
     font-weight: 400;
   }
-  /* Nav bar labels — slightly larger than section eyebrows */
+  /* Header wordmark — rounded geometric, lowercase like Bloom, unique size */
+  .nav-mark {
+    font-family: var(--font-nav);
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .nav-mark {
+      font-size: 29px;
+    }
+  }
+
+  /* Header links — title case, bold, no tracking */
   .nav-link {
-    font-family: var(--font-sans);
-    font-size: 0.8125rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-weight: 600;
+    font-family: var(--font-nav);
+    font-size: 15.5px;
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    text-transform: none;
+    line-height: 1;
+  }
+
+  @media (min-width: 1280px) {
+    .nav-link {
+      font-size: 16.5px;
+    }
+  }
+
+  .nav-cta {
+    font-family: var(--font-nav);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  .auth-continue {
+    font-family: var(--font-nav);
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    width: 100%;
+    min-height: 3.15rem;
+    border-radius: 10px;
+    background: var(--bronze);
+    color: var(--ivory);
+    transition: opacity 0.3s var(--ease-luxe);
+  }
+
+  .auth-continue:hover {
+    opacity: 0.92;
+  }
+
+  /* Primary CTA — forest or bronze fill */
+  .btn-primary {
+    font-family: var(--font-nav);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.85rem;
+    padding-inline: 1.5rem;
+    border-radius: 10px;
+    background: var(--forest);
+    color: var(--ivory);
+    transition: opacity 0.35s var(--ease-luxe);
+  }
+
+  .btn-primary:hover {
+    opacity: 0.92;
+  }
+
+  .btn-primary-bronze {
+    background: var(--bronze);
+  }
+
+  .btn-sun {
+    font-family: var(--font-nav);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.85rem;
+    padding-inline: 1.5rem;
+    border-radius: 10px;
+    background: var(--sun);
+    color: var(--ivory);
+    transition: opacity 0.35s var(--ease-luxe);
+  }
+
+  .btn-sun:hover {
+    opacity: 0.92;
+  }
+
+  /* Marketing display titles (Why, Account, book chrome) */
+  .display-nav {
+    font-family: var(--font-nav);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  .section-pad {
+    padding-block: 3.5rem;
   }
 
   @media (min-width: 640px) {
-    .nav-link {
-      font-size: 0.9375rem;
-      letter-spacing: 0.2em;
+    .section-pad {
+      padding-block: 4rem;
     }
+  }
+
+  @media (min-width: 1024px) {
+    .section-pad {
+      padding-block: 5rem;
+    }
+  }
+
+  .prose-quiet {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
   }
 
   /* Matches “OUR HOUSES” — geometric sans, tracked uppercase */
@@ -397,12 +521,74 @@
   animation: slow-spin 60s linear infinite;
 }
 
+@keyframes why-sun {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes why-plane {
+  0% {
+    transform: translate(18px, 8px);
+  }
+  50% {
+    transform: translate(-28px, -14px);
+  }
+  100% {
+    transform: translate(18px, 8px);
+  }
+}
+
+@keyframes why-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes why-pulse-fill {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@utility animate-why-sun {
+  animation: why-sun 42s linear infinite;
+  transform-origin: center;
+}
+
+@utility animate-why-plane {
+  animation: why-plane 9s ease-in-out infinite;
+}
+
+@utility animate-why-float {
+  animation: why-float 5.5s ease-in-out infinite;
+}
+
+@utility animate-why-door {
+  animation: why-pulse-fill 2.8s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ken-burns,
   .marquee-track,
   .marquee-rtl,
   .animate-drift,
-  .animate-slow-spin {
+  .animate-slow-spin,
+  .animate-why-sun,
+  .animate-why-plane,
+  .animate-why-float,
+  .animate-why-door {
     animation: none !important;
   }
 }

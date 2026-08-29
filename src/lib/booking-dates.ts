@@ -34,6 +34,26 @@ export function formatShort(iso: string) {
   return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 }
 
+/** Bloom-style: "15 Sep, Tuesday" */
+export function formatStayDate(iso: string) {
+  const d = parseInputDate(iso);
+  if (!Number.isFinite(d.getTime())) return "Select date";
+  const day = d.toLocaleDateString("en-IN", { day: "numeric" });
+  const month = d.toLocaleDateString("en-IN", { month: "short" });
+  const weekday = d.toLocaleDateString("en-IN", { weekday: "long" });
+  return `${day} ${month}, ${weekday}`;
+}
+
+/** Compact bar: "15 Sep, Tue" */
+export function formatStayCompact(iso: string) {
+  const d = parseInputDate(iso);
+  if (!Number.isFinite(d.getTime())) return "Select date";
+  const day = d.toLocaleDateString("en-IN", { day: "numeric" });
+  const month = d.toLocaleDateString("en-IN", { month: "short" });
+  const weekday = d.toLocaleDateString("en-IN", { weekday: "short" });
+  return `${day} ${month}, ${weekday}`;
+}
+
 export function startOfDay(d: Date) {
   const next = new Date(d);
   next.setHours(0, 0, 0, 0);
