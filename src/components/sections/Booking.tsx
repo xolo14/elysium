@@ -1,33 +1,36 @@
 import { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
-import type { Suite } from "@/data/hotels";
+import type { Hotel, Suite } from "@/data/hotels";
 import { BrandStar } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
-import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
-import { formatNice, nightsBetween } from "@/lib/booking-dates";
-
-const ease = [0.16, 1, 0.3, 1] as const;
+import { formatShort, nightsBetween } from "@/lib/booking-dates";
 
 function parseRate(rate: string) {
   return Number(rate.replace(/[^\d]/g, "")) || 0;
 }
 
+function suiteFromHotel(hotel: Hotel, name?: string) {
+  if (!name) return hotel.suites[0]!;
+  return hotel.suites.find((s) => s.name.toLowerCase() === name.toLowerCase()) ?? hotel.suites[0]!;
+}
+
 export function Booking({
   initialHotelSlug,
+  initialSuite,
   initialCheckIn,
   initialCheckOut,
   initialGuests,
 }: {
   initialHotelSlug?: string;
+  initialSuite?: string;
   initialCheckIn?: string;
   initialCheckOut?: string;
   initialGuests?: number;
 } = {}) {
-  const { hotel, hotels, hotelId, selectHotel } = useHotel();
+  const { hotels } = useHotel();
 
   const today = useMemo(() => {
     const d = new Date();
@@ -35,8 +38,13 @@ export function Booking({
     return d;
   }, []);
 
-  const [step, setStep] = useState<"dates" | "details">("dates");
-  const [suite, setSuite] = useState<Suite>(hotel.suites[0]!);
+  const startHotel =
+    hotels.find((h) => h.slug === initialHotelSlug || h.id === initialHotelSlug) ?? hotels[0]!;
+
+  const [houseId, setHouseId] = useState<Hotel["id"]>(startHotel.id);
+  const hotel = hotels.find((h) => h.id === houseId) ?? hotels[0]!;
+
+  const [suite, setSuite] = useState<Suite>(() => suiteFromHotel(startHotel, initialSuite));
   const [checkIn, setCheckIn] = useState(initialCheckIn ?? "");
   const [checkOut, setCheckOut] = useState(initialCheckOut ?? "");
   const [guests, setGuests] = useState(initialGuests && initialGuests >= 1 ? initialGuests : 2);
@@ -48,41 +56,40 @@ export function Booking({
   const [bookingId, setBookingId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!initialHotelSlug) return;
     const match = hotels.find((h) => h.slug === initialHotelSlug || h.id === initialHotelSlug);
-    if (match && match.id !== hotelId) selectHotel(match.id);
-  }, [initialHotelSlug, hotels, hotelId, selectHotel]);
+    if (match) setHouseId(match.id);
+  }, [initialHotelSlug, hotels]);
 
   useEffect(() => {
-    setSuite(hotel.suites[0]!);
-    setStep("dates");
+    setSuite(suiteFromHotel(hotel, initialSuite));
     setSent(false);
     setError(null);
     setBookingId(null);
-  }, [hotel.id, hotel.suites]);
+  }, [hotel.id, hotel.suites, initialSuite]);
 
   const nights = checkIn && checkOut ? nightsBetween(checkIn, checkOut) : 0;
   const total = parseRate(suite.rate) * Math.max(nights, 1) * rooms;
+  const canSubmit = Boolean(checkIn && checkOut && nights > 0 && form.name && form.email && form.phone);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!checkIn || !checkOut) return;
+    if (!canSubmit) return;
 
     setSubmitting(true);
     setError(null);
 
     try {
       const result = await submitBooking({
-          hotelId: hotel.id,
-          suiteName: suite.name,
-          guestName: form.name.trim(),
-          guestEmail: form.email.trim(),
-          guestPhone: form.phone.trim(),
-          checkIn,
-          checkOut,
-          guests,
-          rooms,
-        });
+        hotelId: hotel.id,
+        suiteName: suite.name,
+        guestName: form.name.trim(),
+        guestEmail: form.email.trim(),
+        guestPhone: form.phone.trim(),
+        checkIn,
+        checkOut,
+        guests,
+        rooms,
+      });
       setBookingId(result.id);
       setSent(true);
     } catch (err) {
@@ -92,326 +99,230 @@ export function Booking({
     }
   };
 
-  return (
-    <div id="booking" className="relative">
-      <section className="relative overflow-hidden bg-forest text-ivory">
-        <img
-          src={hotel.hero}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover opacity-35"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-forest/70 via-forest/75 to-forest" />
-        <div className="page-wrap relative pt-32 pb-16 sm:pt-40 sm:pb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease }}
-          >
-            <p className="eyebrow text-ivory/60">Reservations</p>
-            <h1 className="mt-5 max-w-3xl font-display text-[clamp(2.75rem,6.5vw,5rem)] leading-[0.92] tracking-[-0.02em]">
-              Book your stay
-            </h1>
-            <p className="mt-5 max-w-md text-sm text-ivory/70">
-              Taxes, breakfast and Wi‑Fi included. Free cancel 24 hours before arrival.
+  if (sent) {
+    return (
+      <div className="flex min-h-[100svh] items-center justify-center bg-ivory px-5 pt-20">
+        <div className="w-full max-w-lg rounded-[10px] border border-border bg-background p-8 text-center">
+          <p className="eyebrow text-muted-foreground">Request received</p>
+          <h1 className="mt-3 font-display text-3xl text-forest">Thank you, {form.name}</h1>
+          <p className="mt-4 text-sm leading-relaxed text-foreground/70">
+            {suite.name} at {hotel.name} · {nights} night{nights === 1 ? "" : "s"} ·{" "}
+            {formatShort(checkIn)} → {formatShort(checkOut)}. We will call {form.phone}.
+          </p>
+          {bookingId ? (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Ref <span className="font-mono text-foreground">{bookingId.slice(0, 8)}</span>
             </p>
-          </motion.div>
+          ) : null}
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <a
+              href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
+              className="eyebrow inline-flex min-h-11 items-center rounded-[10px] bg-forest px-5 text-ivory"
+            >
+              Call {hotel.contact.phone}
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                setSent(false);
+                setCheckIn("");
+                setCheckOut("");
+                setForm({ name: "", email: "", phone: "" });
+                setBookingId(null);
+              }}
+              className="eyebrow inline-flex min-h-11 items-center rounded-[10px] border border-border px-5"
+            >
+              New request
+            </button>
+          </div>
         </div>
-      </section>
+      </div>
+    );
+  }
 
-      <section className="page-wrap py-12 sm:py-16 lg:py-20">
-        <div>
-          <p className="eyebrow text-muted-foreground">House</p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-6">
+  return (
+    <form
+      id="booking"
+      onSubmit={onSubmit}
+      className="flex min-h-[100svh] flex-col bg-ivory pt-[4.75rem] lg:h-[100svh] lg:overflow-hidden"
+    >
+      <div className="page-wrap flex min-h-0 flex-1 flex-col gap-3 py-3 sm:gap-4 sm:py-4">
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="eyebrow text-muted-foreground">Reservations</p>
+            <h1 className="mt-1 font-display text-2xl leading-none text-forest sm:text-3xl">Book</h1>
+          </div>
+          <div className="flex rounded-[10px] border border-border bg-background p-1">
             {hotels.map((h) => {
-              const active = h.id === hotelId;
+              const active = h.id === houseId;
               return (
                 <button
                   key={h.id}
                   type="button"
-                  onClick={() => selectHotel(h.id)}
+                  onClick={() => setHouseId(h.id)}
                   aria-pressed={active}
                   className={cn(
-                    "group relative overflow-hidden rounded-[10px] text-left transition-colors duration-500",
-                    active ? "bg-forest text-ivory" : "bg-secondary text-foreground hover:bg-forest/5",
+                    "rounded-[8px] px-3 py-2 text-left transition-colors sm:px-4",
+                    active ? "bg-forest text-ivory" : "text-foreground/70 hover:text-foreground",
                   )}
                 >
-                  <div className="grid grid-cols-[7.5rem_1fr] sm:grid-cols-[10rem_1fr]">
-                    <div className="relative aspect-[4/5] sm:aspect-auto sm:min-h-[9.5rem]">
-                      <img
-                        src={h.hero}
-                        alt=""
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-luxe group-hover:scale-[1.04]"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-center px-4 py-4 sm:px-6">
-                      <span
-                        className={cn(
-                          "eyebrow",
-                          active ? "text-ivory/55" : "text-muted-foreground",
-                        )}
-                      >
-                        {h.place}
-                      </span>
-                      <span className="mt-2 font-display text-xl leading-tight sm:text-2xl">
-                        {h.name}
-                      </span>
-                      <span
-                        className={cn(
-                          "mt-2 text-sm",
-                          active ? "text-ivory/65" : "text-foreground/65",
-                        )}
-                      >
-                        From {h.fromRate} · {h.rating} rating
-                      </span>
-                    </div>
-                  </div>
+                  <span className="block text-sm font-semibold">{h.place}</span>
                 </button>
               );
             })}
           </div>
-        </div>
+        </header>
 
-        <AnimatePresence mode="wait">
-          {sent ? (
-            <motion.div
-              key="sent"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease }}
-              className="mt-14 rounded-[10px] border border-border bg-secondary p-8 sm:p-12"
-            >
-              <p className="eyebrow text-muted-foreground">Confirmed request</p>
-              <h2 className="mt-4 font-display text-3xl sm:text-4xl">Thank you, {form.name}</h2>
-              <p className="mt-5 max-w-xl text-sm leading-relaxed text-foreground/75">
-                We have your request for {rooms} room{rooms === 1 ? "" : "s"} ({suite.name}) at{" "}
-                {hotel.name} — {nights} night{nights === 1 ? "" : "s"}, {formatNice(checkIn)} to{" "}
-                {formatNice(checkOut)}, {guests} guest{guests === 1 ? "" : "s"}. Our desk will call{" "}
-                {form.phone || hotel.contact.phone} within two hours.
+        <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(17rem,0.85fr)] lg:gap-4">
+          <section className="flex min-h-0 flex-col rounded-[10px] border border-border bg-background p-3 sm:p-4">
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <p className="eyebrow text-muted-foreground">Dates</p>
+              <p className="text-xs text-foreground/70 sm:text-sm">
+                {checkIn && checkOut
+                  ? `${formatShort(checkIn)} → ${formatShort(checkOut)} · ${nights} night${nights === 1 ? "" : "s"}`
+                  : "Pick check-in, then check-out"}
               </p>
-              {bookingId && (
-                <p className="mt-4 text-sm text-muted-foreground">
-                  Reference: <span className="font-mono text-foreground">{bookingId.slice(0, 8)}</span>
-                </p>
-              )}
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
-                  className="eyebrow inline-flex min-h-12 items-center rounded-[10px] bg-forest px-6 py-3 text-ivory"
-                >
-                  Call {hotel.contact.phone}
-                </a>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSent(false);
-                    setStep("dates");
-                    setCheckIn("");
-                    setCheckOut("");
-                    setForm({ name: "", email: "", phone: "" });
-                    setBookingId(null);
-                    setError(null);
-                  }}
-                  className="eyebrow inline-flex min-h-12 items-center rounded-[10px] border border-foreground/20 px-6 py-3"
-                >
-                  New request
-                </button>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key={`${hotel.id}-${step}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease }}
-              className="mt-14"
-            >
-              <BookingStepBar step={step} />
+            </div>
+            <DateRangePicker
+              compact
+              checkIn={checkIn}
+              checkOut={checkOut}
+              minDate={today}
+              onRangeChange={(inDate, outDate) => {
+                setCheckIn(inDate);
+                setCheckOut(outDate);
+              }}
+            />
+          </section>
 
-              {step === "dates" ? (
-                <div className="mt-8">
-                  <DateRangePicker
-                    checkIn={checkIn}
-                    checkOut={checkOut}
-                    minDate={today}
-                    onRangeChange={(inDate, outDate) => {
-                      setCheckIn(inDate);
-                      setCheckOut(outDate);
-                    }}
-                    onConfirm={() => setStep("details")}
-                  />
-                </div>
-              ) : (
-                <form onSubmit={onSubmit} className="mt-10">
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                      <p className="eyebrow text-muted-foreground">Your stay</p>
-                      <p className="mt-2 text-sm text-foreground">
-                        {formatNice(checkIn)} → {formatNice(checkOut)} · {nights} night
-                        {nights === 1 ? "" : "s"}
-                      </p>
-                    </div>
+          <section className="flex min-h-0 flex-col rounded-[10px] border border-border bg-background p-3 sm:p-4">
+            <p className="eyebrow text-muted-foreground">Suites · {hotel.name}</p>
+            <ul className="mt-2 min-h-0 flex-1 space-y-1.5 overflow-y-auto pr-0.5">
+              {hotel.suites.map((s) => {
+                const active = s.name === suite.name;
+                return (
+                  <li key={s.name}>
                     <button
                       type="button"
-                      onClick={() => setStep("dates")}
-                      className="eyebrow text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                      onClick={() => setSuite(s)}
+                      aria-pressed={active}
+                      className={cn(
+                        "grid w-full grid-cols-[3.5rem_1fr_auto] items-center gap-2.5 rounded-[10px] border px-2 py-2 text-left transition-colors",
+                        active ? "border-forest bg-secondary" : "border-border hover:border-forest/35",
+                      )}
                     >
-                      Change dates
+                      <img
+                        src={s.image}
+                        alt=""
+                        className="aspect-[4/3] w-full rounded-[6px] object-cover"
+                      />
+                      <span className="min-w-0">
+                        <span className="flex items-center gap-1.5">
+                          <span className="truncate font-display text-sm leading-tight">{s.name}</span>
+                          {active ? <BrandStar className="h-2 w-2 shrink-0 text-forest" /> : null}
+                        </span>
+                        <span className="mt-0.5 block truncate text-[0.7rem] text-muted-foreground">
+                          {s.capacity}
+                        </span>
+                      </span>
+                      <span className="shrink-0 font-display text-xs sm:text-sm">
+                        {s.rate.replace(" / night", "")}
+                      </span>
                     </button>
-                  </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        </div>
 
-                  <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-16">
-                    <div className="lg:col-span-7">
-                      <div>
-                        <div className="flex flex-wrap items-end justify-between gap-3">
-                          <p className="eyebrow text-muted-foreground">Suite</p>
-                          <Link
-                            to="/hotels/$slug"
-                            params={{ slug: hotel.slug }}
-                            hash="rooms"
-                            className="link-luxe eyebrow text-muted-foreground"
-                          >
-                            See room details
-                          </Link>
-                        </div>
+        <section className="rounded-[10px] border border-border bg-background p-3 sm:p-4">
+          <div className="grid items-end gap-2 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_4.5rem_4.5rem_auto]">
+            <label className="block">
+              <span className="eyebrow text-muted-foreground">Name</span>
+              <input
+                required
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                className="mt-1 w-full rounded-[8px] border border-border bg-ivory px-3 py-2 text-sm outline-none focus:border-forest"
+              />
+            </label>
+            <label className="block">
+              <span className="eyebrow text-muted-foreground">Email</span>
+              <input
+                required
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                className="mt-1 w-full rounded-[8px] border border-border bg-ivory px-3 py-2 text-sm outline-none focus:border-forest"
+              />
+            </label>
+            <label className="block">
+              <span className="eyebrow text-muted-foreground">Phone</span>
+              <input
+                required
+                type="tel"
+                value={form.phone}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                className="mt-1 w-full rounded-[8px] border border-border bg-ivory px-3 py-2 text-sm outline-none focus:border-forest"
+              />
+            </label>
+            <label className="block">
+              <span className="eyebrow text-muted-foreground">Guests</span>
+              <input
+                required
+                type="number"
+                min={1}
+                max={12}
+                value={guests}
+                onChange={(e) => setGuests(Math.min(12, Math.max(1, Number(e.target.value) || 1)))}
+                className="mt-1 w-full rounded-[8px] border border-border bg-ivory px-2 py-2 text-sm outline-none focus:border-forest"
+              />
+            </label>
+            <label className="block">
+              <span className="eyebrow text-muted-foreground">Rooms</span>
+              <input
+                required
+                type="number"
+                min={1}
+                max={6}
+                value={rooms}
+                onChange={(e) => setRooms(Math.min(6, Math.max(1, Number(e.target.value) || 1)))}
+                className="mt-1 w-full rounded-[8px] border border-border bg-ivory px-2 py-2 text-sm outline-none focus:border-forest"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={submitting || !canSubmit}
+              className="eyebrow inline-flex min-h-10 items-center justify-center rounded-[10px] bg-forest px-5 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              {submitting ? "Saving…" : "Request"}
+            </button>
+          </div>
 
-                        <div className="mt-6 grid gap-3">
-                          {hotel.suites.map((s) => {
-                            const active = s.name === suite.name;
-                            return (
-                              <button
-                                key={s.name}
-                                type="button"
-                                onClick={() => setSuite(s)}
-                                aria-pressed={active}
-                                className={cn(
-                                  "grid grid-cols-[5.5rem_1fr_auto] items-center gap-4 rounded-[10px] border px-3 py-3 text-left transition-colors duration-500 sm:grid-cols-[8rem_1fr_auto] sm:gap-6 sm:px-4 sm:py-4",
-                                  active
-                                    ? "border-forest bg-secondary"
-                                    : "border-border hover:border-foreground/35",
-                                )}
-                              >
-                                <img
-                                  src={s.image}
-                                  alt=""
-                                  loading="lazy"
-                                  className="aspect-[4/3] w-full rounded-[8px] object-cover"
-                                />
-                                <span className="min-w-0">
-                                  <span className="flex items-center gap-2">
-                                    <span className="font-display text-lg sm:text-xl">{s.name}</span>
-                                    {active && <BrandStar className="h-2.5 w-2.5 text-accent" />}
-                                  </span>
-                                  <span className="mt-1 block text-xs text-muted-foreground sm:text-sm">
-                                    {s.size} · {s.capacity} · {s.view}
-                                  </span>
-                                </span>
-                                <span className="shrink-0 self-start font-display text-sm sm:self-center sm:text-lg">
-                                  {s.rate}
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <div className="mt-12">
-                        <p className="eyebrow text-muted-foreground">Guest details</p>
-                        <div className="mt-6">
-                          <BookingDetailsFields
-                            guests={guests}
-                            rooms={rooms}
-                            form={form}
-                            onGuestsChange={setGuests}
-                            onRoomsChange={setRooms}
-                            onFormChange={(key, value) => setForm((f) => ({ ...f, [key]: value }))}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <aside className="lg:col-span-5">
-                      <div className="rounded-[10px] border border-border bg-secondary p-6 sm:p-8 lg:sticky lg:top-28">
-                        <p className="eyebrow text-muted-foreground">Summary</p>
-                        <h3 className="mt-4 font-display text-2xl">{suite.name}</h3>
-                        <p className="mt-2 text-sm text-foreground/70">
-                          {hotel.name} · {hotel.place}
-                        </p>
-
-                        <dl className="mt-8 space-y-4 text-sm">
-                          <div className="flex justify-between gap-4 border-b border-border pb-3">
-                            <dt className="text-muted-foreground">Check-in</dt>
-                            <dd className="text-right">{formatNice(checkIn)}</dd>
-                          </div>
-                          <div className="flex justify-between gap-4 border-b border-border pb-3">
-                            <dt className="text-muted-foreground">Check-out</dt>
-                            <dd className="text-right">{formatNice(checkOut)}</dd>
-                          </div>
-                          <div className="flex justify-between gap-4 border-b border-border pb-3">
-                            <dt className="text-muted-foreground">Nights</dt>
-                            <dd>{nights}</dd>
-                          </div>
-                          <div className="flex justify-between gap-4 border-b border-border pb-3">
-                            <dt className="text-muted-foreground">Guests</dt>
-                            <dd>{guests}</dd>
-                          </div>
-                          <div className="flex justify-between gap-4 border-b border-border pb-3">
-                            <dt className="text-muted-foreground">Rooms</dt>
-                            <dd>{rooms}</dd>
-                          </div>
-                        </dl>
-
-                        <p className="mt-6 font-display text-3xl tracking-tight">
-                          ₹{total.toLocaleString("en-IN")}
-                        </p>
-                        <p className="mt-2 text-xs text-muted-foreground">
-                          Estimated total · taxes & breakfast included
-                        </p>
-
-                        {error && (
-                          <p className="mt-4 text-sm text-destructive" role="alert">
-                            {error}
-                          </p>
-                        )}
-
-                        <button
-                          type="submit"
-                          disabled={submitting}
-                          className="mt-8 flex w-full min-h-14 items-center justify-center gap-3 rounded-[10px] bg-forest px-6 py-4 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                          <BrandStar className="h-2.5 w-2.5 text-accent" />
-                          <span className="eyebrow">
-                            {submitting ? "Saving request…" : "Request reservation"}
-                          </span>
-                        </button>
-                        <p className="mt-4 text-center text-xs leading-relaxed text-muted-foreground">
-                          By requesting a stay you agree to our{" "}
-                          <Link to="/terms" className="underline underline-offset-2 hover:text-foreground">
-                            Terms
-                          </Link>{" "}
-                          and{" "}
-                          <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground">
-                            Privacy Policy
-                          </Link>
-                          . The desk will confirm availability.
-                        </p>
-
-                        <a
-                          href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
-                          className="mt-4 block text-center text-sm text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                          Or call {hotel.contact.phone}
-                        </a>
-                      </div>
-                    </aside>
-                  </div>
-                </form>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-    </div>
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+            <p>
+              {suite.name} · ₹{total.toLocaleString("en-IN")}
+              {nights ? ` · ${nights} night${nights === 1 ? "" : "s"}` : ""} · taxes & breakfast in
+            </p>
+            <p>
+              <Link to="/terms" className="underline-offset-2 hover:underline">
+                Terms
+              </Link>
+              {" · "}
+              <a href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`} className="hover:text-foreground">
+                {hotel.contact.phone}
+              </a>
+            </p>
+          </div>
+          {error ? (
+            <p className="mt-2 text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          ) : null}
+        </section>
+      </div>
+    </form>
   );
 }

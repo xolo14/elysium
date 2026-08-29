@@ -1,8 +1,29 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { HotelProvider } from "@/context/hotel";
+import { Nav } from "@/components/Nav";
+import { WhyPage } from "@/components/sections/WhyPage";
+import { Footer } from "@/components/sections/Footer";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { pageMeta } from "@/lib/site";
 
-/** Legacy URL — 4B’s now expands in place on the homepage. */
+const title = "Why Elysium — The 4B Standard in Hyderabad";
+const description =
+  "Why guests choose Elysium: two houses, a 4.7★ rating, the 4B standard, and a front desk that answers.";
+
 export const Route = createFileRoute("/why")({
-  beforeLoad: () => {
-    throw redirect({ to: "/", hash: "why" });
-  },
+  head: () => pageMeta({ title, description, path: "/why" }),
+  component: WhyRoute,
 });
+
+function WhyRoute() {
+  return (
+    <HotelProvider>
+      <Nav />
+      <main className="relative bg-ivory">
+        <WhyPage />
+      </main>
+      <Footer />
+      <WhatsAppFloat />
+    </HotelProvider>
+  );
+}

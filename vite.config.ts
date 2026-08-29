@@ -15,6 +15,7 @@ const sharedBase = process.env.HOSTINGER_BASE || "/";
 const staticPages = [
   "/",
   "/about",
+  "/why",
   "/book",
   "/privacy",
   "/terms",

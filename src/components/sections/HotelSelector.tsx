@@ -62,8 +62,8 @@ export function HotelSelector() {
                     </p>
                   </div>
                   <Link
-                    to="/hotels/$slug"
-                    params={{ slug: h.slug }}
+                    to="/book"
+                    search={{ hotel: h.slug }}
                     onClick={() => selectHotel(h.id)}
                     className="eyebrow shrink-0 rounded-[10px] bg-forest px-4 py-2.5 text-ivory transition-colors hover:bg-forest/90"
                   >

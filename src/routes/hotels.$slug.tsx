@@ -1,7 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { hotels, type Hotel, type Suite } from "@/data/hotels";
+import { useMemo, useState } from "react";
+import { hotels, type Hotel } from "@/data/hotels";
 import { hotelFaqs } from "@/data/faqs";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
@@ -11,10 +10,7 @@ import {
   useHotelCarousel,
 } from "@/components/HotelImageCarousel";
 import { Suite360Experience, View360HeroControl } from "@/components/Suite360Experience";
-import { submitBooking } from "@/lib/submit-booking";
-import { DateRangePicker } from "@/components/booking/DateRangePicker";
-import { BookingDetailsFields, BookingStepBar } from "@/components/booking/BookingDetailsFields";
-import { formatNice, nightsBetween, toInputDate } from "@/lib/booking-dates";
+import { toInputDate } from "@/lib/booking-dates";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { SocialProof } from "@/components/sections/SocialProof";
@@ -264,8 +260,6 @@ function HotelIntro({
 }
 
 function Rooms({ hotel }: { hotel: Hotel }) {
-  const [selected, setSelected] = useState<Suite | null>(null);
-
   return (
     <section id="rooms" data-anchor="booking" className="page-wrap py-16">
       <span id="booking" className="block" />
@@ -299,222 +293,22 @@ function Rooms({ hotel }: { hotel: Hotel }) {
                   </span>
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">Incl. taxes</p>
-                <button
-                  type="button"
-                  onClick={() => setSelected(s)}
-                  className="eyebrow mt-4 w-full rounded-[10px] bg-forest py-3 text-ivory transition-colors hover:bg-forest/90"
+                <Link
+                  to="/book"
+                  search={{ hotel: hotel.slug, suite: s.name }}
+                  className="eyebrow mt-4 block w-full rounded-[10px] bg-forest py-3 text-center text-ivory transition-colors hover:bg-forest/90"
                 >
                   Book
-                </button>
+                </Link>
               </div>
             </article>
           </Reveal>
         ))}
       </div>
-
-      {selected && (
-        <BookingPanel hotel={hotel} suite={selected} onClose={() => setSelected(null)} />
-      )}
     </section>
   );
 }
 
-function BookingPanel({
-  hotel,
-  suite,
-  onClose,
-}: {
-  hotel: Hotel;
-  suite: Suite;
-  onClose: () => void;
-}) {
-  const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }, []);
-
-  const [step, setStep] = useState<"dates" | "details">("dates");
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState(2);
-  const [rooms, setRooms] = useState(1);
-  const [form, setForm] = useState({ name: "", email: "", phone: "" });
-  const [sent, setSent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [bookingId, setBookingId] = useState<string | null>(null);
-
-  const nights = checkIn && checkOut ? nightsBetween(checkIn, checkOut) : 0;
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!checkIn || !checkOut) return;
-
-    setSubmitting(true);
-    setError(null);
-
-    try {
-      const result = await submitBooking({
-        hotelId: hotel.id,
-        suiteName: suite.name,
-        guestName: form.name.trim(),
-        guestEmail: form.email.trim(),
-        guestPhone: form.phone.trim(),
-        checkIn,
-        checkOut,
-        guests,
-        rooms,
-      });
-      setBookingId(result.id);
-      setSent(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not save your request.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [onClose]);
-
-  return (
-    <div
-      className="fixed inset-0 z-[80] flex items-end justify-center bg-forest/60 p-0 sm:items-center sm:p-6"
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Book ${suite.name}`}
-      onClick={onClose}
-    >
-      <div
-        className="max-h-[92svh] w-full max-w-5xl overflow-y-auto rounded-[10px] bg-background p-4 sm:p-8"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-start justify-between gap-6">
-          <div>
-            <p className="eyebrow text-muted-foreground">
-              {hotel.name} — {hotel.place}
-            </p>
-            <h3 className="mt-3 font-display text-3xl">{suite.name}</h3>
-            <p className="mt-3 text-sm font-medium text-muted-foreground">{suite.rate}</p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="eyebrow inline-flex items-center gap-2 text-forest transition-opacity hover:opacity-70"
-            aria-label="Close booking"
-          >
-            <X className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-            Close
-          </button>
-        </div>
-
-        {sent ? (
-          <div className="mt-10 rounded-[10px] border border-border p-6">
-            <p className="font-display text-2xl">Request received</p>
-            <p className="mt-4 text-sm leading-relaxed text-foreground/80">
-              Thank you, {form.name || "guest"}. Our front desk will confirm {rooms} room
-              {rooms === 1 ? "" : "s"} ({suite.name}) for {nights} night{nights === 1 ? "" : "s"},{" "}
-              {guests} guest{guests === 1 ? "" : "s"}, at {hotel.name}, {hotel.place} on{" "}
-              {hotel.contact.phone}.
-            </p>
-            {bookingId && (
-              <p className="mt-3 text-sm text-muted-foreground">
-                Reference: <span className="font-mono">{bookingId.slice(0, 8)}</span>
-              </p>
-            )}
-            <a
-              href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
-              className="eyebrow mt-6 inline-block border border-foreground/25 px-6 py-3"
-            >
-              Call the hotel
-            </a>
-          </div>
-        ) : (
-          <div className="mt-8">
-            <BookingStepBar step={step} />
-
-            {step === "dates" ? (
-              <div className="mt-6">
-                <DateRangePicker
-                  checkIn={checkIn}
-                  checkOut={checkOut}
-                  minDate={today}
-                  onRangeChange={(inDate, outDate) => {
-                    setCheckIn(inDate);
-                    setCheckOut(outDate);
-                  }}
-                  onConfirm={() => setStep("details")}
-                />
-              </div>
-            ) : (
-              <form onSubmit={onSubmit} className="mt-8">
-                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
-                  <div>
-                    <p className="eyebrow text-muted-foreground">Selected dates</p>
-                    <p className="mt-2 text-sm">
-                      {formatNice(checkIn)} → {formatNice(checkOut)} · {nights} night
-                      {nights === 1 ? "" : "s"}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setStep("dates")}
-                    className="eyebrow text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-                  >
-                    Change dates
-                  </button>
-                </div>
-
-                <div className="mt-8">
-                  <p className="eyebrow text-muted-foreground">Guest details</p>
-                  <div className="mt-6">
-                    <BookingDetailsFields
-                      guests={guests}
-                      rooms={rooms}
-                      form={form}
-                      onGuestsChange={setGuests}
-                      onRoomsChange={setRooms}
-                      onFormChange={(key, value) => setForm((f) => ({ ...f, [key]: value }))}
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
-                  <p className="text-sm text-muted-foreground">
-                    {rooms} room{rooms === 1 ? "" : "s"} · {guests} guest{guests === 1 ? "" : "s"}
-                  </p>
-                  {error && (
-                    <p className="w-full text-sm text-destructive" role="alert">
-                      {error}
-                    </p>
-                  )}
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="eyebrow rounded-[10px] border border-foreground/25 px-8 py-3 transition-colors hover:bg-forest hover:text-ivory disabled:opacity-60"
-                  >
-                    {submitting ? "Saving…" : "Confirm request"}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function Amenities({ hotel }: { hotel: Hotel }) {
   return (

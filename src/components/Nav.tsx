@@ -16,7 +16,7 @@ export function Nav() {
   const [active, setActive] = useState("#home");
   const { hotels, hotelId, selectHotel } = useHotel();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const onDarkHero = pathname === "/";
+  const onDarkHero = pathname === "/" || pathname === "/why";
   const solid = scrolled || !onDarkHero;
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 80));
@@ -24,7 +24,7 @@ export function Nav() {
   useEffect(() => {
     setOpen(false);
     setHotelsOpen(false);
-    if (pathname === "/about") setActive("/about");
+    if (pathname === "/why") setActive("/why");
   }, [pathname]);
 
   useEffect(() => {

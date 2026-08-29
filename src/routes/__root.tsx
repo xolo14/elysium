@@ -4,11 +4,12 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 import { MotionConfig } from "motion/react";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportRuntimeError } from "../lib/error-reporting";
@@ -125,12 +126,34 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function ScrollToTop() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hash = useRouterState({ select: (s) => s.location.hash });
+
+  useLayoutEffect(() => {
+    if (hash) {
+      const id = hash.replace(/^#/, "");
+      const el = id ? document.getElementById(id) : null;
+      if (el) {
+        el.scrollIntoView({ block: "start" });
+        return;
+      }
+    }
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [pathname, hash]);
+
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       <MotionConfig reducedMotion="user" transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
+        <ScrollToTop />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </MotionConfig>

@@ -3,6 +3,7 @@ import type { Hotel } from "@/data/hotels";
 import {
   socialProofFeatures,
   socialProofTiles,
+  type SocialProofFeature,
   type SocialProofTile,
 } from "@/data/social-proof";
 import { BrandStar } from "@/lib/brand";
@@ -10,7 +11,7 @@ import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
 function Tile({ tile, className }: { tile: SocialProofTile; className?: string }) {
-  const base = "relative flex h-full min-h-0 flex-col overflow-hidden rounded-[10px]";
+  const base = "relative flex h-full min-h-0 flex-col overflow-hidden rounded-[12px]";
 
   if (tile.kind === "image") {
     return (
@@ -28,18 +29,18 @@ function Tile({ tile, className }: { tile: SocialProofTile; className?: string }
   if (tile.kind === "award") {
     return (
       <article
-        className={cn(base, "justify-between gap-3 bg-forest p-4 text-ivory sm:gap-4 sm:p-5", className)}
+        className={cn(base, "justify-between gap-4 bg-forest p-5 text-ivory sm:p-6 lg:p-7", className)}
       >
-        <Trophy className="h-5 w-5 shrink-0 opacity-80 sm:h-6 sm:w-6" strokeWidth={1.5} aria-hidden="true" />
+        <Trophy className="h-7 w-7 shrink-0 opacity-85 sm:h-8 sm:w-8" strokeWidth={1.4} aria-hidden="true" />
         <div className="min-h-0 flex-1">
-          <p className="font-display text-sm leading-snug font-semibold sm:text-lg lg:text-xl">
+          <p className="font-display text-lg leading-snug font-semibold sm:text-xl lg:text-2xl">
             {tile.title}
           </p>
-          <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-ivory/75 sm:text-base">
+          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-ivory/75 sm:text-base">
             {tile.subtitle}
           </p>
         </div>
-        <p className="eyebrow shrink-0 pt-1 text-[0.65rem] text-ivory/55">{tile.source}</p>
+        <p className="eyebrow shrink-0 pt-1 text-ivory/50">{tile.source}</p>
       </article>
     );
   }
@@ -47,9 +48,9 @@ function Tile({ tile, className }: { tile: SocialProofTile; className?: string }
   if (tile.kind === "stat") {
     return (
       <article
-        className={cn(base, "justify-center gap-2 bg-forest px-4 py-4 text-ivory sm:px-5", className)}
+        className={cn(base, "justify-center gap-3 bg-forest px-5 py-6 text-ivory sm:px-6", className)}
       >
-        <p className="font-display text-3xl leading-none font-semibold sm:text-4xl">{tile.value}</p>
+        <p className="font-display text-4xl leading-none font-semibold sm:text-5xl">{tile.value}</p>
         <p className="text-sm leading-snug text-ivory/75 sm:text-base">{tile.label}</p>
       </article>
     );
@@ -61,15 +62,15 @@ function Tile({ tile, className }: { tile: SocialProofTile; className?: string }
       : "bg-background text-foreground ring-1 ring-border";
 
   return (
-    <blockquote className={cn(base, "justify-between gap-3 p-4 sm:p-5", toneClass, className)}>
+    <blockquote className={cn(base, "justify-between gap-4 p-5 sm:p-6", toneClass, className)}>
       <BrandStar
-        className={cn("h-3 w-3 shrink-0", tile.tone === "light" ? "text-forest/40" : "text-ivory/50")}
+        className={cn("h-3.5 w-3.5 shrink-0", tile.tone === "light" ? "text-forest/40" : "text-ivory/50")}
         aria-hidden="true"
       />
-      <p className="min-h-0 flex-1 font-display text-sm leading-snug font-semibold sm:text-base lg:text-lg">
+      <p className="min-h-0 flex-1 font-display text-base leading-snug font-semibold sm:text-lg lg:text-xl">
         &ldquo;{tile.quote}&rdquo;
       </p>
-      <footer className="eyebrow shrink-0 text-[0.65rem] opacity-70">{tile.source}</footer>
+      <footer className="eyebrow shrink-0 opacity-70">{tile.source}</footer>
     </blockquote>
   );
 }
@@ -82,10 +83,6 @@ function isHeavy(tile: SocialProofTile) {
   return tile.kind === "award" || (tile.kind === "quote" && tile.quote.length > 70);
 }
 
-/**
- * Bloom-style columns: heavy text cards stay tall so copy isn’t clipped;
- * images/stats can stack.
- */
 function buildMasonryColumns(tiles: SocialProofTile[]): MasonryColumn[] {
   const cols: MasonryColumn[] = [];
   const queue = [...tiles];
@@ -99,29 +96,28 @@ function buildMasonryColumns(tiles: SocialProofTile[]): MasonryColumn[] {
         tile: a,
         width:
           a.kind === "award"
-            ? "w-[15rem] sm:w-[17rem]"
+            ? "w-[17rem] sm:w-[20rem] lg:w-[22rem]"
             : a.kind === "image"
-              ? "w-[12rem] sm:w-[15rem]"
-              : "w-[13rem] sm:w-[16rem]",
+              ? "w-[15rem] sm:w-[18rem] lg:w-[20rem]"
+              : "w-[16rem] sm:w-[19rem] lg:w-[21rem]",
       });
       continue;
     }
 
     const b = queue[0]!;
-    // Stack only when both fit a half-height slot (image/stat/short quote)
     if (!isHeavy(b) && (a.kind === "image" || a.kind === "stat" || b.kind === "image" || b.kind === "stat")) {
       queue.shift();
       cols.push({
         type: "stack",
         top: a,
         bottom: b,
-        width: "w-[12rem] sm:w-[14rem]",
+        width: "w-[15rem] sm:w-[17rem] lg:w-[19rem]",
       });
     } else {
       cols.push({
         type: "tall",
         tile: a,
-        width: a.kind === "award" ? "w-[15rem] sm:w-[17rem]" : "w-[13rem] sm:w-[16rem]",
+        width: a.kind === "award" ? "w-[17rem] sm:w-[20rem] lg:w-[22rem]" : "w-[16rem] sm:w-[19rem] lg:w-[21rem]",
       });
     }
   }
@@ -129,21 +125,53 @@ function buildMasonryColumns(tiles: SocialProofTile[]): MasonryColumn[] {
   return cols;
 }
 
+function FeatureMarquee({ features }: { features: SocialProofFeature[] }) {
+  const loop = [...features, ...features];
+
+  return (
+    <div className="overflow-hidden" aria-label="Stay highlights, scrolling">
+      <ul className="marquee-track marquee-chips flex w-max items-stretch gap-3 pr-3 sm:gap-4 sm:pr-4">
+        {loop.map((feature, i) => {
+          const body = (
+            <>
+              <p className="text-[0.68rem] font-bold tracking-[0.16em] text-muted-foreground uppercase">
+                {feature.label}
+              </p>
+              <p className="mt-1.5 text-sm leading-snug text-foreground/80">{feature.note}</p>
+            </>
+          );
+          return (
+            <li
+              key={`${feature.label}-${feature.note}-${i}`}
+              className="min-w-[12.5rem] shrink-0 overflow-hidden rounded-[12px] border border-border bg-background sm:min-w-[14rem]"
+            >
+              {"href" in feature && feature.href ? (
+                <a href={feature.href} className="block px-5 py-3.5 transition-colors hover:bg-ivory">
+                  {body}
+                </a>
+              ) : (
+                <div className="px-5 py-3.5">{body}</div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 function MasonryMarquee({ tiles }: { tiles: SocialProofTile[] }) {
   const columns = buildMasonryColumns(tiles);
   const loop = [...columns, ...columns];
 
   return (
-    <div
-      className="mt-6 overflow-hidden sm:mt-8"
-      aria-label="Awards, reviews and moments, scrolling right to left"
-    >
-      <div className="marquee-track marquee-rtl flex w-max items-stretch gap-3 pr-3 sm:gap-4 sm:pr-4">
+    <div className="overflow-hidden" aria-label="Awards, reviews and moments, scrolling">
+      <div className="marquee-track marquee-rtl flex w-max items-stretch gap-3.5 pr-3.5 sm:gap-4 sm:pr-4 lg:gap-5 lg:pr-5">
         {loop.map((col, i) => (
           <div
             key={`col-${i}`}
             className={cn(
-              "flex h-[24rem] shrink-0 flex-col gap-3 sm:h-[28rem] sm:gap-3.5 lg:h-[30rem]",
+              "flex h-[32rem] shrink-0 flex-col gap-3.5 sm:h-[38rem] sm:gap-4 lg:h-[44rem] lg:gap-5",
               col.width,
             )}
           >
@@ -176,55 +204,24 @@ export function SocialProof({ hotel }: { hotel?: Hotel }) {
       ]
     : socialProofFeatures;
 
-  const subtitle = hotel
-    ? `${hotel.name}, ${hotel.place}.`
-    : "From both houses in Hyderabad.";
+  const subtitle = hotel ? `${hotel.name}, ${hotel.place}.` : "From both houses in Hyderabad.";
 
   return (
-    <section id="trusted" className="relative overflow-hidden bg-secondary py-10 sm:py-12 lg:py-14">
-      <div className="page-wrap relative">
+    <section id="trusted" className="relative overflow-hidden bg-secondary py-12 sm:py-14 lg:py-16">
+      <div className="page-wrap">
         <Reveal className="max-w-2xl">
           <p className="eyebrow text-muted-foreground">Trusted by guests</p>
-          <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:mt-3 sm:text-4xl">
+          <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:mt-3 sm:text-4xl lg:text-5xl">
             Awards, reviews & moments
           </h2>
-          <p className="mt-3 max-w-xl text-sm text-foreground/70">{subtitle}</p>
-        </Reveal>
-
-        <Reveal delay={0.05}>
-          <ul className="mt-6 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] sm:mt-8 [&::-webkit-scrollbar]:hidden">
-            {features.map((feature) => {
-              const body = (
-                <>
-                  <p className="text-[0.7rem] font-bold tracking-[0.16em] text-muted-foreground uppercase">
-                    {feature.label}
-                  </p>
-                  <p className="mt-1.5 text-sm leading-snug text-foreground/80">{feature.note}</p>
-                </>
-              );
-              return (
-                <li
-                  key={`${feature.label}-${feature.note}`}
-                  className="min-w-[10.5rem] shrink-0 overflow-hidden rounded-[10px] border border-border bg-background"
-                >
-                  {"href" in feature && feature.href ? (
-                    <a
-                      href={feature.href}
-                      className="block px-4 py-3 transition-colors hover:bg-ivory"
-                    >
-                      {body}
-                    </a>
-                  ) : (
-                    <div className="px-4 py-3">{body}</div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+          <p className="mt-3 text-sm text-foreground/70">{subtitle}</p>
         </Reveal>
       </div>
 
-      <MasonryMarquee tiles={socialProofTiles} />
+      <div className="mt-8 space-y-4 sm:mt-10 sm:space-y-5">
+        <FeatureMarquee features={features} />
+        <MasonryMarquee tiles={socialProofTiles} />
+      </div>
     </section>
   );
 }

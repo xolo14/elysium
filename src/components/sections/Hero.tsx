@@ -37,7 +37,7 @@ export function Hero() {
     <section
       ref={ref}
       id="home"
-      className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-forest text-ivory"
+      className="relative flex w-full flex-col overflow-hidden bg-forest text-ivory aspect-[2048/841] min-h-[34rem] md:min-h-0 md:max-h-[841px]"
     >
       <motion.div {...(hydrated ? { style: { y, scale } } : {})} className="absolute inset-0">
         {hydrated ? (
@@ -46,8 +46,8 @@ export function Hero() {
               key={hotel.id}
               src={hotel.hero}
               alt={`${hotel.name} — ${hotel.region}`}
-              width={1920}
-              height={1088}
+              width={2048}
+              height={841}
               initial={{ opacity: 0, scale: 1.06 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
@@ -59,8 +59,8 @@ export function Hero() {
           <img
             src={hotel.hero}
             alt={`${hotel.name} — ${hotel.region}`}
-            width={1920}
-            height={1088}
+            width={2048}
+            height={841}
             className="absolute inset-0 h-full w-full object-cover"
           />
         )}
@@ -70,22 +70,22 @@ export function Hero() {
 
       <motion.div
         {...(hydrated ? { style: { opacity: fade } } : {})}
-        className="page-wrap relative z-10 flex flex-1 flex-col justify-end pb-10 pt-28 sm:justify-center sm:pb-14 sm:pt-32"
+        className="page-wrap relative z-10 flex flex-1 flex-col justify-end pb-8 pt-24 sm:pb-10 sm:pt-28"
       >
         <div className="max-w-3xl">
-          <p className="font-hero text-[clamp(2.4rem,8vw,5.5rem)] leading-[0.92] tracking-[-0.02em] text-ivory/90">
+          <p className="font-hero text-[clamp(2.1rem,6.5vw,4.5rem)] leading-[0.92] tracking-[-0.02em] text-ivory/90">
             Fresh travel,
           </p>
-          <h1 className="font-hero mt-1 text-[clamp(2.75rem,9vw,6rem)] leading-[0.9] tracking-[-0.02em]">
+          <h1 className="font-hero mt-1 text-[clamp(2.4rem,7.5vw,5rem)] leading-[0.9] tracking-[-0.02em]">
             Hello Elysium.
           </h1>
-          <p className="mt-5 max-w-lg text-sm leading-relaxed text-ivory/75 sm:mt-6 sm:text-base">
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-ivory/75 sm:mt-5 sm:text-base">
             Serviced suites in Madhapur &amp; Hitec City. Direct rates.
           </p>
         </div>
 
         <form
-          className="mt-8 w-full max-w-xl sm:mt-10"
+          className="mt-6 w-full max-w-xl sm:mt-8"
           onSubmit={(e) => {
             e.preventDefault();
             onSearch();
@@ -123,7 +123,7 @@ export function Hero() {
 
         <Link
           to="/book"
-          className="link-luxe mt-8 inline-flex text-sm font-bold tracking-[0.16em] text-ivory/70 uppercase hover:text-ivory sm:mt-10"
+          className="link-luxe mt-6 inline-flex text-sm font-bold tracking-[0.16em] text-ivory/70 uppercase hover:text-ivory sm:mt-8"
         >
           Reserve a stay →
         </Link>

@@ -308,11 +308,17 @@
 
   .marquee-rtl {
     animation-name: marquee-rtl;
-    animation-duration: 70s;
+    animation-duration: 80s;
+  }
+
+  .marquee-chips {
+    animation-name: marquee-rtl;
+    animation-duration: 42s;
   }
 
   .marquee-track:hover,
-  .marquee-rtl:hover {
+  .marquee-rtl:hover,
+  .marquee-chips:hover {
     animation-play-state: paused;
   }
 }

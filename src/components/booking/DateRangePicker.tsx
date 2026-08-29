@@ -20,9 +20,10 @@ type DateRangePickerProps = {
   checkIn: string;
   checkOut: string;
   onRangeChange: (checkIn: string, checkOut: string) => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   minDate?: Date;
   className?: string;
+  compact?: boolean;
 };
 
 export function DateRangePicker({
@@ -32,6 +33,7 @@ export function DateRangePicker({
   onConfirm,
   minDate,
   className,
+  compact = false,
 }: DateRangePickerProps) {
   const today = useMemo(() => startOfDay(minDate ?? new Date()), [minDate]);
   const checkInDate = useMemo(
@@ -107,17 +109,27 @@ export function DateRangePicker({
 
   const renderMonth = (year: number, month: number) => (
     <div className="min-w-0 flex-1">
-      <p className="mb-3 h-7 text-center font-display text-lg leading-7 text-forest sm:mb-4 sm:h-8 sm:text-xl sm:leading-8">
+      <p
+        className={cn(
+          "text-center font-display leading-none text-forest",
+          compact ? "mb-2 text-sm" : "mb-3 h-7 text-lg leading-7 sm:mb-4 sm:h-8 sm:text-xl sm:leading-8",
+        )}
+      >
         {monthLabel(year, month)}
       </p>
       <div
-        className="grid grid-cols-7 gap-x-0 gap-y-0 text-center"
-        style={{ gridTemplateRows: "1.75rem repeat(6, 2.75rem)" }}
+        className="grid grid-cols-7 text-center"
+        style={{
+          gridTemplateRows: compact ? "1.15rem repeat(6, 1.85rem)" : "1.75rem repeat(6, 2.75rem)",
+        }}
       >
         {WEEKDAYS.map((day, i) => (
           <span
             key={`${year}-${month}-wd-${i}`}
-            className="flex items-center justify-center text-[0.65rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase"
+            className={cn(
+              "flex items-center justify-center font-semibold tracking-[0.12em] text-muted-foreground uppercase",
+              compact ? "text-[0.58rem]" : "text-[0.65rem]",
+            )}
           >
             {day}
           </span>
@@ -136,7 +148,8 @@ export function DateRangePicker({
               disabled={disabled}
               onClick={() => selectDate(date)}
               className={cn(
-                "mx-auto flex h-10 w-10 items-center justify-center text-sm transition-colors sm:h-11 sm:w-11",
+                "mx-auto flex items-center justify-center rounded-[6px] transition-colors",
+                compact ? "h-7 w-7 text-xs" : "h-10 w-10 text-sm sm:h-11 sm:w-11",
                 !inMonth && "invisible pointer-events-none",
                 disabled && inMonth && "cursor-not-allowed text-muted-foreground/35",
                 !disabled && !selected && !ranged && "text-foreground/80 hover:bg-secondary",
@@ -153,23 +166,28 @@ export function DateRangePicker({
   );
 
   return (
-    <div className={cn("w-full overflow-hidden border border-border bg-background", className)}>
-      <div className="border-b border-border bg-forest px-4 py-5 sm:px-8 sm:py-6">
-        <div className="mx-auto flex w-full max-w-4xl items-center gap-3 border border-ivory/20 bg-ivory/10 px-4 py-3.5 text-ivory sm:px-5">
-          <span className="text-sm font-medium sm:text-base">
-            {canConfirm
-              ? `${formatShort(checkIn)} → ${formatShort(checkOut)}`
-              : "Pick check-in & check-out dates"}
-          </span>
+    <div className={cn("w-full overflow-hidden bg-background", !compact && "border border-border", className)}>
+      {!compact ? (
+        <div className="border-b border-border bg-forest px-4 py-5 sm:px-8 sm:py-6">
+          <div className="mx-auto flex w-full max-w-4xl items-center gap-3 rounded-[10px] border border-ivory/20 bg-ivory/10 px-4 py-3.5 text-ivory sm:px-5">
+            <span className="text-sm font-medium sm:text-base">
+              {canConfirm
+                ? `${formatShort(checkIn)} → ${formatShort(checkOut)}`
+                : "Pick check-in & check-out dates"}
+            </span>
+          </div>
         </div>
-      </div>
+      ) : null}
 
-      <div className="relative bg-background px-3 py-6 sm:px-6 sm:py-8 lg:px-10">
+      <div className={cn("relative bg-background", compact ? "px-1 py-1" : "px-3 py-6 sm:px-6 sm:py-8 lg:px-10")}>
         <button
           type="button"
           onClick={goPrev}
           aria-label="Previous month"
-          className="absolute top-7 left-2 z-10 inline-flex h-9 w-9 items-center justify-center border border-border bg-background text-forest transition-colors hover:bg-secondary sm:left-4 lg:left-6"
+          className={cn(
+            "absolute z-10 inline-flex items-center justify-center rounded-[8px] border border-border bg-background text-forest transition-colors hover:bg-secondary",
+            compact ? "top-0 left-0 h-7 w-7" : "top-7 left-2 h-9 w-9 sm:left-4 lg:left-6",
+          )}
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -177,43 +195,53 @@ export function DateRangePicker({
           type="button"
           onClick={goNext}
           aria-label="Next month"
-          className="absolute top-7 right-2 z-10 inline-flex h-9 w-9 items-center justify-center border border-forest bg-forest text-ivory transition-opacity hover:opacity-90 sm:right-4 lg:right-6"
+          className={cn(
+            "absolute z-10 inline-flex items-center justify-center rounded-[8px] border border-forest bg-forest text-ivory transition-opacity hover:opacity-90",
+            compact ? "top-0 right-0 h-7 w-7" : "top-7 right-2 h-9 w-9 sm:right-4 lg:right-6",
+          )}
         >
           <ChevronRight className="h-4 w-4" />
         </button>
 
-        <div className="mx-auto flex w-full max-w-4xl flex-col items-stretch gap-8 px-8 sm:px-10 lg:flex-row lg:items-start lg:gap-14 lg:px-12">
+        <div
+          className={cn(
+            "flex w-full flex-col items-stretch",
+            compact ? "gap-4 px-8 pt-1 lg:flex-row lg:gap-6" : "mx-auto max-w-4xl gap-8 px-8 sm:px-10 lg:flex-row lg:items-start lg:gap-14 lg:px-12",
+          )}
+        >
           {renderMonth(viewMonth.year, viewMonth.month)}
-          <div className="hidden lg:block lg:min-w-0 lg:flex-1">
+          <div className={cn("min-w-0 flex-1", compact ? "hidden xl:block" : "hidden lg:block")}>
             {renderMonth(secondMonth.year, secondMonth.month)}
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border-t border-border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
-        <div className="mx-auto grid w-full max-w-4xl grid-cols-2 gap-6 sm:mx-0 sm:flex-1 sm:gap-10">
-          <div>
-            <p className="text-sm font-medium text-foreground sm:text-base">
-              {checkIn ? formatShort(checkIn) : "Select date"}
-            </p>
-            <p className="eyebrow mt-1 text-muted-foreground">Check-in</p>
+      {!compact && onConfirm ? (
+        <div className="flex flex-col gap-4 border-t border-border bg-background px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
+          <div className="mx-auto grid w-full max-w-4xl grid-cols-2 gap-6 sm:mx-0 sm:flex-1 sm:gap-10">
+            <div>
+              <p className="text-sm font-medium text-foreground sm:text-base">
+                {checkIn ? formatShort(checkIn) : "Select date"}
+              </p>
+              <p className="eyebrow mt-1 text-muted-foreground">Check-in</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground sm:text-base">
+                {checkOut ? formatShort(checkOut) : "Select date"}
+              </p>
+              <p className="eyebrow mt-1 text-muted-foreground">Check-out</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-medium text-foreground sm:text-base">
-              {checkOut ? formatShort(checkOut) : "Select date"}
-            </p>
-            <p className="eyebrow mt-1 text-muted-foreground">Check-out</p>
-          </div>
+          <button
+            type="button"
+            disabled={!canConfirm}
+            onClick={onConfirm}
+            className="eyebrow min-h-12 w-full shrink-0 rounded-[10px] border border-forest bg-forest px-10 py-3 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+          >
+            Confirm
+          </button>
         </div>
-        <button
-          type="button"
-          disabled={!canConfirm}
-          onClick={onConfirm}
-          className="eyebrow min-h-12 w-full shrink-0 border border-forest bg-forest px-10 py-3 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
-        >
-          Confirm
-        </button>
-      </div>
+      ) : null}
     </div>
   );
 }

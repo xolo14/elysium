@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/Reveal";
 import { BrandStar } from "@/lib/brand";
 
@@ -58,13 +59,13 @@ export function WhatMakesUs() {
         </div>
 
         <Reveal delay={0.15}>
-          <a
-            href="#why"
+          <Link
+            to="/why"
             className="eyebrow mx-auto mt-10 flex w-fit items-center justify-center gap-2.5 rounded-[10px] bg-ivory px-7 py-3.5 text-[0.8rem] tracking-[0.2em] text-forest transition-opacity hover:opacity-90 sm:mt-12 sm:px-8 sm:py-4 sm:text-[0.875rem]"
           >
-            Explore the 4B’s
+            Why Elysium
             <BrandStar className="h-3 w-3" />
-          </a>
+          </Link>
         </Reveal>
       </div>
     </section>
