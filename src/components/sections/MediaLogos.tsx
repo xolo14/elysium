@@ -14,7 +14,7 @@ const promises = [
 export function MediaLogos() {
   return (
     <section aria-label="Why book direct" className="border-y border-border bg-background py-8 sm:py-10">
-      <div className="mx-auto max-w-[1200px] px-5 sm:px-10">
+      <div className="page-wrap">
         <Reveal>
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12">
             {promises.map((name) => (

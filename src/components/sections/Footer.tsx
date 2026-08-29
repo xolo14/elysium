@@ -11,14 +11,13 @@ export function Footer() {
 
   return (
     <footer id="contact" className="relative overflow-hidden bg-forest text-ivory">
-      <div className="relative mx-auto w-full max-w-[1200px] px-5 pt-12 sm:px-10 sm:pt-14">
+      <div className="page-wrap relative pt-12 sm:pt-14">
         <Reveal>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
             <div className="lg:col-span-4">
               <BrandLockup className="text-ivory" />
               <p className="mt-5 max-w-xs text-sm leading-relaxed text-ivory/70">
-                Serviced suites in Madhapur &amp; Hitec City — quiet rooms, breakfast, and a front desk
-                that answers.
+                Serviced suites in Madhapur &amp; Hitec City.
               </p>
             </div>
 
@@ -102,7 +101,7 @@ export function Footer() {
         </Reveal>
       </div>
 
-      <div className="relative mx-auto mt-8 w-full max-w-[1200px] border-t border-ivory/15 px-5 py-5 sm:px-10">
+      <div className="page-wrap relative mt-8 border-t border-ivory/15 py-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="eyebrow flex items-center gap-2 text-ivory/50">
             <BrandStar className="h-2 w-2" />

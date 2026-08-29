@@ -55,7 +55,7 @@ export function FourBHighlight({ className }: { className?: string }) {
               <button
                 type="button"
                 onClick={collapse}
-                className="eyebrow inline-flex items-center gap-2 border border-ivory/35 px-5 py-3 text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
+                className="eyebrow inline-flex items-center gap-2 rounded-[10px] border border-ivory/35 px-5 py-3 text-ivory/80 transition-colors hover:border-ivory hover:text-ivory"
               >
                 <BrandStar className="h-2.5 w-2.5 rotate-45" />
                 Close the 4B’s

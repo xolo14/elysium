@@ -83,7 +83,8 @@
 }
 
 :root {
-  --radius: 0rem;
+  /* Soft corners — a little curve, not pills */
+  --radius: 0.625rem;
 
   --ivory: oklch(0.9665 0.0149 94.2);
   --ivory-dim: oklch(0.9366 0.0219 92.51);
@@ -210,6 +211,24 @@
     }
   }
 
+  /* One page grid — every guest page aligns to this */
+  .page-wrap {
+    width: 100%;
+    max-width: 75rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .page-wrap {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .soft {
+    border-radius: 10px;
+  }
+
   /* Shared premium display scale for section titles */
   .display-title {
     font-family: var(--font-display);
@@ -236,6 +255,7 @@
     background: color-mix(in oklab, var(--ivory) 62%, transparent);
     backdrop-filter: blur(22px) saturate(130%);
     border: 1px solid color-mix(in oklab, var(--forest) 12%, transparent);
+    border-radius: 10px;
   }
 
   .glass-dark {

@@ -7,25 +7,25 @@ const fourBs = [
   {
     title: "Bed",
     label: "Rest, properly",
-    copy: "A quiet, considered room with a comfortable bed, fresh linen and enough space to let a long day disappear. Elysium is designed for the sleep that makes the next day better.",
+    copy: "A quiet room, a considered bed, fresh linen.",
     detail: "Daily housekeeping · Fresh linen · Quiet floors",
   },
   {
     title: "Breakfast",
     label: "Start with something real",
-    copy: "Breakfast is part of the stay, not an afterthought. Begin with a generous spread at O Sorriso, or take the morning at your own pace before the city begins.",
+    copy: "A real breakfast at O Sorriso — or at your own pace.",
     detail: "Complimentary buffet · 7–10:30 am · In-room service",
   },
   {
     title: "Bathroom",
     label: "The private reset",
-    copy: "Clean lines, hot water and the practical details that matter after travel. Every bathroom is kept ready for the rhythm of a short visit or a month-long stay.",
+    copy: "Hot water, fresh towels, ready after travel.",
     detail: "Hot water · Fresh towels · Daily service",
   },
   {
     title: "Balcony",
     label: "Your own open air",
-    copy: "Step outside and change the pace. Selected suites open onto private balconies with city views — a place for the first coffee, a late call or a quiet evening.",
+    copy: "Selected suites open to private air and city views.",
     detail: "Selected suites · City views · Private outdoor space",
   },
 ];
@@ -70,7 +70,7 @@ function StackCard({
       {/* Never put transform on the sticky node itself */}
       <motion.div style={{ scale, opacity }} className="origin-top will-change-transform">
         <div className="grid min-w-0 items-stretch gap-5 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] sm:gap-8">
-          <div className="relative aspect-[16/11] min-w-0 overflow-hidden bg-forest-deep shadow-[0_28px_70px_-28px_rgba(0,0,0,0.55)] sm:aspect-[4/5]">
+          <div className="relative aspect-[16/11] min-w-0 overflow-hidden rounded-[10px] bg-forest-deep sm:aspect-[4/5]">
             {image ? (
               <img
                 src={image}
@@ -79,7 +79,7 @@ function StackCard({
                 className="h-full w-full object-cover"
               />
             ) : null}
-            <span className="absolute top-4 left-4 bg-forest px-3 py-1.5 text-xs font-semibold tracking-wide text-ivory">
+            <span className="absolute top-4 left-4 rounded-[8px] bg-forest px-3 py-1.5 text-xs font-semibold tracking-wide text-ivory">
               0{index + 1}
             </span>
           </div>
@@ -117,12 +117,12 @@ export function WhyElysium({ embedded = false }: { embedded?: boolean }) {
       }
     >
       <BrandLineCorner className="pointer-events-none absolute top-12 right-8 hidden h-32 w-16 rotate-180 text-ivory/25 lg:right-16 lg:block" />
-      <div className="mx-auto max-w-[1600px] px-5 sm:px-10">
+      <div className="page-wrap">
         <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
           <div className="min-w-0">
             <div className="lg:sticky lg:top-24 lg:pb-8">
               <p className="max-w-sm text-sm leading-relaxed text-ivory/70">
-                {hotel.name} is built around the details that make serviced living feel like home.
+                The details that make a stay feel complete.
               </p>
               <div aria-label="Four reasons to choose Elysium" className="mt-6 select-none lg:mt-10">
                 <p className="font-display text-[clamp(4.25rem,20vw,20rem)] font-bold leading-[0.72] tracking-[-0.06em] text-ivory lg:text-[clamp(8rem,16vw,20rem)]">

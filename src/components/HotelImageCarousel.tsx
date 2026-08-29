@@ -89,7 +89,7 @@ export function HotelGalleryBar({
               type="button"
               onClick={onPrev}
               aria-label="Previous image"
-              className="inline-flex h-9 w-9 items-center justify-center border border-ivory/40 bg-forest/40 text-ivory transition-colors hover:bg-ivory hover:text-forest"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-[8px] border border-ivory/40 bg-forest/40 text-ivory transition-colors hover:bg-ivory hover:text-forest"
             >
               <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
@@ -97,7 +97,7 @@ export function HotelGalleryBar({
               type="button"
               onClick={onNext}
               aria-label="Next image"
-              className="inline-flex h-9 w-9 items-center justify-center border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-[8px] border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90"
             >
               <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
@@ -216,7 +216,7 @@ export function HotelImageCarousel({
                     type="button"
                     onClick={goPrev}
                     aria-label="Previous image"
-                    className="inline-flex h-11 w-11 items-center justify-center border border-ivory/40 bg-forest/35 text-ivory backdrop-blur-sm transition-colors hover:bg-ivory hover:text-forest"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-[8px] border border-ivory/40 bg-forest/35 text-ivory backdrop-blur-sm transition-colors hover:bg-ivory hover:text-forest"
                   >
                     <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                   </button>
@@ -224,7 +224,7 @@ export function HotelImageCarousel({
                     type="button"
                     onClick={goNext}
                     aria-label="Next image"
-                    className="inline-flex h-11 w-11 items-center justify-center border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-[8px] border border-ivory/40 bg-ivory text-forest transition-opacity hover:opacity-90"
                   >
                     <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                   </button>

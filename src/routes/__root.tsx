@@ -22,18 +22,18 @@ function NotFoundComponent() {
       </h1>
       <h2 className="mt-4 font-display text-2xl sm:text-3xl">This page has checked out</h2>
       <p className="mt-3 max-w-sm text-center text-sm leading-relaxed text-ivory/70">
-        The link may be outdated, or the room never existed. Head home or book a stay at either house.
+        This room has checked out. Home, or book a stay.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           to="/"
-          className="eyebrow inline-flex min-h-12 items-center bg-ivory px-6 text-forest transition-opacity hover:opacity-90"
+          className="eyebrow inline-flex min-h-12 items-center rounded-[10px] bg-ivory px-6 text-forest transition-opacity hover:opacity-90"
         >
           Go home
         </Link>
         <Link
           to="/book"
-          className="eyebrow inline-flex min-h-12 items-center border border-ivory/40 px-6 text-ivory transition-colors hover:bg-ivory/10"
+          className="eyebrow inline-flex min-h-12 items-center rounded-[10px] border border-ivory/40 px-6 text-ivory transition-colors hover:bg-ivory/10"
         >
           Book a stay
         </Link>
@@ -130,7 +130,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MotionConfig reducedMotion="never" transition={{ ease: [0.16, 1, 0.3, 1] }}>
+      <MotionConfig reducedMotion="user" transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
       </MotionConfig>

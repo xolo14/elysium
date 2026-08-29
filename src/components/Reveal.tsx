@@ -14,7 +14,7 @@ type RevealProps = {
 };
 
 /** Soft upward fade — SSR/prerender stays visible to avoid hydration mismatch. */
-export function Reveal({ children, className, delay = 0, y = 28, once = true }: RevealProps) {
+export function Reveal({ children, className, delay = 0, y = 16, once = true }: RevealProps) {
   const hydrated = useHydrated();
 
   if (!hydrated) {
@@ -25,8 +25,8 @@ export function Reveal({ children, className, delay = 0, y = 28, once = true }: 
     <motion.div
       initial={{ opacity: 0.001, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, amount: 0.08, margin: "0px 0px -5% 0px" }}
-      transition={{ duration: 0.85, delay, ease }}
+      viewport={{ once, amount: 0.12, margin: "0px 0px -4% 0px" }}
+      transition={{ duration: 0.6, delay, ease }}
       className={className}
     >
       {children}

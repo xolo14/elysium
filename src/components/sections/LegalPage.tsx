@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { BrandStar } from "@/lib/brand";
 import { SITE_EMAIL } from "@/lib/site";
+import { Reveal } from "@/components/Reveal";
 
 type Section = { heading: string; body: string[] };
 
@@ -16,7 +17,8 @@ export function LegalPage({
   sections: Section[];
 }) {
   return (
-    <article className="mx-auto max-w-[760px] px-5 pt-28 pb-20 sm:px-10 sm:pt-36 sm:pb-28">
+    <article className="mx-auto max-w-[720px] px-5 pt-28 pb-20 sm:px-10 sm:pt-36 sm:pb-28">
+      <Reveal>
       <p className="eyebrow text-muted-foreground">Elysium Hotels</p>
       <h1 className="mt-4 font-display text-[clamp(2.25rem,5vw,3.5rem)] leading-[0.95] tracking-[-0.02em] text-forest">
         {title}
@@ -51,6 +53,7 @@ export function LegalPage({
           .
         </p>
       </div>
+      </Reveal>
     </article>
   );
 }

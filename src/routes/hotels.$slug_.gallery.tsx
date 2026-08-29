@@ -44,11 +44,11 @@ function HotelGalleryPage() {
         <Nav />
 
       <header className="border-b border-ivory/15">
-        <div className="mx-auto flex max-w-[1400px] items-center gap-4 px-5 py-5 sm:px-10">
+        <div className="page-wrap flex items-center gap-4 py-5">
           <Link
             to="/hotels/$slug"
             params={{ slug: hotel.slug }}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-ivory/30 transition-colors hover:bg-ivory hover:text-forest"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[10px] border border-ivory/30 transition-colors hover:bg-ivory hover:text-forest"
             aria-label={`Back to ${hotel.name}`}
           >
             <ArrowLeft className="h-5 w-5" />
@@ -62,8 +62,8 @@ function HotelGalleryPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-[1400px] px-5 py-10 sm:px-10 sm:py-14">
-        <div className="rounded-sm bg-ivory px-5 py-8 text-forest sm:px-8 sm:py-10">
+      <div className="page-wrap py-10 sm:py-14">
+        <div className="rounded-[10px] bg-ivory px-5 py-8 text-forest sm:px-8 sm:py-10">
           {albums.map((album) => (
             <section key={album.title} className="not-first:mt-14 sm:not-first:mt-16">
               <Reveal>
@@ -74,7 +74,7 @@ function HotelGalleryPage() {
                 {album.images.map((image) => (
                   <figure
                     key={`${album.title}-${image.src}`}
-                    className="group overflow-hidden bg-secondary"
+                    className="group overflow-hidden rounded-[10px] bg-secondary"
                   >
                     <img
                       src={image.src}

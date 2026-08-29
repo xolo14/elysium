@@ -102,25 +102,24 @@ export function Booking({
           className="absolute inset-0 h-full w-full object-cover opacity-35"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-forest/70 via-forest/75 to-forest" />
-        <div className="relative mx-auto max-w-[1400px] px-5 pt-32 pb-16 sm:px-10 sm:pt-40 sm:pb-20">
+        <div className="page-wrap relative pt-32 pb-16 sm:pt-40 sm:pb-20">
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease }}
+            transition={{ duration: 0.6, ease }}
           >
             <p className="eyebrow text-ivory/60">Reservations</p>
             <h1 className="mt-5 max-w-3xl font-display text-[clamp(2.75rem,6.5vw,5rem)] leading-[0.92] tracking-[-0.02em]">
               Book your stay
             </h1>
             <p className="mt-5 max-w-md text-sm text-ivory/70">
-              Direct rates include taxes, breakfast and Wi‑Fi. Free cancellation up to 24 hours
-              before arrival.
+              Taxes, breakfast and Wi‑Fi included. Free cancel 24 hours before arrival.
             </p>
           </motion.div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1400px] px-5 py-12 sm:px-10 sm:py-16 lg:py-20">
+      <section className="page-wrap py-12 sm:py-16 lg:py-20">
         <div>
           <p className="eyebrow text-muted-foreground">House</p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -133,7 +132,7 @@ export function Booking({
                   onClick={() => selectHotel(h.id)}
                   aria-pressed={active}
                   className={cn(
-                    "group relative overflow-hidden text-left transition-colors duration-500",
+                    "group relative overflow-hidden rounded-[10px] text-left transition-colors duration-500",
                     active ? "bg-forest text-ivory" : "bg-secondary text-foreground hover:bg-forest/5",
                   )}
                 >
@@ -181,7 +180,7 @@ export function Booking({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5, ease }}
-              className="mt-14 border border-border bg-secondary p-8 sm:p-12"
+              className="mt-14 rounded-[10px] border border-border bg-secondary p-8 sm:p-12"
             >
               <p className="eyebrow text-muted-foreground">Confirmed request</p>
               <h2 className="mt-4 font-display text-3xl sm:text-4xl">Thank you, {form.name}</h2>
@@ -199,7 +198,7 @@ export function Booking({
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
-                  className="eyebrow inline-flex min-h-12 items-center bg-forest px-6 py-3 text-ivory"
+                  className="eyebrow inline-flex min-h-12 items-center rounded-[10px] bg-forest px-6 py-3 text-ivory"
                 >
                   Call {hotel.contact.phone}
                 </a>
@@ -214,7 +213,7 @@ export function Booking({
                     setBookingId(null);
                     setError(null);
                   }}
-                  className="eyebrow inline-flex min-h-12 items-center border border-foreground/20 px-6 py-3"
+                  className="eyebrow inline-flex min-h-12 items-center rounded-[10px] border border-foreground/20 px-6 py-3"
                 >
                   New request
                 </button>
@@ -287,7 +286,7 @@ export function Booking({
                                 onClick={() => setSuite(s)}
                                 aria-pressed={active}
                                 className={cn(
-                                  "grid grid-cols-[5.5rem_1fr_auto] items-center gap-4 border px-3 py-3 text-left transition-colors duration-500 sm:grid-cols-[8rem_1fr_auto] sm:gap-6 sm:px-4 sm:py-4",
+                                  "grid grid-cols-[5.5rem_1fr_auto] items-center gap-4 rounded-[10px] border px-3 py-3 text-left transition-colors duration-500 sm:grid-cols-[8rem_1fr_auto] sm:gap-6 sm:px-4 sm:py-4",
                                   active
                                     ? "border-forest bg-secondary"
                                     : "border-border hover:border-foreground/35",
@@ -297,7 +296,7 @@ export function Booking({
                                   src={s.image}
                                   alt=""
                                   loading="lazy"
-                                  className="aspect-[4/3] w-full object-cover"
+                                  className="aspect-[4/3] w-full rounded-[8px] object-cover"
                                 />
                                 <span className="min-w-0">
                                   <span className="flex items-center gap-2">
@@ -333,7 +332,7 @@ export function Booking({
                     </div>
 
                     <aside className="lg:col-span-5">
-                      <div className="border border-border bg-secondary p-6 sm:p-8 lg:sticky lg:top-28">
+                      <div className="rounded-[10px] border border-border bg-secondary p-6 sm:p-8 lg:sticky lg:top-28">
                         <p className="eyebrow text-muted-foreground">Summary</p>
                         <h3 className="mt-4 font-display text-2xl">{suite.name}</h3>
                         <p className="mt-2 text-sm text-foreground/70">
@@ -379,7 +378,7 @@ export function Booking({
                         <button
                           type="submit"
                           disabled={submitting}
-                          className="mt-8 flex w-full min-h-14 items-center justify-center gap-3 bg-forest px-6 py-4 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                          className="mt-8 flex w-full min-h-14 items-center justify-center gap-3 rounded-[10px] bg-forest px-6 py-4 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           <BrandStar className="h-2.5 w-2.5 text-accent" />
                           <span className="eyebrow">

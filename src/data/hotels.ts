@@ -135,9 +135,9 @@ export const hotels: Hotel[] = [
     region: "Madhapur, Hyderabad",
     badge: "Studio Suites",
     established: "2026",
-    tagline: "Serviced studio living in the heart of Madhapur",
+    tagline: "Studio living in Madhapur",
     summary:
-      "Serviced studio suites minutes from Hitec City, built for long stays: kitchenettes, work desks, daily housekeeping and a quiet address inside Ayyappa Society.",
+      "Studio suites near Hitec City — kitchenettes, desks, daily housekeeping.",
     hero: heroLivingUrl,
     rating: "4.7",
     fromRate: "₹4,200",
@@ -325,9 +325,9 @@ export const hotels: Hotel[] = [
     region: "Hitec City, Hyderabad",
     badge: "Premier Suites",
     established: "2026",
-    tagline: "Premier suites at the centre of Hitec City",
+    tagline: "Premier suites in Hitec City",
     summary:
-      "Our larger house: premier one and two bedroom suites with full kitchens, arched media walls and balconies, steps from the Hitec City business district.",
+      "One and two bedroom suites with kitchens and balconies, steps from Hitec City.",
     hero: premierEntrance,
     rating: "4.8",
     fromRate: "₹5,600",

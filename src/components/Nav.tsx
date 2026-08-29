@@ -139,7 +139,7 @@ export function Nav() {
           <Link
             to="/book"
             onClick={() => setOpen(false)}
-            className="eyebrow relative z-10 mt-6 flex min-h-14 shrink-0 items-center justify-between border border-ivory/35 px-5 py-4"
+            className="eyebrow relative z-10 mt-6 flex min-h-14 shrink-0 items-center justify-between rounded-[10px] border border-ivory/35 px-5 py-4"
           >
             Reserve a stay <BrandStar className="h-3 w-3" />
           </Link>
@@ -173,7 +173,7 @@ function NavBar({
   return (
     <nav
       className={cn(
-        "relative flex w-full items-center justify-between gap-4 px-4 py-3.5 transition-all duration-700 ease-luxe sm:px-6 sm:py-4 lg:px-8",
+        "relative flex w-full items-center justify-between gap-4 rounded-[10px] px-4 py-3.5 transition-all duration-700 ease-luxe sm:px-6 sm:py-4 lg:px-8",
         solid
           ? "glass text-foreground shadow-[0_20px_60px_-40px_rgba(0,0,0,0.4)]"
           : "border border-transparent text-ivory",
@@ -204,7 +204,7 @@ function NavBar({
           </button>
 
           {hotelsOpen ? (
-            <ul className="glass absolute top-full left-0 w-72 py-2 text-foreground">
+            <ul className="glass absolute top-full left-0 w-72 rounded-[10px] py-2 text-foreground">
               {hotels.map((h) => (
                 <li key={h.id}>
                   <Link
@@ -267,7 +267,7 @@ function NavBar({
         <Link
           to="/book"
           className={cn(
-            "group flex min-h-12 items-center gap-2 border px-5 py-3 transition-colors duration-700 sm:gap-3 sm:px-7 sm:py-3.5",
+            "group flex min-h-12 items-center gap-2 rounded-[10px] border px-5 py-3 transition-colors duration-700 sm:gap-3 sm:px-7 sm:py-3.5",
             solid
               ? "border-foreground/25 hover:bg-foreground hover:text-ivory"
               : "border-ivory/40 hover:bg-ivory hover:text-forest",

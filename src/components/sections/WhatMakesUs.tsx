@@ -4,19 +4,19 @@ import { BrandStar } from "@/lib/brand";
 const pillars = [
   {
     title: "Hospitality with heart",
-    copy: "Like a host you can always rely on — we’re there every step of your stay, from check-in to the quiet of your suite.",
+    copy: "A host at every step — from check-in to the quiet of your suite.",
     image: "/images/image-9.png",
     alt: "Quiet bedroom suite at Elysium",
   },
   {
     title: "Kept spotless",
-    copy: "We design suites to stay easy to keep ready — daily housekeeping, fresh linen and the details guests notice first.",
+    copy: "Daily housekeeping, fresh linen, and the details guests notice first.",
     image: "/images/image-10.png",
     alt: "Serviced living space at Elysium",
   },
   {
     title: "Sleep, properly",
-    copy: "Quiet floors, considered beds and the rest that makes the next day in Hyderabad better — short visit or month-long stay.",
+    copy: "Quiet floors and considered beds — for a night or a month.",
     image: "/images/hero-suite-living.png",
     alt: "Living room suite at Elysium",
   },
@@ -26,21 +26,21 @@ const pillars = [
 export function WhatMakesUs() {
   return (
     <section id="makes-us" className="relative overflow-hidden bg-forest py-14 text-ivory sm:py-16 lg:py-20">
-      <div className="mx-auto max-w-[1200px] px-5 sm:px-10">
+      <div className="page-wrap">
         <Reveal>
           <h2 className="text-center font-display text-[clamp(2.25rem,5vw,3.5rem)] leading-[0.95] tracking-[-0.02em]">
             What makes us Elysium?
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-center text-sm leading-relaxed text-ivory/70 sm:text-base">
-            With so much to tell &amp; so little time, here are a few key highlights.
+          <p className="mx-auto mt-4 max-w-md text-center text-sm text-ivory/70">
+            Three things we never compromise.
           </p>
         </Reveal>
 
         <div className="mt-10 grid gap-5 sm:mt-12 sm:grid-cols-3 sm:gap-6">
           {pillars.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
-              <article className="flex h-full flex-col overflow-hidden bg-ivory text-forest">
-                <div className="aspect-[5/4] overflow-hidden">
+              <article className="flex h-full flex-col overflow-hidden rounded-[10px] bg-ivory text-forest">
+                <div className="aspect-[5/4] overflow-hidden rounded-t-[10px]">
                   <img
                     src={p.image}
                     alt={p.alt}
@@ -60,7 +60,7 @@ export function WhatMakesUs() {
         <Reveal delay={0.15}>
           <a
             href="#why"
-            className="eyebrow mx-auto mt-10 flex w-fit items-center justify-center gap-2.5 bg-ivory px-7 py-3.5 text-[0.8rem] tracking-[0.2em] text-forest transition-opacity hover:opacity-90 sm:mt-12 sm:px-8 sm:py-4 sm:text-[0.875rem]"
+            className="eyebrow mx-auto mt-10 flex w-fit items-center justify-center gap-2.5 rounded-[10px] bg-ivory px-7 py-3.5 text-[0.8rem] tracking-[0.2em] text-forest transition-opacity hover:opacity-90 sm:mt-12 sm:px-8 sm:py-4 sm:text-[0.875rem]"
           >
             Explore the 4B’s
             <BrandStar className="h-3 w-3" />

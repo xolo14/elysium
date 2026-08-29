@@ -15,7 +15,7 @@ const cards: PartnerCard[] = [
   {
     id: "owners",
     title: "Developers & Owners",
-    copy: "We're growing carefully across Hyderabad — don't miss a partnership.",
+    copy: "Growing carefully across Hyderabad.",
     cta: "Learn more",
     href: "/about",
     illustration: "building",
@@ -23,7 +23,7 @@ const cards: PartnerCard[] = [
   {
     id: "corporate",
     title: "Corporate Bookings",
-    copy: "With houses in Madhapur and Hitec City, we're built for project stays and relocating teams.",
+    copy: "Project stays and relocating teams — two houses, one desk.",
     cta: "Learn more",
     href: "mailto:elysium.hyd@gmail.com?subject=Corporate%20bookings",
     illustration: "desk",
@@ -31,7 +31,7 @@ const cards: PartnerCard[] = [
   {
     id: "careers",
     title: "Careers @ Elysium",
-    copy: "Work with a team that keeps hospitality personal — two houses, one standard.",
+    copy: "Hospitality kept personal. Two houses, one standard.",
     cta: "Learn more",
     href: "mailto:elysium.hyd@gmail.com?subject=Careers%20at%20Elysium",
     illustration: "lounge",
@@ -99,7 +99,7 @@ const art = {
 export function Partnerships() {
   return (
     <section id="partners" className="relative overflow-hidden bg-secondary py-12 sm:py-14 lg:py-16">
-      <div className="relative mx-auto max-w-[1200px] px-5 sm:px-10">
+      <div className="page-wrap relative">
         <ul className="grid gap-5 sm:grid-cols-3 sm:gap-6">
           {cards.map((card, index) => {
             const Art = art[card.illustration];
@@ -109,7 +109,7 @@ export function Partnerships() {
                   <a
                     href={card.href}
                     className={cn(
-                      "group flex h-full flex-col border border-forest/20 bg-background p-6 transition-colors duration-500",
+                      "group flex h-full flex-col rounded-[10px] border border-forest/20 bg-background p-6 transition-colors duration-500",
                       "hover:border-forest/40 hover:bg-ivory sm:p-7",
                     )}
                   >

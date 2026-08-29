@@ -10,15 +10,13 @@ export function FaqBand() {
 
   return (
     <section id="faqs" className="relative overflow-hidden bg-background py-14 sm:py-16 lg:py-20">
-      <div className="mx-auto max-w-[800px] px-5 sm:px-10">
+      <div className="page-wrap max-w-[800px]">
         <Reveal>
           <p className="eyebrow text-muted-foreground">Before you book</p>
           <h2 className="mt-3 font-display text-[clamp(2rem,4.5vw,3rem)] leading-[0.95] tracking-[-0.02em] text-forest">
             Frequently asked questions
           </h2>
-          <p className="mt-3 max-w-lg text-sm leading-relaxed text-foreground/65 sm:text-base">
-            Practical answers for both houses — Madhapur and Hitec City.
-          </p>
+          <p className="mt-3 text-sm text-foreground/65">Madhapur and Hitec City.</p>
         </Reveal>
 
         <ul className="mt-10 divide-y divide-border border-y border-border">

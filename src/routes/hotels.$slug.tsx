@@ -144,18 +144,18 @@ function HotelIntro({
         </div>
       ) : null}
 
-      <div className="relative z-30 mx-auto -mt-24 max-w-[1400px] px-4 sm:-mt-28 sm:px-10">
+      <div className="page-wrap relative z-30 -mt-24 sm:-mt-28">
         <HotelGalleryBar
           caption={currentSlide?.caption}
           hotelSlug={hotel.slug}
           slideCount={slides.length}
           onPrev={goPrev}
           onNext={goNext}
-          className="mb-3 border border-ivory/15 bg-forest/55 backdrop-blur-md sm:mb-4"
+          className="mb-3 rounded-[10px] border border-ivory/15 bg-forest/55 backdrop-blur-md sm:mb-4"
         />
 
         {/* Bloom-style booking strip */}
-        <div className="border border-forest/10 bg-forest text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.25)]">
+        <div className="overflow-hidden rounded-[10px] border border-forest/10 bg-forest text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.25)]">
           <div className="grid gap-0 lg:grid-cols-[1.4fr_1fr_1fr_0.7fr_auto]">
             <div className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
               <p className="eyebrow text-ivory/60">Property</p>
@@ -205,7 +205,7 @@ function HotelIntro({
               <button
                 type="button"
                 onClick={onSearchStay}
-                className="flex min-h-12 w-full items-center justify-center bg-ivory px-8 text-forest transition-opacity hover:opacity-90"
+                className="flex min-h-12 w-full items-center justify-center rounded-[8px] bg-ivory px-8 text-forest transition-opacity hover:opacity-90"
               >
                 <span className="eyebrow">Search</span>
               </button>
@@ -213,7 +213,7 @@ function HotelIntro({
           </div>
         </div>
 
-        <div className="mt-8 bg-background px-5 py-8 sm:px-10 sm:py-10">
+        <div className="mt-8 rounded-[10px] bg-background px-5 py-8 sm:px-10 sm:py-10">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 max-w-2xl">
               <h1 className="font-display text-[1.85rem] leading-tight sm:text-5xl">
@@ -221,9 +221,9 @@ function HotelIntro({
               </h1>
               <p className="mt-2 flex items-center gap-2 text-sm text-foreground/70">
                 <BrandStar className="h-2.5 w-2.5 text-forest" />
-                {hotel.rating}/5 · {hotel.place}, Hyderabad
+                {hotel.rating}/5 · {hotel.place}
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-foreground/75 sm:text-base">
+              <p className="mt-4 max-w-lg text-sm leading-relaxed text-foreground/75">
                 {hotel.summary}
               </p>
             </div>
@@ -267,19 +267,17 @@ function Rooms({ hotel }: { hotel: Hotel }) {
   const [selected, setSelected] = useState<Suite | null>(null);
 
   return (
-    <section id="rooms" data-anchor="booking" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
+    <section id="rooms" data-anchor="booking" className="page-wrap py-16">
       <span id="booking" className="block" />
       <Reveal>
         <h2 className="font-display text-4xl text-forest sm:text-5xl">Rooms</h2>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Book directly to request Early Check-in / Late Check-out, as per availability.
-        </p>
+        <p className="mt-3 text-sm text-muted-foreground">Early check-in on request.</p>
       </Reveal>
 
       <div className="mt-10 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
         {hotel.suites.map((s, idx) => (
           <Reveal key={s.name} delay={idx * 0.05}>
-            <article className="flex h-full flex-col border border-border bg-background">
+            <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-border bg-background">
               <img
                 src={s.image}
                 alt={`${s.name} at ${hotel.name}, ${hotel.place}`}
@@ -304,7 +302,7 @@ function Rooms({ hotel }: { hotel: Hotel }) {
                 <button
                   type="button"
                   onClick={() => setSelected(s)}
-                  className="eyebrow mt-4 w-full bg-forest py-3 text-ivory transition-colors hover:bg-forest/90"
+                  className="eyebrow mt-4 w-full rounded-[10px] bg-forest py-3 text-ivory transition-colors hover:bg-forest/90"
                 >
                   Book
                 </button>
@@ -399,7 +397,7 @@ function BookingPanel({
       onClick={onClose}
     >
       <div
-        className="max-h-[92svh] w-full max-w-5xl overflow-y-auto bg-background p-4 sm:p-8"
+        className="max-h-[92svh] w-full max-w-5xl overflow-y-auto rounded-[10px] bg-background p-4 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-6">
@@ -422,7 +420,7 @@ function BookingPanel({
         </div>
 
         {sent ? (
-          <div className="mt-10 border border-border p-6">
+          <div className="mt-10 rounded-[10px] border border-border p-6">
             <p className="font-display text-2xl">Request received</p>
             <p className="mt-4 text-sm leading-relaxed text-foreground/80">
               Thank you, {form.name || "guest"}. Our front desk will confirm {rooms} room
@@ -504,7 +502,7 @@ function BookingPanel({
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="eyebrow border border-foreground/25 px-8 py-3 transition-colors hover:bg-forest hover:text-ivory disabled:opacity-60"
+                    className="eyebrow rounded-[10px] border border-foreground/25 px-8 py-3 transition-colors hover:bg-forest hover:text-ivory disabled:opacity-60"
                   >
                     {submitting ? "Saving…" : "Confirm request"}
                   </button>
@@ -521,7 +519,7 @@ function BookingPanel({
 function Amenities({ hotel }: { hotel: Hotel }) {
   return (
     <section id="amenities" className="border-y border-border bg-background py-10 sm:py-12">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-10">
+      <div className="page-wrap">
         <Reveal>
           <p className="eyebrow tracking-[0.28em] text-forest/55">Amenities</p>
         </Reveal>
@@ -535,7 +533,7 @@ function Amenities({ hotel }: { hotel: Hotel }) {
 
 function Reviews({ hotel }: { hotel: Hotel }) {
   return (
-    <section id="reviews" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
+    <section id="reviews" className="page-wrap py-16">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-display text-4xl text-forest sm:text-5xl">Reviews</h2>
@@ -549,7 +547,7 @@ function Reviews({ hotel }: { hotel: Hotel }) {
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {hotel.testimonials.map((t, i) => (
           <Reveal key={t.name} delay={i * 0.06}>
-            <blockquote className="flex h-full flex-col border border-border p-6">
+            <blockquote className="flex h-full flex-col rounded-[10px] border border-border p-6">
               <div className="flex gap-1 text-forest">
                 {Array.from({ length: 5 }).map((_, s) => (
                   <BrandStar key={s} className="h-2.5 w-2.5" />
@@ -575,7 +573,7 @@ function LocationBlock({ hotel }: { hotel: Hotel }) {
 
   return (
     <section id="location" className="border-y border-border bg-background py-16">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-10">
+      <div className="page-wrap">
         <Reveal>
           <h2 className="font-display text-4xl text-forest sm:text-5xl">Location</h2>
         </Reveal>
@@ -588,8 +586,7 @@ function LocationBlock({ hotel }: { hotel: Hotel }) {
                 ))}
               </div>
               <div className="mt-8 space-y-3 text-sm text-foreground/70">
-                <p>Near Hitec City & Madhapur business corridor</p>
-                <p>Airport transfer available on request</p>
+                <p>Near Hitec City. Airport transfer on request.</p>
               </div>
               <div className="mt-8 flex flex-wrap gap-6">
                 <a
@@ -608,7 +605,7 @@ function LocationBlock({ hotel }: { hotel: Hotel }) {
             </address>
           </Reveal>
           <Reveal delay={0.08}>
-            <div className="aspect-[4/3] overflow-hidden border border-border bg-secondary">
+            <div className="aspect-[4/3] overflow-hidden rounded-[10px] border border-border bg-secondary">
               <iframe
                 title={`Map — ${hotel.name}`}
                 src={mapSrc}
@@ -626,9 +623,9 @@ function LocationBlock({ hotel }: { hotel: Hotel }) {
 
 function FaqBlock() {
   return (
-    <section id="faqs" className="mx-auto max-w-[1400px] px-4 py-16 sm:px-10">
+    <section id="faqs" className="page-wrap py-16">
       <Reveal>
-        <h2 className="font-display text-4xl text-forest sm:text-5xl">Frequently asked questions</h2>
+        <h2 className="font-display text-4xl text-forest sm:text-5xl">Questions</h2>
       </Reveal>
       <dl className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
         {hotelFaqs.map((item, i) => (
@@ -649,14 +646,14 @@ function DiscoverOther({ currentId }: { currentId: Hotel["id"] }) {
 
   return (
     <section className="border-t border-border bg-secondary py-16">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-10">
+      <div className="page-wrap">
         <Reveal>
           <h2 className="font-display text-4xl text-forest sm:text-5xl">Living across Hyderabad</h2>
         </Reveal>
         <div className="mt-10 grid gap-8 sm:grid-cols-2">
           {others.map((h, i) => (
             <Reveal key={h.id} delay={i * 0.06}>
-              <article className="group overflow-hidden border border-border bg-background">
+              <article className="group overflow-hidden rounded-[10px] border border-border bg-background">
                 <Link to="/hotels/$slug" params={{ slug: h.slug }} className="block">
                   <div className="aspect-[16/10] overflow-hidden">
                     <img

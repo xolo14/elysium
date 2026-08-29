@@ -10,7 +10,7 @@ import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
 function Tile({ tile, className }: { tile: SocialProofTile; className?: string }) {
-  const base = "relative flex h-full min-h-0 flex-col overflow-hidden";
+  const base = "relative flex h-full min-h-0 flex-col overflow-hidden rounded-[10px]";
 
   if (tile.kind === "image") {
     return (
@@ -177,20 +177,18 @@ export function SocialProof({ hotel }: { hotel?: Hotel }) {
     : socialProofFeatures;
 
   const subtitle = hotel
-    ? `Moments and guest trust from ${hotel.name}, ${hotel.place}.`
-    : "Awards, reviews and house moments from both Elysium properties.";
+    ? `${hotel.name}, ${hotel.place}.`
+    : "From both houses in Hyderabad.";
 
   return (
     <section id="trusted" className="relative overflow-hidden bg-secondary py-10 sm:py-12 lg:py-14">
-      <div className="relative mx-auto max-w-[1400px] px-5 sm:px-10">
+      <div className="page-wrap relative">
         <Reveal className="max-w-2xl">
           <p className="eyebrow text-muted-foreground">Trusted by guests</p>
           <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:mt-3 sm:text-4xl">
             Awards, reviews & moments
           </h2>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-foreground/70 sm:text-base">
-            {subtitle}
-          </p>
+          <p className="mt-3 max-w-xl text-sm text-foreground/70">{subtitle}</p>
         </Reveal>
 
         <Reveal delay={0.05}>
@@ -207,7 +205,7 @@ export function SocialProof({ hotel }: { hotel?: Hotel }) {
               return (
                 <li
                   key={`${feature.label}-${feature.note}`}
-                  className="min-w-[10.5rem] shrink-0 border border-border bg-background"
+                  className="min-w-[10.5rem] shrink-0 overflow-hidden rounded-[10px] border border-border bg-background"
                 >
                   {"href" in feature && feature.href ? (
                     <a

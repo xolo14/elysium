@@ -191,14 +191,12 @@ export function Amenities() {
 
   return (
     <section id="amenities" className="relative overflow-hidden bg-background py-12 sm:py-14 lg:py-16">
-      <div className="relative mx-auto max-w-[1200px] px-5 sm:px-10">
+      <div className="page-wrap relative">
         <Reveal>
           <h2 className="font-display text-[clamp(2rem,4vw,3rem)] leading-tight tracking-[-0.02em] text-forest">
             Amenities
           </h2>
-          <p className="mt-2 max-w-md text-sm text-foreground/65">
-            Everything you need for a calm, practical stay — both houses.
-          </p>
+          <p className="mt-2 text-sm text-foreground/65">Both houses. Same standard.</p>
         </Reveal>
         <div className="mt-8 sm:mt-10">
           <AmenitiesGrid hotel={hotel} />

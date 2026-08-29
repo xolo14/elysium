@@ -8,13 +8,13 @@ export function HotelSelector() {
 
   return (
     <section id="properties" className="relative overflow-hidden bg-background py-12 sm:py-14 lg:py-16">
-      <div className="relative mx-auto max-w-[1200px] px-5 sm:px-10">
+      <div className="page-wrap relative">
         <Reveal>
           <h2 className="font-display text-[clamp(2.25rem,5vw,3.75rem)] leading-[0.95] tracking-[-0.02em] text-forest">
             Living across Hyderabad
           </h2>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-foreground/65 sm:text-base">
-            In top locations including — Madhapur &amp; Hitec City.
+          <p className="mt-3 text-sm text-foreground/65 sm:text-base">
+            Madhapur &amp; Hitec City.
           </p>
           <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
             {hotels.map((h) => (
@@ -37,9 +37,9 @@ export function HotelSelector() {
                   to="/hotels/$slug"
                   params={{ slug: h.slug }}
                   onClick={() => selectHotel(h.id)}
-                  className="block overflow-hidden"
+                  className="block overflow-hidden rounded-[10px]"
                 >
-                  <div className="aspect-[16/11] overflow-hidden bg-secondary">
+                  <div className="aspect-[16/11] overflow-hidden rounded-[10px] bg-secondary">
                     <img
                       src={h.hero}
                       alt={`${h.name}, ${h.region}`}
@@ -65,7 +65,7 @@ export function HotelSelector() {
                     to="/hotels/$slug"
                     params={{ slug: h.slug }}
                     onClick={() => selectHotel(h.id)}
-                    className="eyebrow shrink-0 bg-forest px-4 py-2.5 text-ivory transition-colors hover:bg-forest/90"
+                    className="eyebrow shrink-0 rounded-[10px] bg-forest px-4 py-2.5 text-ivory transition-colors hover:bg-forest/90"
                   >
                     Book Now
                   </Link>
