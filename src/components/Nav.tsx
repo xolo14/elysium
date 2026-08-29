@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useEffect, useState } from "react";
 import { navItems, type Hotel } from "@/data/hotels";
 import { useHotel } from "@/context/hotel";
@@ -7,6 +7,8 @@ import { guestInitials, loyaltyStatus, useGuest, type Guest } from "@/context/gu
 import { useHydrated } from "@/hooks/use-hydrated";
 import { cn } from "@/lib/utils";
 import { AuthModal } from "@/components/AuthModal";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export function Nav() {
   const hydrated = useHydrated();
@@ -24,7 +26,7 @@ export function Nav() {
     pathname === "/why" ||
     pathname === "/book" ||
     pathname.startsWith("/hotels/");
-  const solid = scrolled || !onDarkHero;
+  const solid = scrolled || !onDarkHero || open;
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 48));
 
@@ -45,13 +47,18 @@ export function Nav() {
   }, [open]);
 
   const headerClassName = cn(
-    "fixed top-0 right-0 left-0 z-50 transition-colors duration-500",
-    solid ? "bg-ivory/95 text-forest shadow-[0_8px_30px_-18px_rgba(6,51,44,0.35)] backdrop-blur-md" : "text-ivory",
+    "fixed top-0 right-0 left-0 z-[80] transition-[background-color,box-shadow,color] duration-500 ease-luxe",
+    open
+      ? "bg-forest text-ivory"
+      : solid
+        ? "bg-ivory/95 text-forest shadow-[0_8px_30px_-18px_rgba(6,51,44,0.35)] backdrop-blur-md"
+        : "bg-transparent text-ivory",
   );
 
   const bar = (
     <NavBar
-      solid={solid}
+      solid={solid && !open}
+      menuOpen={open}
       hotels={hotels}
       hotelId={hotelId}
       selectHotel={selectHotel}
@@ -65,13 +72,15 @@ export function Nav() {
     />
   );
 
+  const closeMenu = () => setOpen(false);
+
   return (
     <>
       {hydrated ? (
         <motion.header
           initial={{ y: -28, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.12, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.12, duration: 0.8, ease }}
           className={headerClassName}
         >
           {bar}
@@ -80,123 +89,155 @@ export function Nav() {
         <header className={headerClassName}>{bar}</header>
       )}
 
-      {open ? (
-        <div
-          className="fixed inset-0 z-[70] flex flex-col justify-between overflow-y-auto overscroll-contain bg-forest px-5 py-5 text-ivory safe-bottom sm:px-8 sm:py-6 lg:px-10"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Site menu"
-        >
-          <div className="flex items-center justify-between">
-            <Link to="/" onClick={() => setOpen(false)} className="nav-mark">
-              elysium
-            </Link>
-            <button
+      <AnimatePresence>
+        {open ? (
+          <>
+            <motion.button
+              key="menu-scrim"
               type="button"
-              onClick={() => setOpen(false)}
-              className="flex h-11 w-11 items-center justify-center"
               aria-label="Close menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease }}
+              className="fixed inset-0 z-[70] bg-forest/40 backdrop-blur-[2px]"
+              onClick={closeMenu}
+            />
+            <motion.aside
+              key="menu-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site menu"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.55, ease }}
+              className="fixed inset-y-0 left-0 z-[75] flex w-[min(100%,22rem)] flex-col overflow-y-auto overscroll-contain bg-forest px-6 pt-24 pb-8 text-ivory safe-bottom sm:w-[min(100%,26rem)] sm:px-8"
             >
-              <CloseMark />
-            </button>
-          </div>
+              <nav className="flex flex-1 flex-col gap-8">
+                <div>
+                  <motion.p
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.12, duration: 0.4, ease }}
+                    className="nav-link text-ivory/45"
+                  >
+                    Hotels
+                  </motion.p>
+                  <ul className="mt-4 space-y-3.5">
+                    {hotels.map((h, i) => (
+                      <motion.li
+                        key={h.id}
+                        initial={{ opacity: 0, x: -24 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.16 + i * 0.06, duration: 0.45, ease }}
+                      >
+                        <Link
+                          to="/hotels/$slug"
+                          params={{ slug: h.slug }}
+                          onClick={() => {
+                            selectHotel(h.id);
+                            closeMenu();
+                          }}
+                          className="block text-left font-nav text-[1.45rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[1.7rem]"
+                        >
+                          {h.name}
+                          <span className="mt-1 block font-nav text-[14px] font-semibold tracking-normal text-ivory/55">
+                            {h.region}
+                          </span>
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
 
-          <div className="flex flex-1 flex-col justify-center gap-7 py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12 lg:py-8">
-            <div>
-              <p className="nav-link text-ivory/45">Hotels</p>
-              <ul className="mt-5 space-y-4">
-                {hotels.map((h) => (
-                  <li key={h.id}>
-                    <Link
-                      to="/hotels/$slug"
-                      params={{ slug: h.slug }}
-                      onClick={() => {
-                        selectHotel(h.id);
-                        setOpen(false);
-                      }}
-                      className="block text-left font-nav text-[1.55rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[1.9rem]"
+                <ul className="space-y-3.5 border-t border-ivory/15 pt-7">
+                  {navItems.map((item, i) => (
+                    <motion.li
+                      key={item.href}
+                      initial={{ opacity: 0, x: -24 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.28 + i * 0.06, duration: 0.45, ease }}
                     >
-                      {h.name}
-                      <span className="mt-1 block font-nav text-[15px] font-semibold tracking-normal text-ivory/55">
-                        {h.region}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <ul className="space-y-4 lg:pt-8">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  {item.href.startsWith("/") && !item.href.startsWith("/#") ? (
-                    <Link
-                      to={item.href}
-                      onClick={() => {
-                        setActive(item.href);
-                        setOpen(false);
-                      }}
-                      className="block font-nav text-[1.85rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[2.15rem]"
-                    >
-                      {item.label}
-                    </Link>
-                  ) : (
+                      {item.href.startsWith("/") && !item.href.startsWith("/#") ? (
+                        <Link
+                          to={item.href}
+                          onClick={() => {
+                            setActive(item.href);
+                            closeMenu();
+                          }}
+                          className="block font-nav text-[1.45rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[1.7rem]"
+                        >
+                          {item.label}
+                        </Link>
+                      ) : (
+                        <a
+                          href={item.href}
+                          onClick={() => {
+                            setActive(item.href);
+                            closeMenu();
+                          }}
+                          className="block font-nav text-[1.45rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[1.7rem]"
+                        >
+                          {item.label}
+                        </a>
+                      )}
+                    </motion.li>
+                  ))}
+                  <motion.li
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.45, ease }}
+                  >
                     <a
-                      href={item.href}
-                      onClick={() => {
-                        setActive(item.href);
-                        setOpen(false);
-                      }}
-                      className="block font-nav text-[1.85rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[2.15rem]"
+                      href="/#contact"
+                      onClick={closeMenu}
+                      className="block font-nav text-[1.45rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[1.7rem]"
                     >
-                      {item.label}
+                      Contact
                     </a>
-                  )}
-                </li>
-              ))}
-              <li>
-                <a
-                  href="/#contact"
-                  onClick={() => setOpen(false)}
-                  className="block font-nav text-[1.85rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[2.15rem]"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
+                  </motion.li>
+                </ul>
+              </nav>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link
-              to="/book"
-              onClick={() => setOpen(false)}
-              className="nav-cta inline-flex min-h-12 w-full items-center justify-center rounded-[10px] border border-ivory/50 px-8 py-3.5 sm:w-auto"
-            >
-              Book
-            </Link>
-            {hydrated && guest ? (
-              <Link
-                to="/account"
-                onClick={() => setOpen(false)}
-                className="nav-cta inline-flex min-h-12 w-full items-center justify-center rounded-[10px] bg-ivory px-8 py-3.5 text-forest sm:w-auto"
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.42, duration: 0.45, ease }}
+                className="mt-10 flex flex-col gap-3"
               >
-                Account
-              </Link>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  setAuthOpen(true);
-                }}
-                className="nav-cta inline-flex min-h-12 w-full items-center justify-center rounded-[10px] bg-ivory px-8 py-3.5 text-forest sm:w-auto"
-              >
-                Login / Join
-              </button>
-            )}
-          </div>
-        </div>
-      ) : null}
+                <Link
+                  to="/book"
+                  onClick={closeMenu}
+                  className="nav-cta inline-flex min-h-12 w-full items-center justify-center rounded-[10px] border border-ivory/50 px-8 py-3.5"
+                >
+                  Book
+                </Link>
+                {hydrated && guest ? (
+                  <Link
+                    to="/account"
+                    onClick={closeMenu}
+                    className="nav-cta inline-flex min-h-12 w-full items-center justify-center rounded-[10px] bg-ivory px-8 py-3.5 text-forest"
+                  >
+                    Account
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeMenu();
+                      setAuthOpen(true);
+                    }}
+                    className="nav-cta inline-flex min-h-12 w-full items-center justify-center rounded-[10px] bg-ivory px-8 py-3.5 text-forest"
+                  >
+                    Login / Join
+                  </button>
+                )}
+              </motion.div>
+            </motion.aside>
+          </>
+        ) : null}
+      </AnimatePresence>
 
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </>
@@ -205,6 +246,7 @@ export function Nav() {
 
 function NavBar({
   solid,
+  menuOpen,
   hotels,
   hotelId,
   selectHotel,
@@ -217,6 +259,7 @@ function NavBar({
   guest,
 }: {
   solid: boolean;
+  menuOpen: boolean;
   hotels: Hotel[];
   hotelId: Hotel["id"];
   selectHotel: (id: Hotel["id"]) => void;
@@ -224,15 +267,18 @@ function NavBar({
   setHotelsOpen: (v: boolean) => void;
   active: string;
   setActive: (v: string) => void;
-  setOpen: (v: boolean) => void;
+  setOpen: (v: boolean | ((o: boolean) => boolean)) => void;
   setAuthOpen: (v: boolean) => void;
   guest: Guest | null;
 }) {
   return (
     <nav className="relative flex w-full items-center justify-between px-4 py-3.5 sm:px-6 sm:py-[1.05rem] lg:px-10 lg:py-4">
       <Link to="/" className="relative z-10 shrink-0">
-        <span className="nav-mark">elysium</span>
-        <span className="sr-only">Elysium Hotels — home</span>
+        <img
+          src={solid && !menuOpen ? "/logo-dark.svg" : "/logo-light.svg"}
+          alt="Elysium Hotels"
+          className="h-8 w-auto sm:h-9"
+        />
       </Link>
 
       <div className="flex shrink-0 items-center gap-5 sm:gap-6 lg:gap-8">
@@ -293,7 +339,10 @@ function NavBar({
                 <a
                   href={item.href}
                   onClick={() => setActive(item.href)}
-                  className={cn("py-1 transition-opacity duration-300 hover:opacity-70", active === item.href && "opacity-70")}
+                  className={cn(
+                    "py-1 transition-opacity duration-300 hover:opacity-70",
+                    active === item.href && "opacity-70",
+                  )}
                 >
                   <span className="nav-link">{item.label}</span>
                 </a>
@@ -307,7 +356,7 @@ function NavBar({
             <span
               className={cn(
                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border font-nav text-[11px] font-extrabold",
-                solid ? "border-forest/30" : "border-ivory/50",
+                solid && !menuOpen ? "border-forest/30" : "border-ivory/50",
               )}
             >
               {guestInitials(guest)}
@@ -326,7 +375,9 @@ function NavBar({
             onClick={() => setAuthOpen(true)}
             className={cn(
               "nav-cta inline-flex min-h-10 items-center rounded-[10px] border px-4 py-2 sm:px-6 sm:py-2.5",
-              solid ? "border-forest/80 hover:bg-forest hover:text-ivory" : "border-ivory hover:bg-ivory hover:text-forest",
+              solid && !menuOpen
+                ? "border-forest/80 hover:bg-forest hover:text-ivory"
+                : "border-ivory hover:bg-ivory hover:text-forest",
             )}
           >
             Login / Join
@@ -335,11 +386,12 @@ function NavBar({
 
         <button
           type="button"
-          onClick={() => setOpen(true)}
-          className="flex h-10 w-8 flex-col items-end justify-center gap-[5px]"
-          aria-label="Open menu"
+          onClick={() => setOpen((v) => !v)}
+          className="relative flex h-10 w-10 items-center justify-center"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
         >
-          <HamburgerMark />
+          <MenuToggleIcon open={menuOpen} />
         </button>
       </div>
     </nav>
@@ -365,26 +417,31 @@ function ChevronDown({ className }: { className?: string }) {
   );
 }
 
-function HamburgerMark() {
+/** Three lines morph into an X. */
+function MenuToggleIcon({ open }: { open: boolean }) {
   return (
-    <>
-      <span className="h-[2px] w-7 rounded-full bg-current" />
-      <span className="h-[2px] w-[18px] rounded-full bg-current" />
-      <span className="h-[2px] w-[11px] rounded-full bg-current" />
-    </>
-  );
-}
-
-function CloseMark() {
-  return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" className="h-5 w-5">
-      <path
-        d="M4 4 L16 16 M16 4 L4 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
+    <span className="relative block h-4 w-7" aria-hidden="true">
+      <motion.span
+        className="absolute left-0 h-[2px] w-7 origin-center rounded-full bg-current"
+        initial={false}
+        animate={open ? { top: 7, rotate: 45, width: 28 } : { top: 0, rotate: 0, width: 28 }}
+        transition={{ duration: 0.4, ease }}
       />
-    </svg>
+      <motion.span
+        className="absolute left-0 h-[2px] origin-center rounded-full bg-current"
+        style={{ width: 18 }}
+        initial={false}
+        animate={open ? { top: 7, opacity: 0, scaleX: 0 } : { top: 7, opacity: 1, scaleX: 1 }}
+        transition={{ duration: 0.28, ease }}
+      />
+      <motion.span
+        className="absolute left-0 h-[2px] origin-center rounded-full bg-current"
+        initial={false}
+        animate={
+          open ? { top: 7, rotate: -45, width: 28 } : { top: 14, rotate: 0, width: 11 }
+        }
+        transition={{ duration: 0.4, ease }}
+      />
+    </span>
   );
 }

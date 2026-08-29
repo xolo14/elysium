@@ -16,6 +16,26 @@ import {
 import { cn } from "@/lib/utils";
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
+/** Bookable window: this month through 6 months ahead (7 months total). */
+const BOOKABLE_MONTHS = 7;
+
+type MonthCursor = { year: number; month: number };
+
+function monthKey(m: MonthCursor) {
+  return m.year * 12 + m.month;
+}
+
+function addMonths(m: MonthCursor, delta: number): MonthCursor {
+  const d = new Date(m.year, m.month + delta, 1);
+  return { year: d.getFullYear(), month: d.getMonth() };
+}
+
+function clampMonth(m: MonthCursor, min: MonthCursor, max: MonthCursor): MonthCursor {
+  const k = monthKey(m);
+  if (k < monthKey(min)) return min;
+  if (k > monthKey(max)) return max;
+  return m;
+}
 
 type DateRangePickerProps = {
   checkIn: string;
@@ -24,7 +44,7 @@ type DateRangePickerProps = {
   onConfirm?: () => void;
   minDate?: Date;
   className?: string;
-  /** Bloom-style yellow range + sun confirm bar */
+  /** Card calendar layout (Bloom structure, Elysium forest colours) */
   bloom?: boolean;
 };
 
@@ -38,6 +58,18 @@ export function DateRangePicker({
   bloom = false,
 }: DateRangePickerProps) {
   const today = useMemo(() => startOfDay(minDate ?? new Date()), [minDate]);
+  const firstMonth = useMemo(
+    () => ({ year: today.getFullYear(), month: today.getMonth() }),
+    [today],
+  );
+  /** Last bookable month (present + 6 = 7 months total). */
+  const lastMonth = useMemo(() => addMonths(firstMonth, BOOKABLE_MONTHS - 1), [firstMonth]);
+  /** Last day selectable in the window. */
+  const maxDate = useMemo(
+    () => startOfDay(new Date(lastMonth.year, lastMonth.month + 1, 0)),
+    [lastMonth],
+  );
+
   const checkInDate = useMemo(
     () => (checkIn ? startOfDay(new Date(checkIn)) : null),
     [checkIn],
@@ -47,21 +79,30 @@ export function DateRangePicker({
     [checkOut],
   );
 
-  const [viewMonth, setViewMonth] = useState(() => {
-    const d = checkIn ? new Date(checkIn) : new Date();
-    return { year: d.getFullYear(), month: d.getMonth() };
+  const [viewMonth, setViewMonth] = useState<MonthCursor>(() => {
+    const d = checkIn ? new Date(checkIn) : today;
+    return clampMonth(
+      { year: d.getFullYear(), month: d.getMonth() },
+      { year: today.getFullYear(), month: today.getMonth() },
+      addMonths(
+        { year: today.getFullYear(), month: today.getMonth() },
+        BOOKABLE_MONTHS - 1,
+      ),
+    );
   });
 
-  const secondMonth = useMemo(() => {
-    const d = new Date(viewMonth.year, viewMonth.month + 1, 1);
-    return { year: d.getFullYear(), month: d.getMonth() };
-  }, [viewMonth]);
+  const secondMonth = useMemo(() => addMonths(viewMonth, 1), [viewMonth]);
+
+  /** Previous hidden on present month; next hidden at end of 7-month window. */
+  const canGoPrev = monthKey(viewMonth) > monthKey(firstMonth);
+  const canGoNext = monthKey(viewMonth) < monthKey(lastMonth);
 
   const canConfirm = Boolean(checkIn && checkOut && checkOut > checkIn);
   const nights = canConfirm ? nightsBetween(checkIn, checkOut) : 0;
+  const waitingForDates = !canConfirm;
 
   const selectDate = (date: Date) => {
-    if (isBeforeDay(date, today)) return;
+    if (isBeforeDay(date, today) || isAfterDay(date, maxDate)) return;
 
     const iso = toInputDate(date);
     const hasCompleteRange = Boolean(checkIn && checkOut && checkOut > checkIn);
@@ -82,7 +123,9 @@ export function DateRangePicker({
         return;
       }
       if (sameDay(date, checkInDate)) {
-        onRangeChange(checkIn, toInputDate(addDays(date, 1)));
+        const next = addDays(date, 1);
+        if (isAfterDay(next, maxDate)) return;
+        onRangeChange(checkIn, toInputDate(next));
         return;
       }
       onRangeChange(checkIn, iso);
@@ -97,17 +140,13 @@ export function DateRangePicker({
   };
 
   const goPrev = () => {
-    setViewMonth((prev) => {
-      const d = new Date(prev.year, prev.month - 1, 1);
-      return { year: d.getFullYear(), month: d.getMonth() };
-    });
+    if (!canGoPrev) return;
+    setViewMonth((prev) => clampMonth(addMonths(prev, -1), firstMonth, lastMonth));
   };
 
   const goNext = () => {
-    setViewMonth((prev) => {
-      const d = new Date(prev.year, prev.month + 1, 1);
-      return { year: d.getFullYear(), month: d.getMonth() };
-    });
+    if (!canGoNext) return;
+    setViewMonth((prev) => clampMonth(addMonths(prev, 1), firstMonth, lastMonth));
   };
 
   const renderMonth = (year: number, month: number) => (
@@ -115,7 +154,7 @@ export function DateRangePicker({
       <p
         className={cn(
           "mb-3 text-center font-nav text-base leading-none font-extrabold sm:mb-4 sm:text-lg",
-          bloom ? "text-sun" : "font-display text-forest",
+          bloom ? "font-nav text-forest" : "font-display text-forest",
         )}
       >
         {monthLabel(year, month)}
@@ -133,7 +172,8 @@ export function DateRangePicker({
           </span>
         ))}
         {buildMonthCells(year, month).map(({ date, inMonth }, cellIndex) => {
-          const disabled = !inMonth || isBeforeDay(date, today);
+          const outOfWindow = isBeforeDay(date, today) || isAfterDay(date, maxDate);
+          const disabled = !inMonth || outOfWindow;
           const isStart = Boolean(checkInDate && sameDay(date, checkInDate) && inMonth);
           const isEnd = Boolean(checkOutDate && sameDay(date, checkOutDate) && inMonth);
           const selected = isStart || isEnd;
@@ -151,15 +191,15 @@ export function DateRangePicker({
                 !inMonth && "invisible pointer-events-none",
                 disabled && inMonth && "cursor-not-allowed text-neutral-300",
                 !disabled && !selected && !mid && "text-neutral-700",
-                bloom && mid && "bg-sun text-ivory",
-                bloom && isStart && checkOutDate && "bg-gradient-to-r from-transparent from-50% to-sun to-50%",
-                bloom && isEnd && checkInDate && "bg-gradient-to-l from-transparent from-50% to-sun to-50%",
+                bloom && mid && "bg-forest text-ivory",
+                bloom && isStart && checkOutDate && "bg-gradient-to-r from-transparent from-50% to-forest to-50%",
+                bloom && isEnd && checkInDate && "bg-gradient-to-l from-transparent from-50% to-forest to-50%",
                 !bloom && mid && "bg-forest/10 text-foreground",
                 bloom && selected && "z-[1]",
               )}
             >
               {bloom && selected ? (
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-sun bg-white font-semibold text-neutral-800 sm:h-10 sm:w-10">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-forest bg-white font-semibold text-forest sm:h-10 sm:w-10">
                   {date.getDate()}
                 </span>
               ) : bloom && mid ? (
@@ -191,34 +231,47 @@ export function DateRangePicker({
       )}
     >
       <div className="relative flex-1 px-3 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <button
-          type="button"
-          onClick={goPrev}
-          aria-label="Previous month"
-          className={cn(
-            "absolute top-6 left-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full sm:left-5",
-            bloom ? "bg-neutral-200 text-neutral-500" : "border border-border bg-background text-forest",
-          )}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          onClick={goNext}
-          aria-label="Next month"
-          className={cn(
-            "absolute top-6 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full sm:right-5",
-            bloom ? "bg-sun text-ivory" : "border border-forest bg-forest text-ivory",
-          )}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
+        {canGoPrev ? (
+          <button
+            type="button"
+            onClick={goPrev}
+            aria-label="Previous month"
+            className={cn(
+              "absolute top-6 left-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full sm:left-5",
+              bloom ? "bg-neutral-200 text-neutral-500" : "border border-border bg-background text-forest",
+            )}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+        ) : null}
+        {canGoNext ? (
+          <button
+            type="button"
+            onClick={goNext}
+            aria-label="Next month"
+            className={cn(
+              "absolute top-6 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full sm:right-5",
+              bloom ? "bg-forest text-ivory" : "border border-forest bg-forest text-ivory",
+            )}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        ) : null}
+
+        <p className="mb-5 flex items-center justify-center gap-1.5 px-10 text-center text-xs font-medium text-neutral-500 sm:mb-6 sm:text-[13px]">
+          <span aria-hidden="true">⏳</span>
+          {waitingForDates
+            ? "Wait a little — pick check-in & check-out"
+            : "Dates locked in — confirm when you’re ready"}
+        </p>
 
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-8 lg:flex-row lg:gap-10 lg:px-10">
           {renderMonth(viewMonth.year, viewMonth.month)}
-          <div className="hidden min-w-0 flex-1 lg:block">
-            {renderMonth(secondMonth.year, secondMonth.month)}
-          </div>
+          {monthKey(secondMonth) <= monthKey(lastMonth) ? (
+            <div className="hidden min-w-0 flex-1 lg:block">
+              {renderMonth(secondMonth.year, secondMonth.month)}
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -263,7 +316,7 @@ export function DateRangePicker({
             onClick={onConfirm}
             className={cn(
               "nav-cta min-h-12 w-full shrink-0 rounded-[10px] px-10 py-3 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto",
-              bloom ? "bg-sun" : "bg-forest",
+              "bg-forest",
             )}
           >
             Confirm

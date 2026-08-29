@@ -15,8 +15,8 @@ export function Footer() {
         <Reveal>
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-4">
-              <Link to="/" className="nav-mark text-ivory">
-                elysium
+              <Link to="/" className="inline-block">
+                <img src="/logo-light.svg" alt="Elysium Hotels" className="h-8 w-auto sm:h-9" />
               </Link>
               <p className="mt-5 max-w-xs prose-quiet text-ivory/70">
                 Serviced suites in Madhapur &amp; Hitec City.

@@ -1,20 +1,31 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
-import { Search } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { cn } from "@/lib/utils";
 
-/** Bloom-style hero — one composition: brand, line, search. */
+const ease = [0.16, 1, 0.3, 1] as const;
+
+/** Hero — brand, line, Book Now (animated open into calendar flow). */
 export function Hero() {
   const { hotel } = useHotel();
   const hydrated = useHydrated();
   const navigate = useNavigate();
   const ref = useRef<HTMLElement>(null);
+  const [opening, setOpening] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
   const fade = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+
+  const openBook = () => {
+    if (opening) return;
+    setOpening(true);
+    window.setTimeout(() => {
+      void navigate({ to: "/book" });
+    }, 520);
+  };
 
   return (
     <section
@@ -34,7 +45,7 @@ export function Hero() {
               initial={{ opacity: 0, scale: 1.06 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1.4, ease }}
               className="ken-burns absolute inset-0 h-full w-full object-cover"
             />
           </AnimatePresence>
@@ -50,6 +61,19 @@ export function Hero() {
       </motion.div>
 
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.15)_20%,transparent_38%),linear-gradient(to_top,rgba(6,51,44,0.9)_0%,rgba(6,51,44,0.35)_45%,rgba(6,51,44,0.12)_100%)]" />
+
+      <AnimatePresence>
+        {opening ? (
+          <motion.div
+            key="book-veil"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45, ease }}
+            className="pointer-events-none absolute inset-0 z-20 bg-forest"
+          />
+        ) : null}
+      </AnimatePresence>
 
       <motion.div
         {...(hydrated ? { style: { opacity: fade } } : {})}
@@ -67,22 +91,29 @@ export function Hero() {
           </p>
         </div>
 
-        <form
-          className="mt-5 w-full max-w-xl sm:mt-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void navigate({ to: "/book" });
-          }}
+        <motion.button
+          type="button"
+          onClick={openBook}
+          disabled={opening}
+          whileTap={{ scale: 0.98 }}
+          animate={
+            opening
+              ? { scale: 1.04, y: -8, opacity: 0.9 }
+              : { scale: 1, y: 0, opacity: 1 }
+          }
+          transition={{ duration: 0.5, ease }}
+          className={cn(
+            "group mt-5 flex min-h-12 w-full max-w-xl items-center justify-between gap-3 rounded-[10px] bg-ivory px-5 text-left text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] sm:mt-6 sm:min-h-14",
+            opening && "pointer-events-none",
+          )}
         >
-          <label className="group flex min-h-12 cursor-pointer items-center gap-3 rounded-[10px] bg-ivory px-4 text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-luxe hover:scale-[1.01] sm:min-h-14 sm:px-5">
-            <button type="submit" className="shrink-0 text-forest/50 transition-colors group-hover:text-forest" aria-label="Book in Hyderabad">
-              <Search className="h-5 w-5" strokeWidth={1.75} />
-            </button>
-            <span className="font-nav text-[15px] font-bold tracking-[-0.01em] sm:text-base">
-              Book an Elysium in Hyderabad
-            </span>
-          </label>
-        </form>
+          <span className="font-nav text-[15px] font-bold tracking-[-0.01em] sm:text-base">
+            {opening ? "Opening calendar…" : "Book an Elysium in Hyderabad"}
+          </span>
+          <span className="btn-primary shrink-0 !min-h-10 px-5 text-[13px] sm:!min-h-11">
+            Book Now
+          </span>
+        </motion.button>
       </motion.div>
     </section>
   );

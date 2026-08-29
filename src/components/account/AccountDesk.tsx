@@ -26,6 +26,7 @@ export function AccountDesk() {
     <div className="page-wrap page-top grid gap-6 pb-12 lg:grid-cols-[16rem_1fr] lg:gap-8 lg:pb-16">
       <aside>
         <div className="rounded-[10px] border border-bronze/45 p-5 sm:p-6">
+          <img src="/logo-dark.svg" alt="Elysium" className="h-7 w-auto" />
           <AccountSkyline />
           <p className="mt-3 font-nav text-lg font-extrabold text-forest">Account Details</p>
           <p className="mt-1 text-[13px] text-neutral-500">{maskEmail(guest.email)}</p>

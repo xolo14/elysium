@@ -271,7 +271,7 @@ export function BookingHotelDetail({
                         }}
                         className="btn-primary rounded-[10px] px-5 py-2.5"
                       >
-                        Book
+                        Book Now
                       </button>
                     </div>
                   </div>
@@ -524,8 +524,8 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
     return (
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <path d="M10 22 C18 14 30 14 38 22" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M16 28 C21 23 27 23 32 28" className="stroke-sun" strokeWidth="1.6" />
-        <circle cx="24" cy="34" r="2.5" className="fill-sun" />
+        <path d="M16 28 C21 23 27 23 32 28" className="stroke-bronze" strokeWidth="1.6" />
+        <circle cx="24" cy="34" r="2.5" className="fill-bronze" />
       </svg>
     );
   }
@@ -533,7 +533,7 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
     return (
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <path d="M14 18 H34 V24 H14 Z" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M18 24 v10 M24 24 v12 M30 24 v10" className="stroke-sun" strokeWidth="1.5" />
+        <path d="M18 24 v10 M24 24 v12 M30 24 v10" className="stroke-bronze" strokeWidth="1.5" />
       </svg>
     );
   }
@@ -542,7 +542,7 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <path d="M8 32 V22 H40 V32" stroke="currentColor" strokeWidth="1.6" />
         <path d="M8 32 H40 M12 22 V18 H22 V22" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M28 14 h4 M34 12 h4 M40 14 h3" className="stroke-sun" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M28 14 h4 M34 12 h4 M40 14 h3" className="stroke-bronze" strokeWidth="1.4" strokeLinecap="round" />
       </svg>
     );
   }
@@ -551,7 +551,7 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <path d="M10 30 H38 M14 30 V38 M34 30 V38" stroke="currentColor" strokeWidth="1.6" />
         <rect x="16" y="16" width="16" height="10" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M20 16 V12 H28 V16" className="stroke-sun" strokeWidth="1.4" />
+        <path d="M20 16 V12 H28 V16" className="stroke-bronze" strokeWidth="1.4" />
       </svg>
     );
   }
@@ -559,7 +559,7 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
     return (
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <rect x="12" y="18" width="24" height="14" rx="2" stroke="currentColor" strokeWidth="1.6" />
-        <circle cx="24" cy="25" r="3" className="fill-sun" />
+        <circle cx="24" cy="25" r="3" className="fill-bronze" />
         <path d="M18 32 v4 H30 v-4" stroke="currentColor" strokeWidth="1.4" />
       </svg>
     );
@@ -568,7 +568,7 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
     return (
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <rect x="10" y="14" width="28" height="18" rx="2" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M20 32 H28" className="stroke-sun" strokeWidth="1.6" strokeLinecap="round" />
+        <path d="M20 32 H28" className="stroke-bronze" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     );
   }
@@ -577,15 +577,15 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <rect x="14" y="12" width="20" height="26" rx="2" stroke="currentColor" strokeWidth="1.6" />
         <path d="M18 20 H30 M18 26 H26" stroke="currentColor" strokeWidth="1.4" />
-        <circle cx="30" cy="32" r="2" className="fill-sun" />
+        <circle cx="30" cy="32" r="2" className="fill-bronze" />
       </svg>
     );
   }
   if (kind === "smoke") {
     return (
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
-        <circle cx="24" cy="24" r="12" className="stroke-sun" strokeWidth="1.6" />
-        <path d="M14 14 L34 34" className="stroke-sun" strokeWidth="1.6" />
+        <circle cx="24" cy="24" r="12" className="stroke-bronze" strokeWidth="1.6" />
+        <path d="M14 14 L34 34" className="stroke-bronze" strokeWidth="1.6" />
         <path d="M16 28 H28" stroke="currentColor" strokeWidth="1.5" />
       </svg>
     );
@@ -594,7 +594,7 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
     return (
       <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
         <rect x="10" y="16" width="28" height="12" rx="2" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M16 32 v4 M24 32 v6 M32 32 v4" className="stroke-sun" strokeWidth="1.4" />
+        <path d="M16 32 v4 M24 32 v6 M32 32 v4" className="stroke-bronze" strokeWidth="1.4" />
       </svg>
     );
   }
@@ -602,7 +602,7 @@ function AmenityIcon({ kind }: { kind: (typeof amenityIcons)[number]["art"] }) {
     <svg viewBox="0 0 48 48" className={common} fill="none" aria-hidden="true">
       <path d="M14 30 H34 V34 H14 Z" stroke="currentColor" strokeWidth="1.6" />
       <path d="M16 30 V20 H32 V30" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M20 20 V16" className="stroke-sun" strokeWidth="1.4" />
+      <path d="M20 20 V16" className="stroke-bronze" strokeWidth="1.4" />
     </svg>
   );
 }

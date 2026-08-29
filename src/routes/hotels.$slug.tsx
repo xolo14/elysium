@@ -10,7 +10,6 @@ import {
   useHotelCarousel,
 } from "@/components/HotelImageCarousel";
 import { Suite360Experience, View360HeroControl } from "@/components/Suite360Experience";
-import { toInputDate } from "@/lib/booking-dates";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { SocialProof } from "@/components/sections/SocialProof";
@@ -88,28 +87,10 @@ function HotelIntro({
   const [tourOpen, setTourOpen] = useState(false);
   const tours = hotel.virtualTours;
 
-  const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return toInputDate(d);
-  }, []);
-  const [checkIn, setCheckIn] = useState(today);
-  const [checkOut, setCheckOut] = useState(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    return toInputDate(d);
-  });
-  const [guests, setGuests] = useState(2);
-
-  const onSearchStay = () => {
+  const onBookNow = () => {
     void navigate({
       to: "/book",
-      search: {
-        hotel: hotel.slug,
-        checkIn: checkIn || undefined,
-        checkOut: checkOut || undefined,
-        guests,
-      },
+      search: { hotel: hotel.slug },
     });
   };
 
@@ -150,62 +131,24 @@ function HotelIntro({
           className="mb-3 rounded-[10px] border border-ivory/15 bg-forest/55 backdrop-blur-md sm:mb-4"
         />
 
-        {/* Bloom-style booking strip */}
+        {/* Book Now — opens animated calendar → rooms flow */}
         <div className="overflow-hidden rounded-[10px] border border-forest/10 bg-forest text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.25)]">
-          <div className="grid gap-0 lg:grid-cols-[1.4fr_1fr_1fr_0.7fr_auto]">
-            <div className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
-              <p className="eyebrow text-ivory/60">Property</p>
-              <p className="mt-1 font-display text-xl leading-tight sm:text-2xl">
-                {hotel.name}
-              </p>
+          <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 sm:py-5">
+            <div className="min-w-0">
+              <p className="eyebrow text-ivory/60">Book direct</p>
+              <p className="mt-1 font-display text-xl leading-tight sm:text-2xl">{hotel.name}</p>
               <p className="mt-1 flex items-center gap-2 text-sm text-ivory/70">
                 <BrandStar className="h-2 w-2" />
-                {hotel.rating}/5 · {hotel.place}
+                {hotel.rating}/5 · {hotel.place} · From {hotel.fromRate}/night
               </p>
             </div>
-            <label className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
-              <span className="eyebrow text-ivory/60">Check-in</span>
-              <input
-                type="date"
-                min={today}
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                className="mt-1 w-full bg-transparent text-sm text-ivory outline-none [color-scheme:dark]"
-              />
-            </label>
-            <label className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
-              <span className="eyebrow text-ivory/60">Check-out</span>
-              <input
-                type="date"
-                min={checkIn || today}
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                className="mt-1 w-full bg-transparent text-sm text-ivory outline-none [color-scheme:dark]"
-              />
-            </label>
-            <label className="border-b border-ivory/15 px-5 py-4 lg:border-r lg:border-b-0">
-              <span className="eyebrow text-ivory/60">Guests</span>
-              <select
-                value={guests}
-                onChange={(e) => setGuests(Number(e.target.value))}
-                className="mt-1 w-full bg-transparent text-sm text-ivory outline-none [color-scheme:dark]"
-              >
-                {[1, 2, 3, 4].map((n) => (
-                  <option key={n} value={n} className="bg-forest text-ivory">
-                    {n} guest{n === 1 ? "" : "s"}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <div className="flex items-stretch p-2">
-              <button
-                type="button"
-                onClick={onSearchStay}
-                className="btn-primary w-full min-h-12 bg-ivory px-8 !text-forest"
-              >
-                <span className="eyebrow">Search</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={onBookNow}
+              className="btn-primary min-h-12 w-full shrink-0 bg-ivory px-10 !text-forest sm:w-auto"
+            >
+              Book Now
+            </button>
           </div>
         </div>
 

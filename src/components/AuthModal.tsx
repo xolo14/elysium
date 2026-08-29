@@ -166,6 +166,7 @@ export function AuthModal({
               onMouseEnter={() => setPaused(true)}
               onMouseLeave={() => setPaused(false)}
             >
+              <img src="/logo-light.svg" alt="Elysium" className="mb-5 h-7 w-auto self-start opacity-95" />
               <div className="flex flex-wrap gap-2">
                 {loyaltyLevels.map((item, i) => (
                   <button
@@ -207,6 +208,9 @@ export function AuthModal({
           ) : null}
 
           <div className="relative flex flex-col bg-white px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10">
+            {!split ? (
+              <img src="/logo-dark.svg" alt="Elysium" className="mb-5 h-7 w-auto self-start" />
+            ) : null}
             <CloseButton />
 
             {formStep === "otp" ? (

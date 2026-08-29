@@ -11,11 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
-import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminHistoryRouteImport } from './routes/admin.history'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -30,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookRoute = BookRouteImport.update({
@@ -50,11 +55,6 @@ const TermsRoute = TermsRouteImport.update({
 const WhyRoute = WhyRouteImport.update({
   id: '/why',
   path: '/why',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AccountRoute = AccountRouteImport.update({
-  id: '/account',
-  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -86,11 +86,11 @@ const HotelsSlugGalleryRoute = HotelsSlugGalleryRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
   '/book': typeof BookRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
-  '/account': typeof AccountRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
@@ -100,11 +100,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
   '/book': typeof BookRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
-  '/account': typeof AccountRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
@@ -115,11 +115,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/account': typeof AccountRoute
   '/book': typeof BookRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
-  '/account': typeof AccountRoute
   '/admin/history': typeof AdminHistoryRoute
   '/admin/login': typeof AdminLoginRoute
   '/hotels/$slug': typeof HotelsSlugRoute
@@ -131,11 +131,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/account'
     | '/book'
     | '/privacy'
     | '/terms'
     | '/why'
-    | '/account'
     | '/admin/history'
     | '/admin/login'
     | '/hotels/$slug'
@@ -145,11 +145,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/account'
     | '/book'
     | '/privacy'
     | '/terms'
     | '/why'
-    | '/account'
     | '/admin/history'
     | '/admin/login'
     | '/hotels/$slug'
@@ -159,11 +159,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/account'
     | '/book'
     | '/privacy'
     | '/terms'
     | '/why'
-    | '/account'
     | '/admin/history'
     | '/admin/login'
     | '/hotels/$slug'
@@ -174,11 +174,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AccountRoute: typeof AccountRoute
   BookRoute: typeof BookRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   WhyRoute: typeof WhyRoute
-  AccountRoute: typeof AccountRoute
   AdminHistoryRoute: typeof AdminHistoryRoute
   AdminLoginRoute: typeof AdminLoginRoute
   HotelsSlugRoute: typeof HotelsSlugRoute
@@ -200,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book': {
@@ -228,13 +235,6 @@ declare module '@tanstack/react-router' {
       path: '/why'
       fullPath: '/why'
       preLoaderRoute: typeof WhyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account': {
-      id: '/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -278,11 +278,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AccountRoute: AccountRoute,
   BookRoute: BookRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   WhyRoute: WhyRoute,
-  AccountRoute: AccountRoute,
   AdminHistoryRoute: AdminHistoryRoute,
   AdminLoginRoute: AdminLoginRoute,
   HotelsSlugRoute: HotelsSlugRoute,

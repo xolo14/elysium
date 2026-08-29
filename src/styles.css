@@ -99,9 +99,10 @@
   /* Accent = logo forest #06332C (was orange sand) */
   --sand: oklch(0.2897 0.0485 179.75);
   --bronze: oklch(0.5166 0.0741 72.84);
-  --sun: #e8bc22;
   --forest: oklch(0.2897 0.0485 179.75);
   --forest-deep: oklch(0.2 0.035 180);
+  /* Legacy token — no yellow; points to forest */
+  --sun: var(--forest);
 
   --background: var(--ivory);
   --foreground: var(--forest);
@@ -274,26 +275,6 @@
 
   .btn-primary-bronze {
     background: var(--bronze);
-  }
-
-  .btn-sun {
-    font-family: var(--font-nav);
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.85rem;
-    padding-inline: 1.5rem;
-    border-radius: 10px;
-    background: var(--sun);
-    color: var(--ivory);
-    transition: opacity 0.35s var(--ease-luxe);
-  }
-
-  .btn-sun:hover {
-    opacity: 0.92;
   }
 
   /* Marketing display titles (Why, Account, book chrome) */

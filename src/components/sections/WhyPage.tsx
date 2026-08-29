@@ -66,7 +66,7 @@ const houses = [
   },
 ];
 
-/** Bloom-style Why page — gold field, line diagrams, values, quotes, houses. */
+/** Why Elysium — forest brand theme, values, quotes, houses. */
 export function WhyPage() {
   const [quote, setQuote] = useState(0);
   const [house, setHouse] = useState(0);
@@ -76,7 +76,7 @@ export function WhyPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-sun text-ivory">
+      <section className="relative overflow-hidden bg-forest text-ivory">
         <div className="page-wrap relative grid min-h-[min(100svh,40rem)] items-center gap-8 page-top pb-10 sm:min-h-[36rem] lg:grid-cols-2 lg:min-h-[88svh] lg:gap-10 lg:pb-14">
           <div className="relative z-10 max-w-xl">
             <h1 className="display-nav text-[clamp(2.4rem,6vw,3.85rem)] text-ivory">
@@ -145,7 +145,7 @@ export function WhyPage() {
                 <SparkLines />
               </div>
               <div className="relative flex flex-col justify-center p-6 sm:p-8 lg:p-10">
-                <p className="font-nav text-5xl leading-none text-sun">“</p>
+                <p className="font-nav text-5xl leading-none text-bronze">“</p>
                 <p className="mt-2 text-[1.15rem] leading-snug text-neutral-500 sm:text-xl">
                   {current.quote}
                 </p>
@@ -155,7 +155,7 @@ export function WhyPage() {
                 <button
                   type="button"
                   onClick={() => setQuote((n) => (n + 1) % quotes.length)}
-                  className="absolute top-6 right-6 flex h-11 w-11 items-center justify-center rounded-full bg-sun text-ivory"
+                  className="absolute top-6 right-6 flex h-11 w-11 items-center justify-center rounded-full bg-forest text-ivory"
                   aria-label="Next guest note"
                 >
                   <Chevron />
@@ -166,7 +166,7 @@ export function WhyPage() {
               {quotes.map((_, i) => (
                 <span
                   key={i}
-                  className={cn("h-[3px] flex-1 rounded-full", i <= quote ? "bg-sun" : "bg-neutral-200")}
+                  className={cn("h-[3px] flex-1 rounded-full", i <= quote ? "bg-bronze" : "bg-neutral-200")}
                 />
               ))}
             </div>
@@ -174,7 +174,7 @@ export function WhyPage() {
         </div>
       </section>
 
-      <section className="bg-sun text-ivory section-pad">
+      <section className="bg-forest text-ivory section-pad">
         <div className="page-wrap relative">
           <h2 className="display-nav text-[clamp(1.85rem,4vw,2.75rem)]">
             Elysium Houses
@@ -197,7 +197,7 @@ export function WhyPage() {
             <button
               type="button"
               onClick={() => setHouse((n) => n + 1)}
-              className="absolute top-[28%] right-0 hidden h-11 w-11 translate-x-1/2 items-center justify-center rounded-full bg-sun text-ivory ring-2 ring-ivory lg:flex"
+              className="absolute top-[28%] right-0 hidden h-11 w-11 translate-x-1/2 items-center justify-center rounded-full bg-bronze text-ivory ring-2 ring-ivory lg:flex"
               aria-label="Next house"
             >
               <Chevron />
@@ -271,7 +271,7 @@ function SparkLines() {
   return (
     <svg
       viewBox="0 0 80 80"
-      className="pointer-events-none absolute top-8 left-4 h-20 w-20 text-sun"
+      className="pointer-events-none absolute top-8 left-4 h-20 w-20 text-bronze"
       aria-hidden="true"
     >
       <path d="M8 40 H36 M40 8 V36 M44 44 L62 62" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
