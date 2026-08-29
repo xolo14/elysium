@@ -11,9 +11,9 @@ export function Footer() {
 
   return (
     <footer id="contact" className="relative overflow-hidden bg-forest text-ivory">
-      <div className="page-wrap relative pt-12 sm:pt-14">
+      <div className="page-wrap relative pt-9 sm:pt-11">
         <Reveal>
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-8">
             <div className="lg:col-span-4">
               <Link to="/" className="nav-mark text-ivory">
                 elysium

@@ -218,7 +218,7 @@ export function SocialProof({ hotel }: { hotel?: Hotel }) {
         </Reveal>
       </div>
 
-      <div className="mt-8 space-y-4 sm:mt-10 sm:space-y-5">
+      <div className="mt-6 space-y-4 sm:mt-7 sm:space-y-5">
         <FeatureMarquee features={features} />
         <MasonryMarquee tiles={socialProofTiles} />
       </div>

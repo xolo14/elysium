@@ -6,7 +6,7 @@ import { BrandStar } from "@/lib/brand";
 export function ValueStay() {
   return (
     <section id="value" className="relative overflow-hidden bg-secondary section-pad">
-      <div className="page-wrap grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className="page-wrap grid items-center gap-7 lg:grid-cols-2 lg:gap-12">
         <Reveal>
           <h2 className="display-nav text-[clamp(2.4rem,5.5vw,3.85rem)] text-bronze">
             The more you stay,
@@ -23,7 +23,7 @@ export function ValueStay() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="relative overflow-hidden rounded-[10px] border border-bronze/50 bg-forest p-8 text-ivory sm:p-10">
+          <div className="relative overflow-hidden rounded-[10px] border border-bronze/50 bg-forest p-6 text-ivory sm:p-8">
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="eyebrow text-ivory/55">Elysium Value Stay</p>

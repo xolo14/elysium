@@ -17,7 +17,7 @@ export function LegalPage({
   sections: Section[];
 }) {
   return (
-    <article className="page-wrap max-w-[45rem] pt-28 pb-20 sm:pt-36 sm:pb-28">
+    <article className="page-wrap page-top max-w-[45rem] pb-14 sm:pb-20">
       <Reveal>
         <p className="eyebrow text-muted-foreground">Elysium Hotels</p>
         <h1 className="mt-4 display-nav text-[clamp(2.25rem,5vw,3.5rem)] text-forest">

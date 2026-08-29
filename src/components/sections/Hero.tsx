@@ -20,7 +20,7 @@ export function Hero() {
     <section
       ref={ref}
       id="home"
-      className="relative flex w-full flex-col overflow-hidden bg-forest text-ivory aspect-[2048/841] min-h-[34rem] md:min-h-0 md:max-h-[841px]"
+      className="relative flex w-full flex-col overflow-hidden bg-forest text-ivory min-h-[min(100svh,34rem)] sm:min-h-[32rem] md:aspect-[2048/841] md:min-h-0 md:max-h-[841px]"
     >
       <motion.div {...(hydrated ? { style: { y, scale } } : {})} className="absolute inset-0">
         {hydrated ? (
@@ -53,7 +53,7 @@ export function Hero() {
 
       <motion.div
         {...(hydrated ? { style: { opacity: fade } } : {})}
-        className="page-wrap relative z-10 flex flex-1 flex-col justify-end pb-9 pt-24 sm:pb-12 sm:pt-28"
+        className="page-wrap relative z-10 flex flex-1 flex-col justify-end pb-6 pt-20 sm:pb-9 sm:pt-24"
       >
         <div className="max-w-3xl">
           <p className="font-hero text-[clamp(2.1rem,6.5vw,4.5rem)] leading-[0.92] tracking-[-0.02em] text-ivory/90">
@@ -68,13 +68,13 @@ export function Hero() {
         </div>
 
         <form
-          className="mt-7 w-full max-w-xl sm:mt-8"
+          className="mt-5 w-full max-w-xl sm:mt-6"
           onSubmit={(e) => {
             e.preventDefault();
             void navigate({ to: "/book" });
           }}
         >
-          <label className="group flex min-h-14 cursor-pointer items-center gap-3 rounded-[10px] bg-ivory px-4 text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-luxe hover:scale-[1.01] sm:px-5">
+          <label className="group flex min-h-12 cursor-pointer items-center gap-3 rounded-[10px] bg-ivory px-4 text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-luxe hover:scale-[1.01] sm:min-h-14 sm:px-5">
             <button type="submit" className="shrink-0 text-forest/50 transition-colors group-hover:text-forest" aria-label="Book in Hyderabad">
               <Search className="h-5 w-5" strokeWidth={1.75} />
             </button>

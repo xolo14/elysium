@@ -140,7 +140,7 @@ function HotelIntro({
         </div>
       ) : null}
 
-      <div className="page-wrap relative z-30 -mt-24 sm:-mt-28">
+      <div className="page-wrap relative z-30 -mt-16 sm:-mt-20">
         <HotelGalleryBar
           caption={currentSlide?.caption}
           hotelSlug={hotel.slug}
@@ -209,7 +209,7 @@ function HotelIntro({
           </div>
         </div>
 
-        <div className="mt-8 rounded-[10px] bg-background px-5 py-8 sm:px-10 sm:py-10">
+        <div className="mt-5 rounded-[10px] bg-background px-4 py-6 sm:mt-6 sm:px-8 sm:py-8">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 max-w-2xl">
               <h1 className="display-nav text-[clamp(1.85rem,4vw,3rem)] text-forest">
@@ -240,7 +240,7 @@ function HotelIntro({
           </div>
         </div>
 
-        <nav className="flex flex-wrap gap-x-7 gap-y-3 border-b border-border py-5">
+        <nav className="edge-scroll gap-x-5 border-b border-border py-3.5 sm:flex-wrap sm:gap-x-7 sm:overflow-visible">
           <Link to="/" className="eyebrow font-semibold text-muted-foreground hover:text-foreground">
             All hotels
           </Link>
@@ -261,7 +261,7 @@ function HotelIntro({
 
 function Rooms({ hotel }: { hotel: Hotel }) {
   return (
-    <section id="rooms" data-anchor="booking" className="page-wrap py-16">
+    <section id="rooms" data-anchor="booking" className="page-wrap section-pad">
       <span id="booking" className="block" />
       <Reveal>
         <h2 className="font-display text-4xl text-forest sm:text-5xl">Rooms</h2>
@@ -327,7 +327,7 @@ function Amenities({ hotel }: { hotel: Hotel }) {
 
 function Reviews({ hotel }: { hotel: Hotel }) {
   return (
-    <section id="reviews" className="page-wrap py-16">
+    <section id="reviews" className="page-wrap section-pad">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-display text-4xl text-forest sm:text-5xl">Reviews</h2>
@@ -366,12 +366,12 @@ function LocationBlock({ hotel }: { hotel: Hotel }) {
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(hotel.mapQuery)}&output=embed`;
 
   return (
-    <section id="location" className="border-y border-border bg-background py-16">
+    <section id="location" className="border-y border-border bg-background section-pad">
       <div className="page-wrap">
         <Reveal>
           <h2 className="font-display text-4xl text-forest sm:text-5xl">Location</h2>
         </Reveal>
-        <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-14">
+        <div className="mt-7 grid gap-7 lg:grid-cols-2 lg:gap-10">
           <Reveal>
             <address className="not-italic">
               <div className="space-y-1 text-sm leading-relaxed text-foreground/80">
@@ -417,7 +417,7 @@ function LocationBlock({ hotel }: { hotel: Hotel }) {
 
 function FaqBlock() {
   return (
-    <section id="faqs" className="page-wrap py-16">
+    <section id="faqs" className="page-wrap section-pad">
       <Reveal>
         <h2 className="font-display text-4xl text-forest sm:text-5xl">Questions</h2>
       </Reveal>
@@ -439,7 +439,7 @@ function DiscoverOther({ currentId }: { currentId: Hotel["id"] }) {
   const others = hotels.filter((h) => h.id !== currentId);
 
   return (
-    <section className="border-t border-border bg-secondary py-16">
+    <section className="border-t border-border bg-secondary section-pad">
       <div className="page-wrap">
         <Reveal>
           <h2 className="font-display text-4xl text-forest sm:text-5xl">Living across Hyderabad</h2>

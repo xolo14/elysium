@@ -153,8 +153,8 @@ export function AuthModal({
         <DialogPrimitive.Overlay className="fixed inset-0 z-[80] bg-black/55 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content
           className={cn(
-            "fixed top-1/2 left-1/2 z-[81] w-[calc(100%-1.5rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[10px] bg-white shadow-[0_40px_80px_-28px_rgba(0,0,0,0.45)]",
-            "max-h-[min(92svh,42rem)] overflow-y-auto focus:outline-none sm:overflow-hidden",
+            "fixed top-1/2 left-1/2 z-[81] w-[calc(100%-1rem)] max-h-[min(92svh,42rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[10px] bg-white shadow-[0_40px_80px_-28px_rgba(0,0,0,0.45)] sm:w-[calc(100%-1.5rem)]",
+            "overflow-y-auto focus:outline-none sm:overflow-hidden",
             split
               ? "grid max-w-[52rem] md:grid-cols-[0.42fr_0.58fr]"
               : "max-w-[34rem]",
@@ -162,7 +162,7 @@ export function AuthModal({
         >
           {split ? (
             <aside
-              className="relative flex min-h-[14rem] flex-col bg-bronze px-7 py-7 text-ivory sm:px-8 sm:py-8 md:min-h-[32rem]"
+              className="relative flex min-h-[12rem] flex-col bg-bronze px-5 py-5 text-ivory sm:px-7 sm:py-7 md:min-h-[30rem]"
               onMouseEnter={() => setPaused(true)}
               onMouseLeave={() => setPaused(false)}
             >
@@ -206,7 +206,7 @@ export function AuthModal({
             </aside>
           ) : null}
 
-          <div className="relative flex flex-col bg-white px-7 py-8 sm:px-10 sm:py-10">
+          <div className="relative flex flex-col bg-white px-5 py-6 sm:px-8 sm:py-8 md:px-10 md:py-10">
             <CloseButton />
 
             {formStep === "otp" ? (

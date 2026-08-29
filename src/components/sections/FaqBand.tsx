@@ -19,7 +19,7 @@ export function FaqBand() {
           <p className="mt-3 text-sm text-foreground/65">Madhapur and Hitec City.</p>
         </Reveal>
 
-        <ul className="mt-10 divide-y divide-border border-y border-border">
+        <ul className="mt-7 divide-y divide-border border-y border-border">
           {hotelFaqs.map((item, i) => {
             const isOpen = open === i;
             return (
@@ -28,7 +28,7 @@ export function FaqBand() {
                   type="button"
                   aria-expanded={isOpen}
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-start justify-between gap-4 py-5 text-left"
+                  className="flex w-full items-start justify-between gap-4 py-4 text-left sm:py-5"
                 >
                   <span className="font-display text-base leading-snug text-forest sm:text-lg">
                     {item.q}

@@ -214,7 +214,7 @@ export function DateRangePicker({
           <ChevronRight className="h-4 w-4" />
         </button>
 
-        <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-8 sm:px-10 lg:flex-row lg:gap-12 lg:px-12">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-8 lg:flex-row lg:gap-10 lg:px-10">
           {renderMonth(viewMonth.year, viewMonth.month)}
           <div className="hidden min-w-0 flex-1 lg:block">
             {renderMonth(secondMonth.year, secondMonth.month)}

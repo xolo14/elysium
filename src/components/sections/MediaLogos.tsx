@@ -13,10 +13,10 @@ const promises = [
 /** Honest trust strip — no fake press brands. */
 export function MediaLogos() {
   return (
-    <section aria-label="Why book direct" className="border-y border-border bg-background py-8 sm:py-10">
+    <section aria-label="Why book direct" className="border-y border-border bg-background py-5 sm:py-6">
       <div className="page-wrap">
         <Reveal>
-          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12">
+          <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:gap-x-10">
             {promises.map((name) => (
               <li
                 key={name}

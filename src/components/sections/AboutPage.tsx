@@ -24,7 +24,7 @@ export function AboutPage() {
 
   return (
     <>
-      <section className="bg-ivory pt-28 pb-16 sm:pt-32 sm:pb-20">
+      <section className="bg-ivory page-top pb-10 sm:pb-12">
         <div className="page-wrap text-center">
           <Reveal>
             <h1 className="display-nav mx-auto max-w-3xl text-[clamp(2.4rem,6vw,4.25rem)] text-forest">
@@ -46,7 +46,7 @@ export function AboutPage() {
       </section>
 
       <section className="bg-forest text-ivory">
-        <div className="page-wrap grid gap-8 py-10 sm:grid-cols-3 sm:gap-6 sm:py-12">
+        <div className="page-wrap grid gap-6 py-8 sm:grid-cols-3 sm:gap-5 sm:py-9">
           {stats.map((s) => (
             <div key={s.label} className="text-center sm:text-left">
               <p className="font-display text-3xl sm:text-4xl">{s.value}</p>
@@ -102,7 +102,7 @@ export function AboutPage() {
               A house that stays personal.
             </h2>
           </Reveal>
-          <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {values.map((p, i) => (
               <Reveal key={p.title} delay={i * 0.04}>
                 <li className="border-t border-forest/15 pt-5">
@@ -117,7 +117,7 @@ export function AboutPage() {
 
       <section className="bg-background">
         <div className="mx-auto grid max-w-[1200px] lg:grid-cols-2">
-          <Reveal className="flex flex-col justify-center bg-forest px-8 py-14 text-ivory sm:px-12 sm:py-16">
+          <Reveal className="flex flex-col justify-center bg-forest px-6 py-10 text-ivory sm:px-10 sm:py-12">
             <p className="eyebrow text-ivory/55">Recognition</p>
             <h2 className="mt-4 display-nav text-[clamp(2rem,4vw,3rem)]">
               Built for guests who return.
@@ -139,7 +139,7 @@ export function AboutPage() {
       </section>
 
       <section className="bg-forest text-ivory">
-        <div className="page-wrap flex flex-col gap-6 py-12 sm:flex-row sm:items-center sm:justify-between sm:py-14">
+        <div className="page-wrap flex flex-col gap-5 py-8 sm:flex-row sm:items-center sm:justify-between sm:py-10">
           <div>
             <h2 className="font-display text-3xl sm:text-4xl">Ready when you are.</h2>
             <p className="mt-3 text-sm text-ivory/75">Owners, corporates, or a quiet stay.</p>

@@ -99,7 +99,7 @@ export function Partnerships() {
   return (
     <section id="partners" className="relative overflow-hidden bg-secondary section-pad">
       <div className="page-wrap relative">
-        <ul className="grid gap-8 sm:grid-cols-3 sm:gap-10">
+        <ul className="grid gap-6 sm:grid-cols-3 sm:gap-8">
           {cards.map((card, index) => {
             const Art = art[card.illustration];
             return (

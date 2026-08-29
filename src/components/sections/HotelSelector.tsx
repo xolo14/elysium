@@ -29,10 +29,10 @@ export function HotelSelector() {
           </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-10 sm:mt-12 sm:grid-cols-2 sm:gap-8 lg:gap-10">
+        <div className="mt-7 grid gap-7 sm:mt-8 sm:grid-cols-2 sm:gap-6 lg:gap-8">
           {hotels.map((h, i) => (
             <Reveal key={h.id} delay={i * 0.08}>
-              <article id={`hotel-${h.id}`} className="group scroll-mt-28">
+              <article id={`hotel-${h.id}`} className="group scroll-mt-24">
                 <Link
                   to="/hotels/$slug"
                   params={{ slug: h.slug }}
@@ -50,7 +50,7 @@ export function HotelSelector() {
                     />
                   </div>
                 </Link>
-                <div className="mt-5 flex items-start justify-between gap-4">
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <div className="min-w-0">
                     <h3 className="font-display text-xl leading-snug sm:text-2xl">
                       {h.name}
@@ -65,7 +65,7 @@ export function HotelSelector() {
                     to="/book"
                     search={{ hotel: h.slug }}
                     onClick={() => selectHotel(h.id)}
-                    className="btn-primary shrink-0 px-4 py-2.5 text-[13px]"
+                    className="btn-primary w-full shrink-0 px-4 py-2.5 text-[13px] sm:w-auto"
                   >
                     Book Now
                   </Link>

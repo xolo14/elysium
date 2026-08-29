@@ -103,10 +103,10 @@ export function BookingHotelDetail({
   };
 
   return (
-    <div className="min-h-[100svh] bg-white pb-28 pt-[4.75rem]">
+    <div className="min-h-[100svh] bg-white pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-[4.5rem]">
       {/* Gallery */}
       <section className="relative">
-        <div className="relative h-[min(62vw,28rem)] overflow-hidden bg-neutral-200 sm:h-[34rem]">
+        <div className="relative h-[min(56vw,22rem)] overflow-hidden bg-neutral-200 sm:h-[28rem] lg:h-[32rem]">
           {images.map((src, i) => (
             <img
               key={src}
@@ -209,7 +209,7 @@ export function BookingHotelDetail({
 
       {/* Subnav */}
       <nav className="sticky top-[4.5rem] z-30 border-b border-neutral-100 bg-white/95 backdrop-blur-md">
-        <div className="page-wrap flex gap-1 overflow-x-auto py-3">
+        <div className="page-wrap edge-scroll py-2.5">
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -226,7 +226,7 @@ export function BookingHotelDetail({
         </div>
       </nav>
 
-      <div className="page-wrap space-y-16 py-10 sm:py-14">
+      <div className="page-wrap space-y-10 py-8 sm:space-y-12 sm:py-10">
         {/* Rooms */}
         <section id="book-rooms">
           <h2 className="display-nav text-[clamp(1.85rem,3.5vw,2.4rem)] text-forest">
@@ -476,8 +476,8 @@ export function BookingHotelDetail({
       </div>
 
       {/* Sticky booking bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-md">
-        <div className="page-wrap flex items-center justify-between gap-4 py-3">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-md safe-bottom">
+        <div className="page-wrap flex items-center justify-between gap-3 py-2.5">
           <p className="font-nav text-sm font-extrabold text-neutral-700">
             {selectedSuite ? `1 Room · ${selectedSuite.name}` : "0 Room"}
           </p>

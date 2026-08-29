@@ -198,7 +198,7 @@ export function Amenities() {
           </h2>
           <p className="mt-2 text-sm text-foreground/65">Both houses. Same standard.</p>
         </Reveal>
-        <div className="mt-8 sm:mt-10">
+        <div className="mt-6 sm:mt-7">
           <AmenitiesGrid hotel={hotel} />
         </div>
       </div>

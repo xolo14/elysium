@@ -37,7 +37,7 @@ export function WhatMakesUs() {
           </p>
         </Reveal>
 
-        <div className="mt-10 grid gap-5 sm:mt-12 sm:grid-cols-3 sm:gap-6">
+        <div className="mt-7 grid gap-5 sm:mt-8 sm:grid-cols-3 sm:gap-6">
           {pillars.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.08}>
               <article className="flex h-full flex-col overflow-hidden rounded-[10px] bg-ivory text-forest">
@@ -61,7 +61,7 @@ export function WhatMakesUs() {
         <Reveal delay={0.15}>
           <Link
             to="/why"
-            className="eyebrow mx-auto mt-10 flex w-fit items-center justify-center gap-2.5 rounded-[10px] bg-ivory px-7 py-3.5 text-[0.8rem] tracking-[0.2em] text-forest transition-opacity hover:opacity-90 sm:mt-12 sm:px-8 sm:py-4 sm:text-[0.875rem]"
+            className="eyebrow mx-auto mt-7 flex w-fit items-center justify-center gap-2.5 rounded-[10px] bg-ivory px-7 py-3.5 text-[0.8rem] tracking-[0.2em] text-forest transition-opacity hover:opacity-90 sm:mt-8 sm:px-8 sm:py-4 sm:text-[0.875rem]"
           >
             Why Elysium
             <BrandStar className="h-3 w-3" />

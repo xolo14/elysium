@@ -62,7 +62,7 @@ function HotelGalleryPage() {
         </div>
       </header>
 
-      <div className="page-wrap py-10 sm:py-14">
+      <div className="page-wrap section-pad">
         <div className="rounded-[10px] bg-ivory px-5 py-8 text-forest sm:px-8 sm:py-10">
           {albums.map((album) => (
             <section key={album.title} className="not-first:mt-14 sm:not-first:mt-16">

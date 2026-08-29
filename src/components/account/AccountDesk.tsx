@@ -23,7 +23,7 @@ export function AccountDesk() {
   const name = guestFullName(guest);
 
   return (
-    <div className="page-wrap grid gap-8 pt-28 pb-16 lg:grid-cols-[17.5rem_1fr] lg:gap-10 lg:pt-32 lg:pb-24">
+    <div className="page-wrap page-top grid gap-6 pb-12 lg:grid-cols-[16rem_1fr] lg:gap-8 lg:pb-16">
       <aside>
         <div className="rounded-[10px] border border-bronze/45 p-5 sm:p-6">
           <AccountSkyline />
@@ -118,7 +118,7 @@ export function AccountDesk() {
             <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-neutral-500">
               Stays appear here after check-out at Madhapur or Hitec City.
             </p>
-            <div className="mt-5 flex flex-col items-center rounded-[10px] border border-neutral-200 bg-neutral-50 px-6 py-14 text-center">
+            <div className="mt-5 flex flex-col items-center rounded-[10px] border border-neutral-200 bg-neutral-50 px-5 py-10 text-center">
               <p className="prose-quiet">You don&apos;t have any recent stays.</p>
               <button type="button" onClick={() => setTab("bookings")} className="auth-continue mt-6 max-w-xs">
                 View All Bookings
@@ -139,7 +139,7 @@ export function AccountDesk() {
               Bookings
             </h1>
             <p className="mt-2 prose-quiet">Requests and confirmed stays, in one place.</p>
-            <div className="mt-8 flex flex-col items-center rounded-[10px] border border-neutral-200 bg-neutral-50 px-6 py-16 text-center">
+            <div className="mt-8 flex flex-col items-center rounded-[10px] border border-neutral-200 bg-neutral-50 px-5 py-12 text-center">
               <p className="prose-quiet">No bookings yet.</p>
               <Link to="/book" className="auth-continue mt-6 max-w-xs inline-flex items-center justify-center">
                 Book a stay

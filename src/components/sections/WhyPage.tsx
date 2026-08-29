@@ -77,14 +77,14 @@ export function WhyPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-sun text-ivory">
-        <div className="page-wrap relative grid min-h-[88svh] items-center gap-10 pt-28 pb-16 lg:grid-cols-2 lg:pb-20 lg:pt-32">
+        <div className="page-wrap relative grid min-h-[min(100svh,40rem)] items-center gap-8 page-top pb-10 sm:min-h-[36rem] lg:grid-cols-2 lg:min-h-[88svh] lg:gap-10 lg:pb-14">
           <div className="relative z-10 max-w-xl">
             <h1 className="display-nav text-[clamp(2.4rem,6vw,3.85rem)] text-ivory">
               Putting the trust
               <br />
               back into travel.
             </h1>
-            <p className="mt-7 max-w-md text-[16px] leading-relaxed text-ivory/95 sm:text-[17px]">
+            <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ivory/95 sm:mt-6 sm:text-[16px]">
               Two houses in Hyderabad. One 4B standard. Direct rates, breakfast included, a desk that answers.
             </p>
             <p className="mt-5 text-[15px] font-semibold text-ivory/90">Come stay with us.</p>
@@ -102,7 +102,7 @@ export function WhyPage() {
           <img
             src="/images/hitec-city/dining-area/dining-01.png"
             alt="A moment at Elysium"
-            className="h-[min(70vw,28rem)] w-full object-cover sm:h-[32rem]"
+            className="h-[min(58vw,22rem)] w-full object-cover sm:h-[26rem] lg:h-[30rem]"
           />
           <span className="absolute inset-0 bg-forest/25" />
           <span className="absolute inset-0 flex flex-col items-center justify-center text-ivory">
@@ -116,14 +116,14 @@ export function WhyPage() {
         </button>
       </section>
 
-      <section className="bg-white py-16 sm:py-20">
+      <section className="bg-white section-pad">
         <div className="page-wrap">
           <Reveal>
             <h2 className="display-nav max-w-2xl text-[clamp(1.85rem,4vw,2.75rem)] text-bronze">
               Our values make us trusted by guests.
             </h2>
           </Reveal>
-          <ul className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-10">
             {values.map((v, i) => (
               <Reveal key={v.title} delay={i * 0.05}>
                 <li>
@@ -136,7 +136,7 @@ export function WhyPage() {
         </div>
       </section>
 
-      <section className="bg-white pb-16 sm:pb-20">
+      <section className="bg-white pb-8 sm:pb-10">
         <div className="page-wrap">
           <Reveal>
             <div className="grid overflow-hidden rounded-[10px] bg-neutral-100 sm:grid-cols-2">
@@ -144,7 +144,7 @@ export function WhyPage() {
                 <img src={current.image} alt="" className="h-full w-full object-cover" />
                 <SparkLines />
               </div>
-              <div className="relative flex flex-col justify-center p-8 sm:p-10 lg:p-12">
+              <div className="relative flex flex-col justify-center p-6 sm:p-8 lg:p-10">
                 <p className="font-nav text-5xl leading-none text-sun">“</p>
                 <p className="mt-2 text-[1.15rem] leading-snug text-neutral-500 sm:text-xl">
                   {current.quote}
@@ -174,13 +174,13 @@ export function WhyPage() {
         </div>
       </section>
 
-      <section className="bg-sun py-16 text-ivory sm:py-20">
+      <section className="bg-sun text-ivory section-pad">
         <div className="page-wrap relative">
           <h2 className="display-nav text-[clamp(1.85rem,4vw,2.75rem)]">
             Elysium Houses
           </h2>
           <p className="mt-2 text-[15px] text-ivory/90">Two addresses. One 4B standard.</p>
-          <div className="relative mt-10">
+          <div className="relative mt-7 sm:mt-8">
             <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {visibleHouses.map((item) => (
                 <li key={item.title}>

@@ -152,8 +152,8 @@ export function Booking({
 
   if (step === "dates") {
     return (
-      <div className="min-h-[100svh] bg-sun pt-[4.75rem]">
-        <div className="page-wrap py-6 sm:py-8 lg:py-10">
+      <div className="min-h-[100svh] bg-sun pt-[4.5rem]">
+        <div className="page-wrap py-4 sm:py-6 lg:py-8">
           <button
             type="button"
             onClick={() => window.history.back()}
@@ -183,9 +183,9 @@ export function Booking({
 
   if (step === "hotels") {
     return (
-      <div className="min-h-[100svh] bg-white pt-[4.75rem]">
+      <div className="min-h-[100svh] bg-white pt-[4.5rem]">
         <div className="relative overflow-hidden bg-forest">
-          <div className="page-wrap relative z-10 py-8 sm:py-10">
+          <div className="page-wrap relative z-10 py-6 sm:py-8">
             <p className="font-nav text-[2rem] font-extrabold tracking-[-0.03em] text-ivory sm:text-[2.4rem]">
               Hyderabad
             </p>
@@ -212,7 +212,7 @@ export function Booking({
           />
         </div>
 
-        <div className="page-wrap space-y-6 py-8 sm:py-10">
+        <div className="page-wrap space-y-5 py-6 sm:py-8">
           <p className="text-sm text-neutral-500">
             {hotels.length} house{hotels.length === 1 ? "" : "s"} in Hyderabad
           </p>
@@ -252,7 +252,7 @@ export function Booking({
     <form
       id="booking"
       onSubmit={onSubmit}
-      className="flex min-h-[100svh] flex-col bg-ivory pt-[4.75rem] lg:h-[100svh] lg:overflow-hidden"
+      className="flex min-h-[100svh] flex-col bg-ivory pt-[4.5rem] lg:h-[100svh] lg:overflow-hidden"
     >
       <div className="page-wrap flex min-h-0 flex-1 flex-col gap-3 py-3 sm:gap-4 sm:py-4">
         <header className="flex flex-wrap items-end justify-between gap-3">
@@ -429,7 +429,7 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
 
   return (
     <article className="overflow-hidden rounded-[10px] border border-neutral-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)] lg:grid lg:grid-cols-[1.15fr_0.85fr]">
-      <div className="relative min-h-[14rem] overflow-hidden bg-neutral-100 sm:min-h-[18rem]">
+      <div className="relative min-h-[12rem] overflow-hidden bg-neutral-100 sm:min-h-[16rem] lg:min-h-[18rem]">
         <img
           src={images[index] ?? hotel.hero}
           alt={`${hotel.name}, ${hotel.place}`}

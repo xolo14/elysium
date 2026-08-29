@@ -82,7 +82,7 @@ export function Nav() {
 
       {open ? (
         <div
-          className="fixed inset-0 z-[70] flex flex-col justify-between overflow-y-auto overscroll-contain bg-forest px-6 py-6 text-ivory sm:px-10 sm:py-8 lg:px-12"
+          className="fixed inset-0 z-[70] flex flex-col justify-between overflow-y-auto overscroll-contain bg-forest px-5 py-5 text-ivory safe-bottom sm:px-8 sm:py-6 lg:px-10"
           role="dialog"
           aria-modal="true"
           aria-label="Site menu"
@@ -101,7 +101,7 @@ export function Nav() {
             </button>
           </div>
 
-          <div className="flex flex-1 flex-col justify-center gap-10 py-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
+          <div className="flex flex-1 flex-col justify-center gap-7 py-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12 lg:py-8">
             <div>
               <p className="nav-link text-ivory/45">Hotels</p>
               <ul className="mt-5 space-y-4">
@@ -114,7 +114,7 @@ export function Nav() {
                         selectHotel(h.id);
                         setOpen(false);
                       }}
-                      className="block text-left font-nav text-[1.85rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[2.15rem]"
+                      className="block text-left font-nav text-[1.55rem] leading-tight font-extrabold tracking-[-0.03em] sm:text-[1.9rem]"
                     >
                       {h.name}
                       <span className="mt-1 block font-nav text-[15px] font-semibold tracking-normal text-ivory/55">
@@ -229,7 +229,7 @@ function NavBar({
   guest: Guest | null;
 }) {
   return (
-    <nav className="relative flex w-full items-center justify-between px-5 py-[1.15rem] sm:px-8 lg:px-12 lg:py-5">
+    <nav className="relative flex w-full items-center justify-between px-4 py-3.5 sm:px-6 sm:py-[1.05rem] lg:px-10 lg:py-4">
       <Link to="/" className="relative z-10 shrink-0">
         <span className="nav-mark">elysium</span>
         <span className="sr-only">Elysium Hotels — home</span>
