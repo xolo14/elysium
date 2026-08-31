@@ -14,7 +14,7 @@ type RevealProps = {
 };
 
 /** Soft upward fade — SSR/prerender stays visible to avoid hydration mismatch. */
-export function Reveal({ children, className, delay = 0, y = 16, once = true }: RevealProps) {
+export function Reveal({ children, className, delay = 0, y = 10, once = true }: RevealProps) {
   const hydrated = useHydrated();
 
   if (!hydrated) {
@@ -26,7 +26,7 @@ export function Reveal({ children, className, delay = 0, y = 16, once = true }: 
       initial={{ opacity: 0.001, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, amount: 0.12, margin: "0px 0px -4% 0px" }}
-      transition={{ duration: 0.6, delay, ease }}
+      transition={{ duration: 0.35, delay, ease }}
       className={className}
     >
       {children}
@@ -63,10 +63,10 @@ export function RevealLines({
       {lines.map((line, i) => (
         <div key={line} className="overflow-hidden">
           <motion.p
-            initial={{ y: "40%", opacity: 0.2 }}
+            initial={{ y: "22%", opacity: 0.35 }}
             whileInView={{ y: "0%", opacity: 1 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.85, delay: i * 0.1, ease }}
+            transition={{ duration: 0.4, delay: i * 0.05, ease }}
             className={cn("py-1", lineClassName)}
           >
             {line}
@@ -105,10 +105,10 @@ export function MaskImage({
     >
       {hydrated ? (
         <motion.div
-          initial={{ scale: 1.04, opacity: 0.9 }}
+          initial={{ scale: 1.02, opacity: 0.92 }}
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true, amount: 0.12 }}
-          transition={{ duration: 0.7, ease }}
+          transition={{ duration: 0.4, ease }}
           className="h-full w-full"
         >
           <picture>

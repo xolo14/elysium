@@ -27,9 +27,9 @@ export function Nav() {
     pathname === "/why" ||
     onBookFlow ||
     pathname.startsWith("/hotels/");
-  /** Ivory chrome when scrolled — except booking desk stays forest like the dates step */
+  /** Ivory chrome when scrolled — booking desk always matches forest page + light logo */
   const solid = !onBookFlow && (scrolled || !onDarkHero);
-  const bookForestChrome = onBookFlow && (scrolled || open);
+  const bookForestChrome = onBookFlow;
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 48));
 
@@ -83,7 +83,10 @@ export function Nav() {
   const headerClassName = cn(
     "fixed top-0 right-0 left-0 z-[80] transition-[background-color,box-shadow,color] duration-500 ease-luxe",
     open || bookForestChrome
-      ? "bg-forest text-ivory shadow-[0_8px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-md"
+      ? cn(
+          "bg-forest text-ivory",
+          (open || scrolled) && "shadow-[0_8px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-md",
+        )
       : solid
         ? "bg-ivory/95 text-forest shadow-[0_8px_30px_-18px_rgba(6,51,44,0.35)] backdrop-blur-md"
         : "bg-transparent text-ivory",
@@ -112,9 +115,9 @@ export function Nav() {
     <>
       {hydrated ? (
         <motion.header
-          initial={{ y: -28, opacity: 0 }}
+          initial={{ y: -12, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.12, duration: 0.8, ease }}
+          transition={{ delay: 0.04, duration: 0.35, ease }}
           className={headerClassName}
         >
           {bar}

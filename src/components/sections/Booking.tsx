@@ -244,15 +244,15 @@ export function Booking({
             key="pick"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.985 }}
-            transition={{ duration: 0.5, ease }}
+            exit={{ opacity: 0, scale: 0.99 }}
+            transition={{ duration: 0.28, ease }}
             className="min-h-[100svh] bg-forest pt-[4.5rem]"
           >
             <div className="page-wrap py-6 sm:py-10">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, ease }}
+                transition={{ duration: 0.3, ease }}
               >
                 <button
                   type="button"
@@ -277,10 +277,10 @@ export function Booking({
                     <motion.button
                       key={h.id}
                       type="button"
-                      initial={{ opacity: 0, y: 28 }}
+                      initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.12 + i * 0.1, duration: 0.55, ease }}
-                      whileHover={{ y: -4 }}
+                      transition={{ delay: 0.06 + i * 0.05, duration: 0.3, ease }}
+                      whileHover={{ y: -3 }}
                       whileTap={{ scale: 0.985 }}
                       onClick={() => pickHouse(h)}
                       className="group overflow-hidden rounded-[14px] bg-white text-left shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)]"
@@ -333,10 +333,10 @@ export function Booking({
         {step === "dates" ? (
           <motion.div
             key="dates"
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 18 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -28 }}
-            transition={{ duration: 0.5, ease }}
+            exit={{ opacity: 0, x: -12 }}
+            transition={{ duration: 0.28, ease }}
             className="min-h-[100svh] bg-forest pt-[4.5rem]"
           >
             <div className="page-wrap py-4 sm:py-6 lg:py-8">
@@ -349,17 +349,17 @@ export function Booking({
                 {hotel.name}
               </button>
               <motion.p
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.4, ease }}
+                transition={{ delay: 0.04, duration: 0.25, ease }}
                 className="mb-4 font-nav text-sm font-semibold text-ivory/80"
               >
                 Choose check-in &amp; check-out for {hotel.place}
               </motion.p>
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.14, duration: 0.5, ease }}
+                transition={{ delay: 0.06, duration: 0.28, ease }}
               >
                 <DateRangePicker
                   bloom
@@ -383,10 +383,10 @@ export function Booking({
         {step === "hotel" ? (
           <motion.div
             key="hotel"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.4, ease }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease }}
           >
             <BookingHotelDetail
               hotel={hotel}
@@ -405,10 +405,10 @@ export function Booking({
         {step === "checkout" ? (
           <motion.div
             key="checkout"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.4, ease }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease }}
           >
             <BookingCheckout
               hotel={hotel}
@@ -427,10 +427,10 @@ export function Booking({
         {step === "contact" ? (
           <motion.div
             key="contact"
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.4, ease }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease }}
           >
             <BookingContact
               hotel={hotel}

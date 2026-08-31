@@ -33,7 +33,7 @@ export function Hero() {
     setOpening(true);
     window.setTimeout(() => {
       void navigate({ to: "/book" });
-    }, 480);
+    }, 280);
   };
 
   return (
@@ -53,7 +53,7 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.7, ease }}
+              transition={{ duration: 0.4, ease }}
               className="absolute inset-0"
             >
               <picture>
@@ -95,7 +95,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease }}
+            transition={{ duration: 0.22, ease }}
             className="pointer-events-none absolute inset-0 z-20 bg-forest"
           />
         ) : null}
@@ -127,7 +127,7 @@ export function Hero() {
               ? { scale: 1.03, y: -6, opacity: 0.9 }
               : { scale: 1, y: 0, opacity: 1 }
           }
-          transition={{ duration: 0.4, ease }}
+          transition={{ duration: 0.25, ease }}
           className={cn(
             "group mt-5 flex min-h-12 w-full max-w-xl items-center justify-between gap-2.5 rounded-[10px] bg-ivory px-3.5 text-left text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] sm:mt-6 sm:min-h-14 sm:gap-3 sm:px-5",
             opening && "pointer-events-none",

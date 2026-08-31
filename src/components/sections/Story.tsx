@@ -63,7 +63,7 @@ export function Story() {
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.9, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.4, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
                   className="border-t border-border pt-5"
                 >
                   <p className="font-display text-3xl lg:text-4xl">{t.value}</p>
@@ -80,7 +80,7 @@ export function Story() {
                   initial={{ opacity: 0, x: -16 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-10% 0px" }}
-                  transition={{ duration: 0.8, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.35, delay: i * 0.03, ease: [0.16, 1, 0.3, 1] }}
                   className="flex gap-4"
                 >
                   <BrandStar className="mt-1.5 h-2.5 w-2.5 shrink-0 text-accent" />

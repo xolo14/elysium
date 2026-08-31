@@ -74,7 +74,7 @@ export function BookingCheckout({
       <div className="page-wrap relative pb-3 pt-5 sm:pb-4 sm:pt-8">
         <motion.div
           {...fadeUp}
-          transition={{ duration: 0.5, ease: easeLuxe }}
+          transition={{ duration: 0.28, ease: easeLuxe }}
           className="flex items-end justify-between gap-4"
         >
           <h1 className="display-nav text-[clamp(1.65rem,6vw,2.5rem)] text-ivory">
@@ -100,9 +100,9 @@ export function BookingCheckout({
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 28 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, delay: 0.08, ease: easeLuxe }}
+        transition={{ duration: 0.3, delay: 0.04, ease: easeLuxe }}
         className="sheet-luxe pb-14 pt-5 sm:pb-16 sm:pt-8"
       >
         <div className="page-wrap space-y-7 sm:space-y-10">

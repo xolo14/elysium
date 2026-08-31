@@ -248,7 +248,7 @@ export function BookingHotelDetail({
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.45, delay: i * 0.06, ease: easeLuxe }}
+                  transition={{ duration: 0.28, delay: i * 0.04, ease: easeLuxe }}
                   className={cn(
                     "grid grid-cols-[6.75rem_minmax(0,1fr)] overflow-hidden rounded-[10px] border bg-white transition-[border-color,box-shadow] duration-300 sm:grid-cols-[1.05fr_1fr]",
                     active ? "border-forest shadow-[0_12px_40px_-24px_rgba(6,51,44,0.35)]" : "border-neutral-200",
@@ -516,9 +516,9 @@ export function BookingHotelDetail({
 
       {/* Sticky booking bar */}
       <motion.div
-        initial={{ y: 48, opacity: 0 }}
+        initial={{ y: 24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.45, delay: 0.15, ease: easeLuxe }}
+        transition={{ duration: 0.28, delay: 0.06, ease: easeLuxe }}
         className="sticky-luxe safe-bottom fixed inset-x-0 bottom-0 z-40"
       >
         <div className="page-wrap flex items-center justify-between gap-3 py-2.5 sm:py-3">

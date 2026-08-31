@@ -95,7 +95,7 @@ export function BookingContact({
         </motion.button>
         <motion.h1
           {...fadeUp}
-          transition={{ duration: 0.5, ease: easeLuxe }}
+          transition={{ duration: 0.28, ease: easeLuxe }}
           className="display-nav text-[clamp(1.65rem,6vw,2.5rem)] text-ivory"
         >
           Booking Details
@@ -103,9 +103,9 @@ export function BookingContact({
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 28 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, delay: 0.06, ease: easeLuxe }}
+        transition={{ duration: 0.3, delay: 0.03, ease: easeLuxe }}
         className="sheet-luxe flex flex-1 flex-col pb-[5.5rem] pt-5 sm:pt-8"
       >
         <div className="page-wrap space-y-7 sm:space-y-8">
@@ -356,9 +356,9 @@ export function BookingContact({
       </motion.div>
 
       <motion.div
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.45, delay: 0.2, ease: easeLuxe }}
+        transition={{ duration: 0.28, delay: 0.08, ease: easeLuxe }}
         className="sticky-luxe safe-bottom fixed inset-x-0 bottom-0 z-40"
       >
         <div className="page-wrap flex items-center justify-between gap-3 py-2.5 sm:gap-4 sm:py-3">

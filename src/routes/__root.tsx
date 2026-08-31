@@ -209,7 +209,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MotionConfig reducedMotion="user" transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
+      <MotionConfig reducedMotion="user" transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}>
         <ScrollToTop />
         <GuestProvider>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
