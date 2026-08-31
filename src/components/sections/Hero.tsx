@@ -12,7 +12,7 @@ function asWebp(src: string) {
   return src.replace(/\.(png|jpe?g)$/i, ".webp");
 }
 
-/** Hero — brand, line, Book Now (animated open into calendar flow). */
+/** Hero — brand, line, Book Now (opens house pick → calendar). */
 export function Hero() {
   const { hotel } = useHotel();
   const hydrated = useHydrated();
@@ -33,7 +33,7 @@ export function Hero() {
     setOpening(true);
     window.setTimeout(() => {
       void navigate({ to: "/book" });
-    }, 420);
+    }, 480);
   };
 
   return (
@@ -113,7 +113,7 @@ export function Hero() {
             Hello Elysium.
           </h1>
           <p className="mt-3 max-w-md prose-quiet text-[0.9rem] text-ivory/80 sm:mt-5 sm:text-base">
-            Madhapur &amp; Hitec City. Direct rates.
+            Direct rates.
           </p>
         </div>
 
@@ -134,7 +134,7 @@ export function Hero() {
           )}
         >
           <span className="min-w-0 truncate font-nav text-[14px] font-bold tracking-[-0.01em] sm:text-base">
-            {opening ? "Opening calendar…" : "Book an Elysium in Hyderabad"}
+            {opening ? "Opening houses…" : "Book an Elysium in Hyderabad"}
           </span>
           <span className="btn-primary shrink-0 !min-h-9 px-4 text-[12px] sm:!min-h-11 sm:px-5 sm:text-[13px]">
             Book Now

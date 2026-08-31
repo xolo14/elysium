@@ -170,7 +170,7 @@ export function BookingHotelDetail({
               onClick={onBack}
               className="mb-2.5 text-[13px] font-semibold text-ivory/80 hover:text-ivory sm:mb-3 sm:text-sm"
             >
-              ← Hyderabad houses
+              ← Back
             </button>
             <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between lg:gap-4">
               <div>

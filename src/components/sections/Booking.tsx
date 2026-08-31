@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Pencil } from "lucide-react";
 import { useHotel } from "@/context/hotel";
+import { guestFullName, useGuest } from "@/context/guest";
 import type { Hotel, Suite } from "@/data/hotels";
-import { getHotelCarouselImages } from "@/data/hotel-images";
-import { cn } from "@/lib/utils";
 import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
 import { BookingHotelDetail } from "@/components/booking/BookingHotelDetail";
@@ -26,9 +24,9 @@ function suiteFromHotel(hotel: Hotel, name?: string) {
   return hotel.suites.find((s) => s.name.toLowerCase() === name.toLowerCase()) ?? hotel.suites[0]!;
 }
 
-type Step = "dates" | "hotels" | "hotel" | "checkout" | "contact";
+type Step = "pick" | "dates" | "hotel" | "checkout" | "contact";
 
-/** Hyderabad-only booking: calendar → houses with photos → suite request. */
+/** Hyderabad booking: pick house → calendar → rooms → checkout. */
 export function Booking({
   initialHotelSlug,
   initialSuite,
@@ -43,6 +41,7 @@ export function Booking({
   initialGuests?: number;
 } = {}) {
   const { hotels } = useHotel();
+  const { guest, ready: guestReady, updateGuest } = useGuest();
   const hotelLocked = Boolean(initialHotelSlug);
 
   const today = useMemo(() => {
@@ -54,9 +53,13 @@ export function Booking({
   const startHotel =
     hotels.find((h) => h.slug === initialHotelSlug || h.id === initialHotelSlug) ?? hotels[0]!;
 
-  const [step, setStep] = useState<Step>(() =>
-    initialCheckIn && initialCheckOut ? (initialHotelSlug ? "hotel" : "hotels") : "dates",
-  );
+  const [step, setStep] = useState<Step>(() => {
+    if (initialCheckIn && initialCheckOut) {
+      return initialHotelSlug ? "hotel" : "pick";
+    }
+    if (initialHotelSlug) return "dates";
+    return "pick";
+  });
   const [houseId, setHouseId] = useState<Hotel["id"]>(startHotel.id);
   const hotel = hotels.find((h) => h.id === houseId) ?? hotels[0]!;
 
@@ -93,6 +96,28 @@ export function Booking({
     setBookingId(null);
   }, [hotel.id, hotel.suites, initialSuite]);
 
+  useEffect(() => {
+    const toTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+    toTop();
+    const t = window.setTimeout(toTop, 40);
+    return () => window.clearTimeout(t);
+  }, [step, sent]);
+
+  /** Prefill checkout from Login / Join session — don’t overwrite edits already typed. */
+  useEffect(() => {
+    if (!guestReady || !guest) return;
+    setForm((f) => ({
+      email: f.email.trim() ? f.email : guest.email,
+      phone: f.phone.trim() ? f.phone : guest.mobile,
+      firstName: f.firstName.trim() ? f.firstName : guest.firstName,
+      lastName: f.lastName.trim() ? f.lastName : guest.lastName,
+    }));
+  }, [guestReady, guest]);
+
   const nights = checkIn && checkOut ? nightsBetween(checkIn, checkOut) : 0;
   const pricing = useMemo(
     () =>
@@ -113,7 +138,13 @@ export function Booking({
   );
 
   const afterDates = () => {
-    setStep(hotelLocked ? "hotel" : "hotels");
+    setStep("hotel");
+  };
+
+  const pickHouse = (h: Hotel) => {
+    setHouseId(h.id);
+    setSuite(suiteFromHotel(h, initialSuite));
+    setStep("dates");
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -137,6 +168,14 @@ export function Booking({
       });
       setBookingId(result.id);
       setSent(true);
+      if (guest) {
+        updateGuest({
+          mobile: form.phone.trim() || guest.mobile,
+          firstName: form.firstName.trim() || guest.firstName,
+          lastName: form.lastName.trim() || guest.lastName,
+          stays: guest.stays + 1,
+        });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save your request. Please call the desk.");
     } finally {
@@ -173,7 +212,7 @@ export function Booking({
               type="button"
               onClick={() => {
                 setSent(false);
-                setStep("dates");
+                setStep("pick");
                 setCheckIn("");
                 setCheckOut("");
                 setForm({ email: "", phone: "", firstName: "", lastName: "" });
@@ -200,108 +239,143 @@ export function Booking({
   return (
     <div className="relative min-h-[100svh] overflow-hidden">
       <AnimatePresence mode="wait">
+        {step === "pick" ? (
+          <motion.div
+            key="pick"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 0.985 }}
+            transition={{ duration: 0.5, ease }}
+            className="min-h-[100svh] bg-forest pt-[4.5rem]"
+          >
+            <div className="page-wrap py-6 sm:py-10">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, ease }}
+              >
+                <button
+                  type="button"
+                  onClick={() => window.history.back()}
+                  className="mb-5 inline-flex items-center gap-2 font-nav text-lg font-extrabold text-ivory/85 sm:text-xl"
+                >
+                  <span aria-hidden="true">‹</span>
+                  Hyderabad
+                </button>
+                <h1 className="display-nav text-[clamp(2rem,6vw,3rem)] text-ivory">
+                  Choose your Elysium
+                </h1>
+                <p className="mt-2 max-w-lg text-sm text-ivory/75 sm:text-base">
+                  Studio Suites or Premier Suites — then lock your dates.
+                </p>
+              </motion.div>
+
+              <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-2 lg:gap-7">
+                {hotels.map((h, i) => {
+                  const kind = h.id === "madhapur" ? "Studio Suites" : "Premier Suites";
+                  return (
+                    <motion.button
+                      key={h.id}
+                      type="button"
+                      initial={{ opacity: 0, y: 28 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.12 + i * 0.1, duration: 0.55, ease }}
+                      whileHover={{ y: -4 }}
+                      whileTap={{ scale: 0.985 }}
+                      onClick={() => pickHouse(h)}
+                      className="group overflow-hidden rounded-[14px] bg-white text-left shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)]"
+                    >
+                      <div className="relative aspect-[16/11] overflow-hidden bg-neutral-200">
+                        <picture>
+                          <source
+                            srcSet={h.hero.replace(/\.(png|jpe?g)$/i, ".webp")}
+                            type="image/webp"
+                          />
+                          <img
+                            src={h.hero}
+                            alt=""
+                            loading="eager"
+                            decoding="async"
+                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                          />
+                        </picture>
+                        <div className="absolute inset-0 bg-gradient-to-t from-forest/55 via-transparent to-transparent" />
+                        <span className="absolute top-3 left-3 rounded-[8px] bg-forest/90 px-2.5 py-1 text-[11px] font-bold tracking-wide text-ivory uppercase">
+                          {kind}
+                        </span>
+                      </div>
+                      <div className="p-5 sm:p-6">
+                        <h2 className="font-nav text-xl font-extrabold text-neutral-800 sm:text-2xl">
+                          {h.name}
+                        </h2>
+                        <p className="mt-1 text-sm text-neutral-500">{h.place}, Hyderabad</p>
+                        <div className="mt-5 flex items-end justify-between gap-3">
+                          <div>
+                            <p className="font-nav text-lg font-extrabold text-forest">
+                              {h.fromRate}{" "}
+                              <span className="text-sm font-semibold">/ night</span>
+                            </p>
+                            <p className="text-[11px] text-neutral-400">Incl. taxes</p>
+                          </div>
+                          <span className="btn-primary !min-h-10 px-5 text-[13px]">
+                            Select
+                          </span>
+                        </div>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+
         {step === "dates" ? (
           <motion.div
             key="dates"
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.45, ease }}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -28 }}
+            transition={{ duration: 0.5, ease }}
             className="min-h-[100svh] bg-forest pt-[4.5rem]"
           >
             <div className="page-wrap py-4 sm:py-6 lg:py-8">
               <button
                 type="button"
-                onClick={() => window.history.back()}
+                onClick={() => (hotelLocked ? window.history.back() : setStep("pick"))}
                 className="mb-5 inline-flex items-center gap-2 font-nav text-xl font-extrabold text-ivory sm:text-2xl"
               >
                 <span aria-hidden="true">‹</span>
-                Hyderabad
+                {hotel.name}
               </button>
-              <p className="mb-4 font-nav text-sm font-semibold text-ivory/80">
-                {hotelLocked
-                  ? `Choose dates for ${hotel.name}`
-                  : "Choose your dates — then Studio or Premier suites"}
-              </p>
-              <DateRangePicker
-                bloom
-                checkIn={checkIn}
-                checkOut={checkOut}
-                minDate={today}
-                onRangeChange={(inDate, outDate) => {
-                  setCheckIn(inDate);
-                  setCheckOut(outDate);
-                }}
-                onConfirm={afterDates}
-              />
+              <motion.p
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.4, ease }}
+                className="mb-4 font-nav text-sm font-semibold text-ivory/80"
+              >
+                Choose check-in &amp; check-out for {hotel.place}
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.14, duration: 0.5, ease }}
+              >
+                <DateRangePicker
+                  bloom
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  minDate={today}
+                  onRangeChange={(inDate, outDate) => {
+                    setCheckIn(inDate);
+                    setCheckOut(outDate);
+                  }}
+                  onConfirm={afterDates}
+                />
+              </motion.div>
               <p className="mt-5 text-center text-sm font-medium text-ivory/85">
-                Elysium Studio Suites, Madhapur · Elysium Premier Suites, Hitec City
+                {hotel.name} · {hotel.place}
               </p>
-            </div>
-          </motion.div>
-        ) : null}
-
-        {step === "hotels" ? (
-          <motion.div
-            key="hotels"
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.45, ease }}
-            className="min-h-[100svh] bg-forest pt-[4.5rem]"
-          >
-            <div className="relative overflow-hidden">
-              <div className="page-wrap relative z-10 py-6 sm:py-8">
-                <p className="font-nav text-[2rem] font-extrabold tracking-[-0.03em] text-ivory sm:text-[2.4rem]">
-                  Hyderabad houses
-                </p>
-                <p className="mt-1 text-sm text-ivory/80">Studio Suites &amp; Premier Suites</p>
-                <button
-                  type="button"
-                  onClick={() => setStep("dates")}
-                  className="mt-4 flex w-full max-w-xl items-center gap-3 rounded-[10px] bg-white px-4 py-3.5 text-left shadow-[0_12px_36px_-20px_rgba(0,0,0,0.35)]"
-                >
-                  <Pencil className="h-4 w-4 shrink-0 text-neutral-400" />
-                  <span className="min-w-0 flex-1 font-nav text-sm font-bold text-neutral-800 sm:text-base">
-                    {formatStayCompact(checkIn)}
-                    <span className="mx-2 text-bronze">→</span>
-                    {formatStayCompact(checkOut)}
-                  </span>
-                  <span className="shrink-0 rounded-full border border-neutral-200 px-3 py-1 text-xs font-semibold text-neutral-600">
-                    {nights} Night{nights === 1 ? "" : "s"}
-                  </span>
-                </button>
-              </div>
-              <img
-                src="/images/hitec-city/facade/facade-01.png"
-                alt=""
-                className="pointer-events-none absolute top-0 right-0 hidden h-full w-[42%] object-cover opacity-35 grayscale lg:block"
-              />
-            </div>
-
-            <div className="sheet-luxe min-h-[50vh] pb-10">
-              <div className="page-wrap space-y-5 py-6 sm:py-8">
-                <p className="text-sm text-neutral-500">
-                  {hotels.length} houses · pick one to see rooms available
-                </p>
-                {hotels.map((h, i) => (
-                  <motion.div
-                    key={h.id}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.08 + i * 0.08, duration: 0.4, ease }}
-                  >
-                    <HotelResultCard
-                      hotel={h}
-                      onSelect={() => {
-                        setHouseId(h.id);
-                        setSuite(suiteFromHotel(h, initialSuite));
-                        setStep("hotel");
-                      }}
-                    />
-                  </motion.div>
-                ))}
-              </div>
             </div>
           </motion.div>
         ) : null}
@@ -318,7 +392,7 @@ export function Booking({
               hotel={hotel}
               checkIn={checkIn}
               checkOut={checkOut}
-              onBack={() => setStep(hotelLocked ? "dates" : "hotels")}
+              onBack={() => setStep(hotelLocked ? "dates" : "pick")}
               onEditDates={() => setStep("dates")}
               onBookSuite={(s) => {
                 setSuite(s);
@@ -366,6 +440,7 @@ export function Booking({
               nights={nights}
               draft={checkout}
               form={form}
+              signedInAs={guest ? guestFullName(guest) : null}
               onFormChange={(next) => setForm((f) => ({ ...f, ...next }))}
               onEditRooms={() => setStep("hotel")}
               onBack={() => setStep("checkout")}
@@ -377,118 +452,5 @@ export function Booking({
         ) : null}
       </AnimatePresence>
     </div>
-  );
-}
-
-function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => void }) {
-  const images = useMemo(() => {
-    const gallery = getHotelCarouselImages(hotel).map((g) => g.src);
-    const unique = [hotel.hero, ...gallery].filter((src, i, arr) => arr.indexOf(src) === i);
-    return unique.slice(0, 6);
-  }, [hotel]);
-  const [index, setIndex] = useState(0);
-  const roomCount = hotel.suites.length;
-  const kind = hotel.id === "madhapur" ? "Studio Suites" : "Premier Suites";
-  const landmarks =
-    hotel.id === "madhapur"
-      ? [
-          "Near Ayyappa Society & Madhapur main road",
-          "Quick access to Hitec City corridor",
-          "Complimentary breakfast at O Sorriso",
-        ]
-      : [
-          "Minutes from Cyber Towers & Hitec City",
-          "Walking distance to offices and metro",
-          "Full kitchen in every suite",
-        ];
-
-  return (
-    <article className="overflow-hidden rounded-[10px] border border-neutral-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)] lg:grid lg:grid-cols-[1.15fr_0.85fr]">
-      <div className="relative min-h-[11rem] overflow-hidden bg-neutral-100 sm:min-h-[16rem] lg:min-h-[18rem]">
-        <picture>
-          <source
-            srcSet={(images[index] ?? hotel.hero).replace(/\.(png|jpe?g)$/i, ".webp")}
-            type="image/webp"
-          />
-          <img
-            src={images[index] ?? hotel.hero}
-            alt={`${hotel.name}, ${hotel.place}`}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        </picture>
-        {images.length > 1 ? (
-          <>
-            <div className="absolute inset-x-0 bottom-0 flex gap-1 px-3 pb-2.5 sm:gap-1.5 sm:px-4 sm:pb-3">
-              {images.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  aria-label={`Photo ${i + 1}`}
-                  onClick={() => setIndex(i)}
-                  className={cn(
-                    "h-0.5 flex-1 rounded-full transition-colors sm:h-1",
-                    i === index ? "bg-ivory" : "bg-white/45",
-                  )}
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => setIndex((n) => (n + 1) % images.length)}
-              className="absolute top-1/2 right-2.5 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-forest/90 text-ivory sm:right-3 sm:h-10 sm:w-10"
-              aria-label="Next photo"
-            >
-              ›
-            </button>
-          </>
-        ) : null}
-      </div>
-
-      <div className="flex flex-col p-4 sm:p-6 lg:p-7">
-        <p className="eyebrow text-bronze">{kind}</p>
-        <div className="mt-1 flex flex-wrap items-start justify-between gap-2">
-          <h2 className="font-nav text-lg font-extrabold text-neutral-800 sm:text-2xl">
-            {hotel.name}
-            <span className="font-semibold text-neutral-500"> — {hotel.place}</span>
-          </h2>
-          <p className="flex items-center gap-1 rounded-[10px] bg-forest/8 px-2 py-1 text-sm font-bold text-forest">
-            ★ {hotel.rating}
-          </p>
-        </div>
-        <p className="mt-1.5 text-[13px] font-semibold text-forest sm:mt-2 sm:text-sm">
-          {roomCount} room type{roomCount === 1 ? "" : "s"} available
-        </p>
-        <p className="mt-1.5 line-clamp-2 text-[13px] leading-relaxed text-neutral-500 sm:mt-2 sm:text-sm">
-          {hotel.contact.address.slice(1).join(" ")}
-        </p>
-        <ul className="mt-3 space-y-1.5 sm:mt-4 sm:space-y-2">
-          {landmarks.map((line) => (
-            <li key={line} className="flex gap-2 text-[13px] text-neutral-600 sm:text-sm">
-              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-bronze" />
-              {line}
-            </li>
-          ))}
-        </ul>
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-5 sm:gap-4 sm:pt-6">
-          <div>
-            <p className="font-nav text-base font-extrabold text-forest sm:text-lg">
-              {hotel.fromRate} <span className="text-xs font-semibold sm:text-sm">/ night onwards</span>
-            </p>
-            <p className="mt-0.5 text-[11px] text-neutral-400 sm:text-xs">Incl. taxes</p>
-          </div>
-          <motion.button
-            type="button"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={onSelect}
-            className="btn-primary inline-flex min-h-11 w-full items-center justify-center rounded-[10px] px-8 sm:w-auto"
-          >
-            View rooms
-          </motion.button>
-        </div>
-      </div>
-    </article>
   );
 }

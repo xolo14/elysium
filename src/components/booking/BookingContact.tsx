@@ -27,6 +27,7 @@ type BookingContactProps = {
   nights: number;
   draft: CheckoutDraft;
   form: ContactForm;
+  signedInAs?: string | null;
   onFormChange: (next: Partial<ContactForm>) => void;
   onEditRooms: () => void;
   onBack: () => void;
@@ -43,6 +44,7 @@ export function BookingContact({
   nights,
   draft,
   form,
+  signedInAs = null,
   onFormChange,
   onEditRooms,
   onBack,
@@ -157,6 +159,15 @@ export function BookingContact({
             <h2 className="font-nav text-xl font-extrabold text-bronze sm:text-2xl">
               Contact Details
             </h2>
+            {signedInAs ? (
+              <p className="mt-2 text-sm font-medium text-forest">
+                Signed in as {signedInAs} — details filled from your account. Edit anytime.
+              </p>
+            ) : (
+              <p className="mt-2 text-sm text-neutral-400">
+                Login / Join in the header to autofill these fields next time.
+              </p>
+            )}
             <div className="mt-4 grid gap-3">
               <input
                 required

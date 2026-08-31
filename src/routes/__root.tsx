@@ -156,21 +156,50 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function ScrollToTop() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const search = useRouterState({ select: (s) => s.location.searchStr });
   const hash = useRouterState({ select: (s) => s.location.hash });
+
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
 
   useLayoutEffect(() => {
     if (hash) {
       const id = hash.replace(/^#/, "");
-      const el = id ? document.getElementById(id) : null;
-      if (el) {
-        el.scrollIntoView({ block: "start" });
-        return;
-      }
+      const jumpToHash = () => {
+        const el = id ? document.getElementById(id) : null;
+        if (el) {
+          el.scrollIntoView({ block: "start" });
+          return true;
+        }
+        return false;
+      };
+      if (jumpToHash()) return;
+      const t = window.setTimeout(jumpToHash, 80);
+      return () => window.clearTimeout(t);
     }
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-  }, [pathname, hash]);
+
+    const toTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+
+    toTop();
+    const frame = window.requestAnimationFrame(toTop);
+    const t0 = window.setTimeout(toTop, 0);
+    const t1 = window.setTimeout(toTop, 50);
+    const t2 = window.setTimeout(toTop, 150);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(t0);
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [pathname, search, hash]);
 
   return null;
 }

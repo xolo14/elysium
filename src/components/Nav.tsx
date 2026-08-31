@@ -42,10 +42,41 @@ export function Nav() {
 
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    const scrollY = window.scrollY;
+    const { body, documentElement: html } = document;
+    const prev = {
+      bodyOverflow: body.style.overflow,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyWidth: body.style.width,
+      bodyPaddingRight: body.style.paddingRight,
+      htmlOverflow: html.style.overflow,
+      htmlOverscroll: html.style.overscrollBehavior,
+    };
+    const scrollbar = window.innerWidth - html.clientWidth;
+
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
+    html.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+
     return () => {
-      document.body.style.overflow = prev;
+      body.style.overflow = prev.bodyOverflow;
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+      body.style.left = "";
+      body.style.right = "";
+      body.style.width = prev.bodyWidth;
+      body.style.paddingRight = prev.bodyPaddingRight;
+      html.style.overflow = prev.htmlOverflow;
+      html.style.overscrollBehavior = prev.htmlOverscroll;
+      window.scrollTo(0, scrollY);
     };
   }, [open]);
 
@@ -103,8 +134,10 @@ export function Nav() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35, ease }}
-              className="fixed inset-0 z-[70] bg-forest/40 backdrop-blur-[2px]"
+              className="fixed inset-0 z-[70] touch-none bg-forest/40 backdrop-blur-[2px]"
               onClick={closeMenu}
+              onWheel={(e) => e.preventDefault()}
+              onTouchMove={(e) => e.preventDefault()}
             />
             <motion.aside
               key="menu-panel"
