@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { motion } from "motion/react";
 import { Pencil } from "lucide-react";
 import type { Hotel, Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
 import { hotelFaqs } from "@/data/faqs";
 import { formatStayCompact, nightsBetween } from "@/lib/booking-dates";
+import { easeLuxe, tapSoft } from "@/lib/motion-ui";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -237,15 +239,24 @@ export function BookingHotelDetail({
               const left = Math.max(1, 5 - (i % 4));
               const active = selectedSuite?.name === suite.name;
               return (
-                <li
+                <motion.li
                   key={suite.name}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.45, delay: i * 0.06, ease: easeLuxe }}
                   className={cn(
-                    "overflow-hidden rounded-[10px] border bg-white sm:grid sm:grid-cols-[1.05fr_1fr]",
+                    "overflow-hidden rounded-[10px] border bg-white transition-[border-color,box-shadow] duration-300 sm:grid sm:grid-cols-[1.05fr_1fr]",
                     active ? "border-forest shadow-[0_12px_40px_-24px_rgba(6,51,44,0.35)]" : "border-neutral-200",
                   )}
                 >
-                  <div className="relative aspect-[16/11] sm:aspect-auto sm:min-h-[12rem]">
-                    <img src={suite.image} alt={suite.name} className="absolute inset-0 h-full w-full object-cover" />
+                  <div className="relative aspect-[16/11] overflow-hidden sm:aspect-auto sm:min-h-[12rem]">
+                    <img
+                      src={suite.image}
+                      alt={suite.name}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] hover:scale-[1.03]"
+                      style={{ transitionTimingFunction: "var(--ease-luxe)" }}
+                    />
                     <span className="absolute top-3 left-3 rounded-[8px] bg-forest/90 px-2 py-1 text-[11px] font-bold text-ivory">
                       {left} Left
                     </span>
@@ -263,19 +274,30 @@ export function BookingHotelDetail({
                         </p>
                         <p className="text-[11px] text-neutral-400">Incl. taxes</p>
                       </div>
-                      <button
+                      <motion.button
                         type="button"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={tapSoft}
+                        transition={{ duration: 0.25, ease: easeLuxe }}
                         onClick={() => {
+                          if (active) {
+                            onBookSuite(suite);
+                            return;
+                          }
                           setSelectedSuite(suite);
-                          onBookSuite(suite);
                         }}
-                        className="btn-primary rounded-[10px] px-5 py-2.5"
+                        className={cn(
+                          "rounded-[10px] px-5 py-2.5",
+                          active
+                            ? "btn-primary"
+                            : "btn-quiet border border-forest bg-white font-nav text-[15px] font-bold text-forest",
+                        )}
                       >
-                        Book Now
-                      </button>
+                        {active ? "Book Now" : "Select"}
+                      </motion.button>
                     </div>
                   </div>
-                </li>
+                </motion.li>
               );
             })}
           </ul>
@@ -476,7 +498,12 @@ export function BookingHotelDetail({
       </div>
 
       {/* Sticky booking bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-md safe-bottom">
+      <motion.div
+        initial={{ y: 48, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.45, delay: 0.15, ease: easeLuxe }}
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-md safe-bottom"
+      >
         <div className="page-wrap flex items-center justify-between gap-3 py-2.5">
           <p className="font-nav text-sm font-extrabold text-neutral-700">
             {selectedSuite ? `1 Room · ${selectedSuite.name}` : "0 Room"}
@@ -486,19 +513,22 @@ export function BookingHotelDetail({
               <span aria-hidden="true">⚡</span>
               Lowest Price, Guaranteed!
             </p>
-            <button
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.03 }}
+              whileTap={tapSoft}
+              transition={{ duration: 0.25, ease: easeLuxe }}
               onClick={() => {
                 if (selectedSuite) onBookSuite(selectedSuite);
                 else scrollTo("rooms");
               }}
               className="btn-primary rounded-[10px] px-6 py-3"
             >
-              {selectedSuite ? "Continue" : "Select Rooms"}
-            </button>
+              {selectedSuite ? "Book Now" : "Select Rooms"}
+            </motion.button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

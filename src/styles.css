@@ -233,6 +233,16 @@
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1;
+    transition:
+      opacity 0.3s var(--ease-luxe),
+      transform 0.3s var(--ease-luxe),
+      background-color 0.3s var(--ease-luxe),
+      color 0.3s var(--ease-luxe),
+      border-color 0.3s var(--ease-luxe);
+  }
+
+  .nav-cta:active:not(:disabled) {
+    transform: scale(0.98);
   }
 
   .auth-continue {
@@ -245,11 +255,17 @@
     border-radius: 10px;
     background: var(--bronze);
     color: var(--ivory);
-    transition: opacity 0.3s var(--ease-luxe);
+    transition:
+      opacity 0.3s var(--ease-luxe),
+      transform 0.3s var(--ease-luxe);
   }
 
   .auth-continue:hover {
     opacity: 0.92;
+  }
+
+  .auth-continue:active:not(:disabled) {
+    transform: scale(0.98);
   }
 
   /* Primary CTA — forest or bronze fill */
@@ -266,15 +282,69 @@
     border-radius: 10px;
     background: var(--forest);
     color: var(--ivory);
-    transition: opacity 0.35s var(--ease-luxe);
+    transition:
+      opacity 0.35s var(--ease-luxe),
+      transform 0.35s var(--ease-luxe),
+      box-shadow 0.35s var(--ease-luxe);
   }
 
   .btn-primary:hover {
     opacity: 0.92;
   }
 
+  .btn-primary:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--bronze);
+    outline-offset: 3px;
+  }
+
   .btn-primary-bronze {
     background: var(--bronze);
+  }
+
+  /* Quiet secondary control (Apply, chips, steppers) */
+  .btn-quiet {
+    font-family: var(--font-nav);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    border-radius: 10px;
+    transition:
+      background-color 0.3s var(--ease-luxe),
+      color 0.3s var(--ease-luxe),
+      border-color 0.3s var(--ease-luxe),
+      transform 0.3s var(--ease-luxe),
+      opacity 0.3s var(--ease-luxe);
+  }
+
+  .btn-quiet:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* Form fields — same radius + focus as booking desk */
+  .field-luxe {
+    min-height: 3rem;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid color-mix(in oklab, var(--forest) 12%, #d4d4d4);
+    background: #fff;
+    padding-inline: 1rem;
+    font-size: 0.875rem;
+    outline: none;
+    transition:
+      border-color 0.3s var(--ease-luxe),
+      box-shadow 0.3s var(--ease-luxe);
+  }
+
+  .field-luxe::placeholder {
+    color: #a3a3a3;
+  }
+
+  .field-luxe:focus {
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--forest) 12%, transparent);
   }
 
   /* Marketing display titles (Why, Account, book chrome) */

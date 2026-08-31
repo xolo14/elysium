@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
+import { motion } from "motion/react";
 
 import {
   addDays,
@@ -13,6 +14,7 @@ import {
   startOfDay,
   toInputDate,
 } from "@/lib/booking-dates";
+import { easeLuxe, tapSoft } from "@/lib/motion-ui";
 import { cn } from "@/lib/utils";
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
@@ -232,8 +234,9 @@ export function DateRangePicker({
     >
       <div className="relative flex-1 px-3 py-6 sm:px-6 sm:py-8 lg:px-8">
         {canGoPrev ? (
-          <button
+          <motion.button
             type="button"
+            whileTap={tapSoft}
             onClick={goPrev}
             aria-label="Previous month"
             className={cn(
@@ -242,11 +245,12 @@ export function DateRangePicker({
             )}
           >
             <ChevronLeft className="h-4 w-4" />
-          </button>
+          </motion.button>
         ) : null}
         {canGoNext ? (
-          <button
+          <motion.button
             type="button"
+            whileTap={tapSoft}
             onClick={goNext}
             aria-label="Next month"
             className={cn(
@@ -255,7 +259,7 @@ export function DateRangePicker({
             )}
           >
             <ChevronRight className="h-4 w-4" />
-          </button>
+          </motion.button>
         ) : null}
 
         <p className="mb-5 flex items-center justify-center gap-1.5 px-10 text-center text-xs font-medium text-neutral-500 sm:mb-6 sm:text-[13px]">
@@ -310,9 +314,12 @@ export function DateRangePicker({
               Book Direct for Lowest Prices!
             </p>
           </div>
-          <button
+          <motion.button
             type="button"
             disabled={!canConfirm}
+            whileHover={canConfirm ? { scale: 1.02 } : undefined}
+            whileTap={canConfirm ? tapSoft : undefined}
+            transition={{ duration: 0.25, ease: easeLuxe }}
             onClick={onConfirm}
             className={cn(
               "nav-cta min-h-12 w-full shrink-0 rounded-[10px] px-10 py-3 text-ivory transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto",
@@ -320,7 +327,7 @@ export function DateRangePicker({
             )}
           >
             Confirm
-          </button>
+          </motion.button>
         </div>
       ) : null}
     </div>
