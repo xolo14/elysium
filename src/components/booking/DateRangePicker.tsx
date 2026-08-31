@@ -163,7 +163,7 @@ export function DateRangePicker({
       </p>
       <div
         className="grid grid-cols-7 text-center"
-        style={{ gridTemplateRows: "1.75rem repeat(6, 2.65rem)" }}
+        style={{ gridTemplateRows: "1.5rem repeat(6, minmax(2.35rem, 2.65rem))" }}
       >
         {WEEKDAYS.map((day, i) => (
           <span
@@ -228,11 +228,11 @@ export function DateRangePicker({
     <div
       className={cn(
         "flex w-full flex-col overflow-hidden bg-white",
-        bloom ? "rounded-[20px]" : "border border-border",
+        bloom ? "rounded-[16px] sm:rounded-[20px]" : "border border-border",
         className,
       )}
     >
-      <div className="relative flex-1 px-3 py-6 sm:px-6 sm:py-8 lg:px-8">
+      <div className="relative flex-1 px-2.5 py-5 sm:px-6 sm:py-8 lg:px-8">
         {canGoPrev ? (
           <motion.button
             type="button"
@@ -262,14 +262,14 @@ export function DateRangePicker({
           </motion.button>
         ) : null}
 
-        <p className="mb-5 flex items-center justify-center gap-1.5 px-10 text-center text-xs font-medium text-neutral-500 sm:mb-6 sm:text-[13px]">
+        <p className="mb-4 flex items-center justify-center gap-1.5 px-9 text-center text-[11px] font-medium text-neutral-500 sm:mb-6 sm:px-10 sm:text-[13px]">
           <span aria-hidden="true">⏳</span>
           {waitingForDates
             ? "Wait a little — pick check-in & check-out"
             : "Dates locked in — confirm when you’re ready"}
         </p>
 
-        <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 sm:px-8 lg:flex-row lg:gap-10 lg:px-10">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-2 sm:px-8 lg:flex-row lg:gap-10 lg:px-10">
           {renderMonth(viewMonth.year, viewMonth.month)}
           {monthKey(secondMonth) <= monthKey(lastMonth) ? (
             <div className="hidden min-w-0 flex-1 lg:block">

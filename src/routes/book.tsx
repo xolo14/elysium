@@ -52,7 +52,7 @@ function BookPage() {
           initialGuests={search.guests}
         />
       </main>
-      <WhatsAppFloat />
+      <WhatsAppFloat raised />
     </HotelProvider>
   );
 }

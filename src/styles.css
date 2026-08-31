@@ -158,6 +158,13 @@
     font-size: 114%;
   }
 
+  @media (max-width: 639.98px) {
+    html {
+      /* Slightly calmer on phones so type + chrome breathe */
+      font-size: 106%;
+    }
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -172,6 +179,15 @@
   html {
     overflow-x: clip;
     scroll-behavior: smooth;
+  }
+
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
   }
 
   h1,
@@ -444,6 +460,100 @@
 
   .safe-bottom {
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Frosted sticky checkout / room bar */
+  .sticky-luxe {
+    border-top: 1px solid color-mix(in oklab, var(--forest) 8%, #e5e5e5);
+    background: color-mix(in oklab, #fff 94%, transparent);
+    backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: 0 -16px 48px -28px rgba(6, 51, 44, 0.32);
+  }
+
+  /* Booking sheet that slides up from forest header */
+  .sheet-luxe {
+    border-radius: 1.35rem 1.35rem 0 0;
+    background: #fff;
+  }
+
+  @media (min-width: 640px) {
+    .sheet-luxe {
+      border-radius: 2rem 2rem 0 0;
+    }
+  }
+
+  /* Clear sticky booking CTA on phones */
+  .pad-sticky-book {
+    padding-bottom: calc(5.85rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* WhatsApp — lift above sticky bars on book flow */
+  .wa-float {
+    position: fixed;
+    right: 0.75rem;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    z-index: 45;
+    display: block;
+    height: 2.85rem;
+    width: 2.85rem;
+    border-radius: 10px;
+    box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.45);
+    transition:
+      opacity 0.3s var(--ease-luxe),
+      transform 0.3s var(--ease-luxe),
+      bottom 0.35s var(--ease-luxe);
+  }
+
+  .wa-float:active {
+    transform: scale(0.96);
+  }
+
+  .wa-float--raised {
+    bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 640px) {
+    .wa-float {
+      right: 1.25rem;
+      bottom: 1.25rem;
+      height: 3.5rem;
+      width: 3.5rem;
+    }
+
+    .wa-float--raised {
+      bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  /* Phone-first luxury density */
+  @media (max-width: 639.98px) {
+    .page-wrap {
+      padding-inline: 1.125rem;
+    }
+
+    .btn-primary {
+      min-height: 2.75rem;
+      padding-inline: 1.25rem;
+      font-size: 14px;
+    }
+
+    .field-luxe {
+      /* 16px avoids iOS focus zoom */
+      min-height: 2.85rem;
+      font-size: 1rem;
+    }
+
+    .display-nav {
+      letter-spacing: -0.035em;
+    }
+
+    .section-pad {
+      padding-block: 2.15rem;
+    }
   }
 
   .soft {

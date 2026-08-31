@@ -77,16 +77,16 @@ export function Hero() {
 
       <motion.div
         {...(hydrated ? { style: { opacity: fade } } : {})}
-        className="page-wrap relative z-10 flex flex-1 flex-col justify-end pb-6 pt-20 sm:pb-9 sm:pt-24"
+        className="page-wrap relative z-10 flex flex-1 flex-col justify-end pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-20 sm:pb-9 sm:pt-24"
       >
         <div className="max-w-3xl">
-          <p className="font-hero text-[clamp(2.1rem,6.5vw,4.5rem)] leading-[0.92] tracking-[-0.02em] text-ivory/90">
+          <p className="font-hero text-[clamp(2rem,7vw,4.5rem)] leading-[0.92] tracking-[-0.02em] text-ivory/90">
             Fresh travel,
           </p>
-          <h1 className="font-hero mt-1 text-[clamp(2.4rem,7.5vw,5rem)] leading-[0.9] tracking-[-0.02em]">
+          <h1 className="font-hero mt-1 text-[clamp(2.25rem,8vw,5rem)] leading-[0.9] tracking-[-0.02em]">
             Hello Elysium.
           </h1>
-          <p className="mt-4 max-w-md prose-quiet text-ivory/80 sm:mt-5 sm:text-base">
+          <p className="mt-3 max-w-md prose-quiet text-[0.9rem] text-ivory/80 sm:mt-5 sm:text-base">
             Madhapur &amp; Hitec City. Direct rates.
           </p>
         </div>
@@ -103,14 +103,14 @@ export function Hero() {
           }
           transition={{ duration: 0.5, ease }}
           className={cn(
-            "group mt-5 flex min-h-12 w-full max-w-xl items-center justify-between gap-3 rounded-[10px] bg-ivory px-5 text-left text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] sm:mt-6 sm:min-h-14",
+            "group mt-5 flex min-h-12 w-full max-w-xl items-center justify-between gap-2.5 rounded-[10px] bg-ivory px-3.5 text-left text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] sm:mt-6 sm:min-h-14 sm:gap-3 sm:px-5",
             opening && "pointer-events-none",
           )}
         >
-          <span className="font-nav text-[15px] font-bold tracking-[-0.01em] sm:text-base">
+          <span className="min-w-0 truncate font-nav text-[14px] font-bold tracking-[-0.01em] sm:text-base">
             {opening ? "Opening calendar…" : "Book an Elysium in Hyderabad"}
           </span>
-          <span className="btn-primary shrink-0 !min-h-10 px-5 text-[13px] sm:!min-h-11">
+          <span className="btn-primary shrink-0 !min-h-9 px-4 text-[12px] sm:!min-h-11 sm:px-5 sm:text-[13px]">
             Book Now
           </span>
         </motion.button>

@@ -272,16 +272,16 @@ function NavBar({
   guest: Guest | null;
 }) {
   return (
-    <nav className="relative flex w-full items-center justify-between px-4 py-3.5 sm:px-6 sm:py-[1.05rem] lg:px-10 lg:py-4">
+    <nav className="safe-top relative flex w-full items-center justify-between px-4 py-3 sm:px-6 sm:py-[1.05rem] lg:px-10 lg:py-4">
       <Link to="/" className="relative z-10 shrink-0">
         <img
           src={solid && !menuOpen ? "/logo-dark.svg" : "/logo-light.svg"}
           alt="Elysium Hotels"
-          className="h-8 w-auto sm:h-9"
+          className="h-7 w-auto sm:h-9"
         />
       </Link>
 
-      <div className="flex shrink-0 items-center gap-5 sm:gap-6 lg:gap-8">
+      <div className="flex shrink-0 items-center gap-3.5 sm:gap-6 lg:gap-8">
         <ul className="hidden items-center gap-7 lg:flex xl:gap-9">
           <li
             className="relative"
@@ -374,7 +374,7 @@ function NavBar({
             type="button"
             onClick={() => setAuthOpen(true)}
             className={cn(
-              "nav-cta inline-flex min-h-10 items-center rounded-[10px] border px-4 py-2 sm:px-6 sm:py-2.5",
+              "nav-cta inline-flex min-h-9 items-center rounded-[10px] border px-3 py-1.5 text-[13px] sm:min-h-10 sm:px-6 sm:py-2.5 sm:text-[15px]",
               solid && !menuOpen
                 ? "border-forest/80 hover:bg-forest hover:text-ivory"
                 : "border-ivory hover:bg-ivory hover:text-forest",

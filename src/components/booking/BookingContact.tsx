@@ -82,19 +82,19 @@ export function BookingContact({
       onSubmit={onSubmit}
       className="flex min-h-[100svh] flex-col bg-forest pt-[4.5rem]"
     >
-      <div className="page-wrap relative pb-4 pt-6 sm:pt-8">
+      <div className="page-wrap relative pb-3 pt-5 sm:pb-4 sm:pt-8">
         <motion.button
           type="button"
           whileTap={tapSoft}
           onClick={onBack}
-          className="btn-quiet mb-3 text-sm font-semibold text-ivory/80 hover:text-ivory"
+          className="btn-quiet mb-2.5 text-[13px] font-semibold text-ivory/80 hover:text-ivory sm:mb-3 sm:text-sm"
         >
           ← Payment
         </motion.button>
         <motion.h1
           {...fadeUp}
           transition={{ duration: 0.5, ease: easeLuxe }}
-          className="display-nav text-[clamp(1.85rem,5vw,2.5rem)] text-ivory"
+          className="display-nav text-[clamp(1.65rem,6vw,2.5rem)] text-ivory"
         >
           Booking Details
         </motion.h1>
@@ -104,9 +104,9 @@ export function BookingContact({
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.06, ease: easeLuxe }}
-        className="flex flex-1 flex-col rounded-t-[1.5rem] bg-white pb-[5.5rem] pt-6 sm:rounded-t-[2rem] sm:pt-8"
+        className="sheet-luxe flex flex-1 flex-col pb-[5.5rem] pt-5 sm:pt-8"
       >
-        <div className="page-wrap space-y-8">
+        <div className="page-wrap space-y-7 sm:space-y-8">
           <motion.section
             {...fadeUp}
             transition={stagger(0)}
@@ -348,15 +348,15 @@ export function BookingContact({
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.45, delay: 0.2, ease: easeLuxe }}
-        className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-md"
+        className="sticky-luxe safe-bottom fixed inset-x-0 bottom-0 z-40"
       >
-        <div className="page-wrap flex items-center justify-between gap-4 py-3">
-          <div>
-            <p className="font-nav text-lg font-extrabold text-forest">
+        <div className="page-wrap flex items-center justify-between gap-3 py-2.5 sm:gap-4 sm:py-3">
+          <div className="min-w-0">
+            <p className="font-nav text-base font-extrabold text-forest sm:text-lg">
               {formatInr(pricing.payable)}{" "}
-              <span className="text-sm font-bold">total</span>
+              <span className="text-xs font-bold sm:text-sm">total</span>
             </p>
-            <p className="text-[11px] text-neutral-400">Payable amount</p>
+            <p className="text-[10px] text-neutral-400 sm:text-[11px]">Payable amount</p>
           </div>
           <motion.button
             type="submit"
@@ -364,7 +364,7 @@ export function BookingContact({
             whileTap={canPay && !submitting ? tapSoft : undefined}
             disabled={submitting || !canPay}
             className={cn(
-              "btn-primary min-h-12 px-6 sm:px-8",
+              "btn-primary min-h-11 shrink-0 px-5 sm:min-h-12 sm:px-8",
               "disabled:cursor-not-allowed disabled:opacity-40",
             )}
           >

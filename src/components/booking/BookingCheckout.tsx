@@ -71,13 +71,13 @@ export function BookingCheckout({
 
   return (
     <div className="min-h-[100svh] bg-forest pt-[4.5rem]">
-      <div className="page-wrap relative pb-4 pt-6 sm:pt-8">
+      <div className="page-wrap relative pb-3 pt-5 sm:pb-4 sm:pt-8">
         <motion.div
           {...fadeUp}
           transition={{ duration: 0.5, ease: easeLuxe }}
           className="flex items-end justify-between gap-4"
         >
-          <h1 className="display-nav text-[clamp(1.85rem,5vw,2.5rem)] text-ivory">
+          <h1 className="display-nav text-[clamp(1.65rem,6vw,2.5rem)] text-ivory">
             Booking Details
           </h1>
           <svg
@@ -103,9 +103,9 @@ export function BookingCheckout({
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.08, ease: easeLuxe }}
-        className="rounded-t-[1.5rem] bg-white pb-16 pt-6 sm:rounded-t-[2rem] sm:pt-8"
+        className="sheet-luxe pb-14 pt-5 sm:pb-16 sm:pt-8"
       >
-        <div className="page-wrap space-y-8 sm:space-y-10">
+        <div className="page-wrap space-y-7 sm:space-y-10">
           <motion.section {...fadeUp} transition={stagger(0)}>
             <h2 className="font-nav text-lg font-extrabold text-neutral-800 sm:text-xl">
               {hotel.name}
@@ -328,14 +328,14 @@ export function BookingCheckout({
               </div>
             </motion.button>
 
-            <div className="mt-5 flex justify-end">
+            <div className="mt-5 flex w-full justify-end sm:mt-5">
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.02 }}
                 whileTap={tapSoft}
                 transition={{ duration: 0.25, ease: easeLuxe }}
                 onClick={onProceed}
-                className="btn-primary min-h-12 px-8"
+                className="btn-primary min-h-12 w-full px-8 sm:w-auto"
               >
                 Proceed to Book
               </motion.button>

@@ -105,10 +105,10 @@ export function BookingHotelDetail({
   };
 
   return (
-    <div className="min-h-[100svh] bg-white pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-[4.5rem]">
+    <div className="pad-sticky-book min-h-[100svh] bg-white pt-[4.5rem]">
       {/* Gallery */}
       <section className="relative">
-        <div className="relative h-[min(56vw,22rem)] overflow-hidden bg-neutral-200 sm:h-[28rem] lg:h-[32rem]">
+        <div className="relative h-[min(62vw,18.5rem)] overflow-hidden bg-neutral-200 sm:h-[28rem] lg:h-[32rem]">
           {images.map((src, i) => (
             <img
               key={src}
@@ -123,7 +123,7 @@ export function BookingHotelDetail({
           <button
             type="button"
             onClick={() => setIndex((n) => (n - 1 + images.length) % images.length)}
-            className="absolute top-1/2 left-4 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-forest/90 text-ivory backdrop-blur-sm"
+            className="absolute top-1/2 left-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-forest/85 text-lg text-ivory backdrop-blur-sm sm:left-4 sm:h-11 sm:w-11"
             aria-label="Previous photo"
           >
             ‹
@@ -131,59 +131,59 @@ export function BookingHotelDetail({
           <button
             type="button"
             onClick={() => setIndex((n) => (n + 1) % images.length)}
-            className="absolute top-1/2 right-4 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-forest/90 text-ivory backdrop-blur-sm"
+            className="absolute top-1/2 right-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-forest/85 text-lg text-ivory backdrop-blur-sm sm:right-4 sm:h-11 sm:w-11"
             aria-label="Next photo"
           >
             ›
           </button>
-          <div className="absolute inset-x-0 bottom-4 flex items-end justify-between gap-4 px-5 sm:px-8">
-            <div className="flex min-w-0 flex-1 gap-1.5">
+          <div className="absolute inset-x-0 bottom-3 flex items-end justify-between gap-3 px-4 sm:bottom-4 sm:gap-4 sm:px-8">
+            <div className="flex min-w-0 flex-1 gap-1">
               {images.slice(0, 8).map((_, i) => (
                 <button
                   key={i}
                   type="button"
                   aria-label={`Photo ${i + 1}`}
                   onClick={() => setIndex(i)}
-                  className={cn("h-1 flex-1 rounded-full", i === index ? "bg-ivory" : "bg-white/50")}
+                  className={cn("h-0.5 flex-1 rounded-full sm:h-1", i === index ? "bg-ivory" : "bg-white/50")}
                 />
               ))}
             </div>
             <Link
               to="/hotels/$slug/gallery"
               params={{ slug: hotel.slug }}
-              className="shrink-0 text-sm font-semibold text-ivory underline underline-offset-4"
+              className="shrink-0 text-[12px] font-semibold text-ivory underline underline-offset-4 sm:text-sm"
             >
-              View All Images
+              View All
             </Link>
           </div>
         </div>
 
         {/* Property info card */}
-        <div className="page-wrap relative z-10 -mt-10 sm:-mt-14">
-          <div className="rounded-t-[10px] bg-forest px-5 pt-6 pb-5 text-ivory sm:px-8 sm:pt-8">
+        <div className="page-wrap relative z-10 -mt-8 sm:-mt-14">
+          <div className="rounded-t-[12px] bg-forest px-4 pt-5 pb-4 text-ivory sm:rounded-t-[10px] sm:px-8 sm:pt-8 sm:pb-5">
             <button
               type="button"
               onClick={onBack}
-              className="mb-3 text-sm font-semibold text-ivory/80 hover:text-ivory"
+              className="mb-2.5 text-[13px] font-semibold text-ivory/80 hover:text-ivory sm:mb-3 sm:text-sm"
             >
               ← Hyderabad houses
             </button>
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between lg:gap-4">
               <div>
-                <h1 className="display-nav text-[clamp(1.75rem,4vw,2.25rem)] text-ivory">
+                <h1 className="display-nav text-[clamp(1.45rem,5.2vw,2.25rem)] text-ivory">
                   {hotel.name} — {hotel.place}
                 </h1>
-                <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <p className="font-nav text-xl font-extrabold text-ivory sm:text-2xl">
-                    {hotel.fromRate} <span className="text-base font-bold">/ night</span>
+                <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:mt-3 sm:gap-3">
+                  <p className="font-nav text-lg font-extrabold text-ivory sm:text-2xl">
+                    {hotel.fromRate} <span className="text-sm font-bold sm:text-base">/ night</span>
                   </p>
-                  <p className="text-xs text-ivory/80">Incl. taxes</p>
-                  <p className="rounded-[8px] bg-white/20 px-2 py-1 text-sm font-bold text-ivory">
+                  <p className="text-[11px] text-ivory/80 sm:text-xs">Incl. taxes</p>
+                  <p className="rounded-[8px] bg-white/20 px-2 py-0.5 text-xs font-bold text-ivory sm:py-1 sm:text-sm">
                     ★ {hotel.rating}
                   </p>
                 </div>
               </div>
-              <ul className="space-y-1 text-sm text-ivory/80">
+              <ul className="hidden space-y-1 text-sm text-ivory/80 sm:block">
                 {hotel.offers.slice(0, 2).map((o) => (
                   <li key={o}>• {o}</li>
                 ))}
@@ -193,15 +193,15 @@ export function BookingHotelDetail({
             <button
               type="button"
               onClick={onEditDates}
-              className="mt-5 flex w-full max-w-xl items-center gap-3 rounded-[10px] bg-white px-4 py-3.5 text-left"
+              className="mt-4 flex w-full max-w-xl items-center gap-2.5 rounded-[10px] bg-white px-3.5 py-3 text-left sm:mt-5 sm:gap-3 sm:px-4 sm:py-3.5"
             >
-              <Pencil className="h-4 w-4 shrink-0 text-neutral-400" />
-              <span className="min-w-0 flex-1 font-nav text-sm font-bold text-neutral-800">
+              <Pencil className="h-3.5 w-3.5 shrink-0 text-neutral-400 sm:h-4 sm:w-4" />
+              <span className="min-w-0 flex-1 truncate font-nav text-[13px] font-bold text-neutral-800 sm:text-sm">
                 {formatStayCompact(checkIn)}
-                <span className="mx-2 text-bronze">→</span>
+                <span className="mx-1.5 text-bronze sm:mx-2">→</span>
                 {formatStayCompact(checkOut)}
               </span>
-              <span className="shrink-0 rounded-full border border-neutral-200 px-3 py-1 text-xs font-semibold text-neutral-600">
+              <span className="shrink-0 rounded-full border border-neutral-200 px-2.5 py-1 text-[11px] font-semibold text-neutral-600 sm:px-3 sm:text-xs">
                 {nights} Night{nights === 1 ? "" : "s"}
               </span>
             </button>
@@ -211,14 +211,14 @@ export function BookingHotelDetail({
 
       {/* Subnav */}
       <nav className="sticky top-[4.5rem] z-30 border-b border-neutral-100 bg-white/95 backdrop-blur-md">
-        <div className="page-wrap edge-scroll py-2.5">
+        <div className="page-wrap edge-scroll gap-0.5 py-2 sm:py-2.5">
           {tabs.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => scrollTo(t.id)}
               className={cn(
-                "shrink-0 rounded-[10px] px-3.5 py-2 text-sm font-semibold transition-colors",
+                "shrink-0 rounded-[10px] px-3 py-1.5 text-[13px] font-semibold transition-colors sm:px-3.5 sm:py-2 sm:text-sm",
                 activeTab === t.id ? "bg-forest/10 text-forest" : "text-neutral-400 hover:text-neutral-700",
               )}
             >
@@ -228,13 +228,13 @@ export function BookingHotelDetail({
         </div>
       </nav>
 
-      <div className="page-wrap space-y-10 py-8 sm:space-y-12 sm:py-10">
+      <div className="page-wrap space-y-9 py-6 sm:space-y-12 sm:py-10">
         {/* Rooms */}
         <section id="book-rooms">
-          <h2 className="display-nav text-[clamp(1.85rem,3.5vw,2.4rem)] text-forest">
+          <h2 className="display-nav text-[clamp(1.55rem,5vw,2.4rem)] text-forest">
             Rooms
           </h2>
-          <ul className="mt-8 grid gap-5 lg:grid-cols-2">
+          <ul className="mt-5 grid gap-3.5 sm:mt-8 sm:gap-5 lg:grid-cols-2">
             {hotel.suites.map((suite, i) => {
               const left = Math.max(1, 5 - (i % 4));
               const active = selectedSuite?.name === suite.name;
@@ -246,33 +246,39 @@ export function BookingHotelDetail({
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.45, delay: i * 0.06, ease: easeLuxe }}
                   className={cn(
-                    "overflow-hidden rounded-[10px] border bg-white transition-[border-color,box-shadow] duration-300 sm:grid sm:grid-cols-[1.05fr_1fr]",
+                    "grid grid-cols-[6.75rem_minmax(0,1fr)] overflow-hidden rounded-[10px] border bg-white transition-[border-color,box-shadow] duration-300 sm:grid-cols-[1.05fr_1fr]",
                     active ? "border-forest shadow-[0_12px_40px_-24px_rgba(6,51,44,0.35)]" : "border-neutral-200",
                   )}
                 >
-                  <div className="relative aspect-[16/11] overflow-hidden sm:aspect-auto sm:min-h-[12rem]">
+                  <div className="relative min-h-[7.5rem] overflow-hidden sm:aspect-auto sm:min-h-[12rem]">
                     <img
                       src={suite.image}
                       alt={suite.name}
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] hover:scale-[1.03]"
                       style={{ transitionTimingFunction: "var(--ease-luxe)" }}
                     />
-                    <span className="absolute top-3 left-3 rounded-[8px] bg-forest/90 px-2 py-1 text-[11px] font-bold text-ivory">
+                    <span className="absolute top-2 left-2 rounded-[6px] bg-forest/90 px-1.5 py-0.5 text-[10px] font-bold text-ivory sm:top-3 sm:left-3 sm:rounded-[8px] sm:px-2 sm:py-1 sm:text-[11px]">
                       {left} Left
                     </span>
                   </div>
-                  <div className="flex flex-col p-4 sm:p-5">
-                    <h3 className="font-nav text-lg font-extrabold text-neutral-800">{suite.name}</h3>
-                    <p className="mt-2 text-sm text-neutral-500">{suite.capacity} max.</p>
-                    <p className="mt-1 text-sm text-neutral-500">{suite.size} area</p>
-                    <div className="mt-auto flex items-end justify-between gap-3 pt-5">
-                      <div>
-                        <p className="text-xs text-neutral-400 line-through">{strikeRate(suite.rate)}</p>
-                        <p className="font-nav text-lg font-extrabold text-forest">
-                          {suite.rate.replace(" / night", "")}{" "}
-                          <span className="text-sm font-semibold">/ night</span>
+                  <div className="flex min-w-0 flex-col p-3 sm:p-5">
+                    <h3 className="font-nav text-[15px] leading-tight font-extrabold text-neutral-800 sm:text-lg">
+                      {suite.name}
+                    </h3>
+                    <p className="mt-1 text-[12px] text-neutral-500 sm:mt-2 sm:text-sm">
+                      {suite.capacity} max.
+                    </p>
+                    <p className="text-[12px] text-neutral-500 sm:mt-1 sm:text-sm">{suite.size} area</p>
+                    <div className="mt-auto flex items-end justify-between gap-2 pt-3 sm:gap-3 sm:pt-5">
+                      <div className="min-w-0">
+                        <p className="text-[10px] text-neutral-400 line-through sm:text-xs">
+                          {strikeRate(suite.rate)}
                         </p>
-                        <p className="text-[11px] text-neutral-400">Incl. taxes</p>
+                        <p className="font-nav text-[15px] font-extrabold text-forest sm:text-lg">
+                          {suite.rate.replace(" / night", "")}{" "}
+                          <span className="text-[11px] font-semibold sm:text-sm">/ night</span>
+                        </p>
+                        <p className="text-[10px] text-neutral-400 sm:text-[11px]">Incl. taxes</p>
                       </div>
                       <motion.button
                         type="button"
@@ -287,10 +293,10 @@ export function BookingHotelDetail({
                           setSelectedSuite(suite);
                         }}
                         className={cn(
-                          "rounded-[10px] px-5 py-2.5",
+                          "shrink-0 rounded-[10px] px-3.5 py-2 text-[13px] sm:px-5 sm:py-2.5 sm:text-[15px]",
                           active
                             ? "btn-primary"
-                            : "btn-quiet border border-forest bg-white font-nav text-[15px] font-bold text-forest",
+                            : "btn-quiet border border-forest bg-white font-nav font-bold text-forest",
                         )}
                       >
                         {active ? "Book Now" : "Select"}
@@ -502,13 +508,13 @@ export function BookingHotelDetail({
         initial={{ y: 48, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.45, delay: 0.15, ease: easeLuxe }}
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-md safe-bottom"
+        className="sticky-luxe safe-bottom fixed inset-x-0 bottom-0 z-40"
       >
-        <div className="page-wrap flex items-center justify-between gap-3 py-2.5">
-          <p className="font-nav text-sm font-extrabold text-neutral-700">
+        <div className="page-wrap flex items-center justify-between gap-3 py-2.5 sm:py-3">
+          <p className="min-w-0 truncate font-nav text-[13px] font-extrabold text-neutral-700 sm:text-sm">
             {selectedSuite ? `1 Room · ${selectedSuite.name}` : "0 Room"}
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <p className="hidden items-center gap-1 text-xs font-semibold text-forest sm:flex">
               <span aria-hidden="true">⚡</span>
               Lowest Price, Guaranteed!
@@ -522,7 +528,7 @@ export function BookingHotelDetail({
                 if (selectedSuite) onBookSuite(selectedSuite);
                 else scrollTo("rooms");
               }}
-              className="btn-primary rounded-[10px] px-6 py-3"
+              className="btn-primary rounded-[10px] px-5 py-2.5 sm:px-6 sm:py-3"
             >
               {selectedSuite ? "Book Now" : "Select Rooms"}
             </motion.button>

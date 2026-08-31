@@ -402,7 +402,7 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
 
   return (
     <article className="overflow-hidden rounded-[10px] border border-neutral-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)] lg:grid lg:grid-cols-[1.15fr_0.85fr]">
-      <div className="relative min-h-[12rem] overflow-hidden bg-neutral-100 sm:min-h-[16rem] lg:min-h-[18rem]">
+      <div className="relative min-h-[11rem] overflow-hidden bg-neutral-100 sm:min-h-[16rem] lg:min-h-[18rem]">
         <img
           src={images[index] ?? hotel.hero}
           alt={`${hotel.name}, ${hotel.place}`}
@@ -410,7 +410,7 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
         />
         {images.length > 1 ? (
           <>
-            <div className="absolute inset-x-0 bottom-0 flex gap-1.5 px-4 pb-3">
+            <div className="absolute inset-x-0 bottom-0 flex gap-1 px-3 pb-2.5 sm:gap-1.5 sm:px-4 sm:pb-3">
               {images.map((_, i) => (
                 <button
                   key={i}
@@ -418,7 +418,7 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
                   aria-label={`Photo ${i + 1}`}
                   onClick={() => setIndex(i)}
                   className={cn(
-                    "h-1 flex-1 rounded-full transition-colors",
+                    "h-0.5 flex-1 rounded-full transition-colors sm:h-1",
                     i === index ? "bg-ivory" : "bg-white/45",
                   )}
                 />
@@ -427,7 +427,7 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
             <button
               type="button"
               onClick={() => setIndex((n) => (n + 1) % images.length)}
-              className="absolute top-1/2 right-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-forest/90 text-ivory"
+              className="absolute top-1/2 right-2.5 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-forest/90 text-ivory sm:right-3 sm:h-10 sm:w-10"
               aria-label="Next photo"
             >
               ›
@@ -436,10 +436,10 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
         ) : null}
       </div>
 
-      <div className="flex flex-col p-5 sm:p-6 lg:p-7">
+      <div className="flex flex-col p-4 sm:p-6 lg:p-7">
         <p className="eyebrow text-bronze">{kind}</p>
         <div className="mt-1 flex flex-wrap items-start justify-between gap-2">
-          <h2 className="font-nav text-xl font-extrabold text-neutral-800 sm:text-2xl">
+          <h2 className="font-nav text-lg font-extrabold text-neutral-800 sm:text-2xl">
             {hotel.name}
             <span className="font-semibold text-neutral-500"> — {hotel.place}</span>
           </h2>
@@ -447,33 +447,33 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
             ★ {hotel.rating}
           </p>
         </div>
-        <p className="mt-2 text-sm font-semibold text-forest">
+        <p className="mt-1.5 text-[13px] font-semibold text-forest sm:mt-2 sm:text-sm">
           {roomCount} room type{roomCount === 1 ? "" : "s"} available
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-neutral-500">
+        <p className="mt-1.5 line-clamp-2 text-[13px] leading-relaxed text-neutral-500 sm:mt-2 sm:text-sm">
           {hotel.contact.address.slice(1).join(" ")}
         </p>
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-3 space-y-1.5 sm:mt-4 sm:space-y-2">
           {landmarks.map((line) => (
-            <li key={line} className="flex gap-2 text-sm text-neutral-600">
+            <li key={line} className="flex gap-2 text-[13px] text-neutral-600 sm:text-sm">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-bronze" />
               {line}
             </li>
           ))}
         </ul>
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pt-6">
+        <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-5 sm:gap-4 sm:pt-6">
           <div>
-            <p className="font-nav text-lg font-extrabold text-forest">
-              {hotel.fromRate} <span className="text-sm font-semibold">/ night onwards</span>
+            <p className="font-nav text-base font-extrabold text-forest sm:text-lg">
+              {hotel.fromRate} <span className="text-xs font-semibold sm:text-sm">/ night onwards</span>
             </p>
-            <p className="mt-0.5 text-xs text-neutral-400">Incl. taxes</p>
+            <p className="mt-0.5 text-[11px] text-neutral-400 sm:text-xs">Incl. taxes</p>
           </div>
           <motion.button
             type="button"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={onSelect}
-            className="btn-primary inline-flex min-h-11 items-center rounded-[10px] px-8"
+            className="btn-primary inline-flex min-h-11 w-full items-center justify-center rounded-[10px] px-8 sm:w-auto"
           >
             View rooms
           </motion.button>
