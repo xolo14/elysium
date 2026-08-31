@@ -7,6 +7,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "build:shared": "HOSTINGER_SHARED=1 vite build",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",
@@ -87,6 +88,7 @@
     "globals": "^15.15.0",
     "nitro": "3.0.260603-beta",
     "prettier": "^3.7.3",
+    "sharp": "^0.33.5",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^8.1.5"

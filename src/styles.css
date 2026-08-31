@@ -17,18 +17,6 @@
   font-display: swap;
 }
 @font-face {
-  font-family: "Acumin";
-  src: url("/fonts/Acumin-Variable-Concept.ttf") format("truetype");
-  font-weight: 100 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Myriad Pro";
-  src: url("/fonts/MyriadPro-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
   font-family: "Nunito";
   src: url("/fonts/Nunito-Variable.ttf") format("truetype");
   font-weight: 200 1000;
@@ -54,9 +42,9 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
-  --font-display: "DM Sans", "Myriad Pro", system-ui, sans-serif;
-  --font-sans: "DM Sans", "Myriad Pro", system-ui, sans-serif;
-  --font-hero: "Carla Sans", "Acumin", sans-serif;
+  --font-display: "DM Sans", system-ui, sans-serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-hero: "Carla Sans", "DM Sans", sans-serif;
   --font-nav: "Nunito", "DM Sans", system-ui, sans-serif;
 
   --color-background: var(--background);
@@ -176,9 +164,19 @@
     overflow-x: clip;
   }
 
+  /* Instant feel — avoid smooth-scroll jank on long pages */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (content-visibility: auto) {
+      main > section:not(:first-of-type),
+      .cv-auto {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 720px;
+      }
+    }
+  }
+
   html {
     overflow-x: clip;
-    scroll-behavior: smooth;
   }
 
   button,
@@ -630,7 +628,29 @@
 
   .ken-burns {
     animation: ken-burns 26s ease-in-out infinite alternate;
-    will-change: transform;
+  }
+
+  @media (min-width: 768px) {
+    .ken-burns {
+      will-change: transform;
+    }
+  }
+
+  /* Phones: skip continuous transform paint for smoother scroll */
+  @media (max-width: 767.98px) {
+    .ken-burns {
+      animation: none;
+      will-change: auto;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ken-burns {
+      animation: none;
+      will-change: auto;
+      transform: none;
+    }
   }
 
   .marquee-track {

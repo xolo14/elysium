@@ -21,12 +21,15 @@ export function Nav() {
   const { hotels, hotelId, selectHotel } = useHotel();
   const { guest } = useGuest();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onBookFlow = pathname === "/book";
   const onDarkHero =
     pathname === "/" ||
     pathname === "/why" ||
-    pathname === "/book" ||
+    onBookFlow ||
     pathname.startsWith("/hotels/");
-  const solid = scrolled || !onDarkHero || open;
+  /** Ivory chrome when scrolled — except booking desk stays forest like the dates step */
+  const solid = !onBookFlow && (scrolled || !onDarkHero);
+  const bookForestChrome = onBookFlow && (scrolled || open);
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 48));
 
@@ -48,8 +51,8 @@ export function Nav() {
 
   const headerClassName = cn(
     "fixed top-0 right-0 left-0 z-[80] transition-[background-color,box-shadow,color] duration-500 ease-luxe",
-    open
-      ? "bg-forest text-ivory"
+    open || bookForestChrome
+      ? "bg-forest text-ivory shadow-[0_8px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-md"
       : solid
         ? "bg-ivory/95 text-forest shadow-[0_8px_30px_-18px_rgba(6,51,44,0.35)] backdrop-blur-md"
         : "bg-transparent text-ivory",
@@ -57,7 +60,7 @@ export function Nav() {
 
   const bar = (
     <NavBar
-      solid={solid && !open}
+      solid={solid && !open && !onBookFlow}
       menuOpen={open}
       hotels={hotels}
       hotelId={hotelId}

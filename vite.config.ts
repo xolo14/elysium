@@ -60,5 +60,19 @@ export default defineConfig({
       port: 5173,
       strictPort: true,
     },
+    build: {
+      cssCodeSplit: true,
+      modulePreload: { polyfill: false },
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules/motion")) return "motion";
+            if (id.includes("node_modules/@tanstack")) return "tanstack";
+            if (id.includes("node_modules/lucide-react")) return "icons";
+            return undefined;
+          },
+        },
+      },
+    },
   },
 });

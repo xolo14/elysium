@@ -104,32 +104,42 @@ export function MaskImage({
       style={ratio ? { aspectRatio: ratio } : undefined}
     >
       {hydrated ? (
-        <motion.img
-          src={src}
-          alt={alt}
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          initial={{ scale: 1.06, opacity: 0.85 }}
+        <motion.div
+          initial={{ scale: 1.04, opacity: 0.9 }}
           whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 1.2, ease }}
-          className={cn("h-full w-full object-cover", imgClassName)}
-          onError={(e) => {
-            const el = e.currentTarget;
-            if (!el.dataset.fallback) {
-              el.dataset.fallback = "1";
-              el.src = "/images/hero-suite-living.png";
-            }
-          }}
-        />
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.7, ease }}
+          className="h-full w-full"
+        >
+          <picture>
+            <source srcSet={src.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
+            <img
+              src={src}
+              alt={alt}
+              loading={priority ? "eager" : "lazy"}
+              decoding="async"
+              className={cn("h-full w-full object-cover", imgClassName)}
+              onError={(e) => {
+                const el = e.currentTarget;
+                if (!el.dataset.fallback) {
+                  el.dataset.fallback = "1";
+                  el.src = "/images/hero-suite-living.png";
+                }
+              }}
+            />
+          </picture>
+        </motion.div>
       ) : (
-        <img
-          src={src}
-          alt={alt}
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-          className={cn("h-full w-full object-cover", imgClassName)}
-        />
+        <picture>
+          <source srcSet={src.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
+          <img
+            src={src}
+            alt={alt}
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+            className={cn("h-full w-full object-cover", imgClassName)}
+          />
+        </picture>
       )}
     </div>
   );

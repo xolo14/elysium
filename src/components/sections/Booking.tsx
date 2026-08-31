@@ -248,9 +248,9 @@ export function Booking({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.45, ease }}
-            className="min-h-[100svh] bg-white pt-[4.5rem]"
+            className="min-h-[100svh] bg-forest pt-[4.5rem]"
           >
-            <div className="relative overflow-hidden bg-forest">
+            <div className="relative overflow-hidden">
               <div className="page-wrap relative z-10 py-6 sm:py-8">
                 <p className="font-nav text-[2rem] font-extrabold tracking-[-0.03em] text-ivory sm:text-[2.4rem]">
                   Hyderabad houses
@@ -264,7 +264,7 @@ export function Booking({
                   <Pencil className="h-4 w-4 shrink-0 text-neutral-400" />
                   <span className="min-w-0 flex-1 font-nav text-sm font-bold text-neutral-800 sm:text-base">
                     {formatStayCompact(checkIn)}
-                    <span className="mx-2 text-neutral-300">→</span>
+                    <span className="mx-2 text-bronze">→</span>
                     {formatStayCompact(checkOut)}
                   </span>
                   <span className="shrink-0 rounded-full border border-neutral-200 px-3 py-1 text-xs font-semibold text-neutral-600">
@@ -279,27 +279,29 @@ export function Booking({
               />
             </div>
 
-            <div className="page-wrap space-y-5 py-6 sm:py-8">
-              <p className="text-sm text-neutral-500">
-                {hotels.length} houses · pick one to see rooms available
-              </p>
-              {hotels.map((h, i) => (
-                <motion.div
-                  key={h.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.08 + i * 0.08, duration: 0.4, ease }}
-                >
-                  <HotelResultCard
-                    hotel={h}
-                    onSelect={() => {
-                      setHouseId(h.id);
-                      setSuite(suiteFromHotel(h, initialSuite));
-                      setStep("hotel");
-                    }}
-                  />
-                </motion.div>
-              ))}
+            <div className="sheet-luxe min-h-[50vh] pb-10">
+              <div className="page-wrap space-y-5 py-6 sm:py-8">
+                <p className="text-sm text-neutral-500">
+                  {hotels.length} houses · pick one to see rooms available
+                </p>
+                {hotels.map((h, i) => (
+                  <motion.div
+                    key={h.id}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.08 + i * 0.08, duration: 0.4, ease }}
+                  >
+                    <HotelResultCard
+                      hotel={h}
+                      onSelect={() => {
+                        setHouseId(h.id);
+                        setSuite(suiteFromHotel(h, initialSuite));
+                        setStep("hotel");
+                      }}
+                    />
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         ) : null}
@@ -403,11 +405,19 @@ function HotelResultCard({ hotel, onSelect }: { hotel: Hotel; onSelect: () => vo
   return (
     <article className="overflow-hidden rounded-[10px] border border-neutral-200 bg-white shadow-[0_16px_40px_-28px_rgba(0,0,0,0.35)] lg:grid lg:grid-cols-[1.15fr_0.85fr]">
       <div className="relative min-h-[11rem] overflow-hidden bg-neutral-100 sm:min-h-[16rem] lg:min-h-[18rem]">
-        <img
-          src={images[index] ?? hotel.hero}
-          alt={`${hotel.name}, ${hotel.place}`}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        <picture>
+          <source
+            srcSet={(images[index] ?? hotel.hero).replace(/\.(png|jpe?g)$/i, ".webp")}
+            type="image/webp"
+          />
+          <img
+            src={images[index] ?? hotel.hero}
+            alt={`${hotel.name}, ${hotel.place}`}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </picture>
         {images.length > 1 ? (
           <>
             <div className="absolute inset-x-0 bottom-0 flex gap-1 px-3 pb-2.5 sm:gap-1.5 sm:px-4 sm:pb-3">

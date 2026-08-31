@@ -3,9 +3,14 @@ import { useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
 import { useHydrated } from "@/hooks/use-hydrated";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+function asWebp(src: string) {
+  return src.replace(/\.(png|jpe?g)$/i, ".webp");
+}
 
 /** Hero — brand, line, Book Now (animated open into calendar flow). */
 export function Hero() {
@@ -14,9 +19,13 @@ export function Hero() {
   const navigate = useNavigate();
   const ref = useRef<HTMLElement>(null);
   const [opening, setOpening] = useState(false);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const desktop = useMediaQuery("(min-width: 768px)");
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
   const fade = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
   const openBook = () => {
@@ -24,7 +33,7 @@ export function Hero() {
     setOpening(true);
     window.setTimeout(() => {
       void navigate({ to: "/book" });
-    }, 520);
+    }, 420);
   };
 
   return (
@@ -33,30 +42,47 @@ export function Hero() {
       id="home"
       className="relative flex w-full flex-col overflow-hidden bg-forest text-ivory min-h-[min(100svh,34rem)] sm:min-h-[32rem] md:aspect-[2048/841] md:min-h-0 md:max-h-[841px]"
     >
-      <motion.div {...(hydrated ? { style: { y, scale } } : {})} className="absolute inset-0">
+      <motion.div
+        {...(hydrated && desktop ? { style: { y, scale } } : {})}
+        className="absolute inset-0"
+      >
         {hydrated ? (
           <AnimatePresence mode="sync">
-            <motion.img
+            <motion.div
               key={hotel.id}
-              src={hotel.hero}
-              alt={`${hotel.name} — ${hotel.region}`}
-              width={2048}
-              height={841}
-              initial={{ opacity: 0, scale: 1.06 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1.4, ease }}
-              className="ken-burns absolute inset-0 h-full w-full object-cover"
-            />
+              transition={{ duration: 0.7, ease }}
+              className="absolute inset-0"
+            >
+              <picture>
+                <source srcSet={asWebp(hotel.hero)} type="image/webp" />
+                <img
+                  src={hotel.hero}
+                  alt={`${hotel.name} — ${hotel.region}`}
+                  width={1600}
+                  height={900}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="ken-burns absolute inset-0 h-full w-full object-cover"
+                />
+              </picture>
+            </motion.div>
           </AnimatePresence>
         ) : (
-          <img
-            src={hotel.hero}
-            alt={`${hotel.name} — ${hotel.region}`}
-            width={2048}
-            height={841}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          <picture>
+            <source srcSet={asWebp(hotel.hero)} type="image/webp" />
+            <img
+              src={hotel.hero}
+              alt={`${hotel.name} — ${hotel.region}`}
+              width={1600}
+              height={900}
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </picture>
         )}
       </motion.div>
 
@@ -69,14 +95,14 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease }}
+            transition={{ duration: 0.35, ease }}
             className="pointer-events-none absolute inset-0 z-20 bg-forest"
           />
         ) : null}
       </AnimatePresence>
 
       <motion.div
-        {...(hydrated ? { style: { opacity: fade } } : {})}
+        {...(hydrated && desktop ? { style: { opacity: fade } } : {})}
         className="page-wrap relative z-10 flex flex-1 flex-col justify-end pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-20 sm:pb-9 sm:pt-24"
       >
         <div className="max-w-3xl">
@@ -98,10 +124,10 @@ export function Hero() {
           whileTap={{ scale: 0.98 }}
           animate={
             opening
-              ? { scale: 1.04, y: -8, opacity: 0.9 }
+              ? { scale: 1.03, y: -6, opacity: 0.9 }
               : { scale: 1, y: 0, opacity: 1 }
           }
-          transition={{ duration: 0.5, ease }}
+          transition={{ duration: 0.4, ease }}
           className={cn(
             "group mt-5 flex min-h-12 w-full max-w-xl items-center justify-between gap-2.5 rounded-[10px] bg-ivory px-3.5 text-left text-forest shadow-[0_16px_40px_-18px_rgba(0,0,0,0.5)] sm:mt-6 sm:min-h-14 sm:gap-3 sm:px-5",
             opening && "pointer-events-none",

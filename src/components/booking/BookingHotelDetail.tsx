@@ -110,15 +110,19 @@ export function BookingHotelDetail({
       <section className="relative">
         <div className="relative h-[min(62vw,18.5rem)] overflow-hidden bg-neutral-200 sm:h-[28rem] lg:h-[32rem]">
           {images.map((src, i) => (
-            <img
-              key={src}
-              src={src}
-              alt={`${hotel.name} photo ${i + 1}`}
-              className={cn(
-                "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",
-                i === index ? "opacity-100" : "opacity-0",
-              )}
-            />
+            <picture key={src}>
+              <source srcSet={src.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
+              <img
+                src={src}
+                alt={`${hotel.name} photo ${i + 1}`}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                className={cn(
+                  "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
+                  i === index ? "opacity-100" : "opacity-0",
+                )}
+              />
+            </picture>
           ))}
           <button
             type="button"
@@ -251,12 +255,19 @@ export function BookingHotelDetail({
                   )}
                 >
                   <div className="relative min-h-[7.5rem] overflow-hidden sm:aspect-auto sm:min-h-[12rem]">
-                    <img
-                      src={suite.image}
-                      alt={suite.name}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] hover:scale-[1.03]"
-                      style={{ transitionTimingFunction: "var(--ease-luxe)" }}
-                    />
+                    <picture>
+                      <source
+                        srcSet={suite.image.replace(/\.(png|jpe?g)$/i, ".webp")}
+                        type="image/webp"
+                      />
+                      <img
+                        src={suite.image}
+                        alt={suite.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                      />
+                    </picture>
                     <span className="absolute top-2 left-2 rounded-[6px] bg-forest/90 px-1.5 py-0.5 text-[10px] font-bold text-ivory sm:top-3 sm:left-3 sm:rounded-[8px] sm:px-2 sm:py-1 sm:text-[11px]">
                       {left} Left
                     </span>

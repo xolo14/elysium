@@ -43,7 +43,7 @@ function BookPage() {
   return (
     <HotelProvider>
       <Nav />
-      <main className="relative bg-ivory">
+      <main className="relative bg-forest">
         <Booking
           initialHotelSlug={search.hotel}
           initialSuite={search.suite}

@@ -104,6 +104,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      {
+        rel: "preload",
+        href: "/fonts/DMSans-VariableFont_opsz_wght.ttf",
+        as: "font",
+        type: "font/ttf",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/Nunito-Variable.ttf",
+        as: "font",
+        type: "font/ttf",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/CarlaSansRegular.ttf",
+        as: "font",
+        type: "font/ttf",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: "/images/hero-suite-living.webp",
+        as: "image",
+        type: "image/webp",
+      },
     ],
   }),
 
@@ -153,7 +180,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MotionConfig reducedMotion="user" transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
+      <MotionConfig reducedMotion="user" transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
         <ScrollToTop />
         <GuestProvider>
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

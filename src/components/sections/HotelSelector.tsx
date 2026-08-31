@@ -40,14 +40,18 @@ export function HotelSelector() {
                   className="block overflow-hidden rounded-[10px]"
                 >
                   <div className="aspect-[16/11] overflow-hidden rounded-[10px] bg-secondary">
-                    <img
-                      src={h.hero}
-                      alt={`${h.name}, ${h.region}`}
-                      loading="lazy"
-                      width={1920}
-                      height={1200}
-                      className="h-full w-full object-cover transition-transform duration-[1200ms] ease-luxe group-hover:scale-[1.04]"
-                    />
+                    <picture>
+                      <source srcSet={h.hero.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
+                      <img
+                        src={h.hero}
+                        alt={`${h.name}, ${h.region}`}
+                        loading="lazy"
+                        decoding="async"
+                        width={1200}
+                        height={825}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      />
+                    </picture>
                   </div>
                 </Link>
                 <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
