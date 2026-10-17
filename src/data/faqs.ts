@@ -14,11 +14,11 @@ export const hotelFaqs = [
   },
   {
     q: "Can I cancel my booking?",
-    a: "Direct bookings can be cancelled free of charge up to 24 hours before arrival. Contact the house on the number listed on your confirmation.",
+    a: "Direct bookings can be cancelled free of charge up to 24 hours before arrival. Contact the front desk on the number listed on your confirmation.",
   },
   {
     q: "Is parking available?",
-    a: "Covered parking is available at both houses on a first-come basis. Mention if you need a space when you book.",
+    a: "Covered parking is available at Studio Suites and Premier Suites on a first-come basis. Mention if you need a space when you book.",
   },
   {
     q: "Do you issue GST invoices?",

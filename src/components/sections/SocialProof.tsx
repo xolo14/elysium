@@ -193,7 +193,7 @@ function MasonryMarquee({ tiles }: { tiles: SocialProofTile[] }) {
 export function SocialProof({ hotel }: { hotel?: Hotel }) {
   const features = hotel
     ? [
-        { label: `${hotel.rating}★`, note: "Guest rating for this house" },
+        { label: `${hotel.rating}★`, note: "Guest rating for this property" },
         { label: hotel.fromRate, note: "From / night incl. taxes" },
         ...hotel.offers.slice(0, 2).map((o) => ({ label: "Included", note: o })),
         { label: "Direct book", note: "Reserve this suite on-site" },
@@ -204,7 +204,7 @@ export function SocialProof({ hotel }: { hotel?: Hotel }) {
       ]
     : socialProofFeatures;
 
-  const subtitle = hotel ? `${hotel.name}, ${hotel.place}.` : "From both houses in Hyderabad.";
+  const subtitle = hotel ? `${hotel.name}, ${hotel.place}.` : "Studio Suites and Premier Suites in Hyderabad.";
 
   return (
     <section id="trusted" className="relative overflow-hidden bg-secondary section-pad">

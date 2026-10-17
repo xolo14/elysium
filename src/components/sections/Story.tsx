@@ -5,7 +5,7 @@ import { BrandStar } from "@/lib/brand";
 import { MaskImage, Reveal, RevealLines } from "@/components/Reveal";
 
 const promises = [
-  { title: "Verified addresses", copy: "Both houses are owned and operated by us — no sub-let inventory, no surprise property." },
+  { title: "Verified addresses", copy: "Studio Suites and Premier Suites are owned and operated by us — no sub-let inventory, no surprise property." },
   { title: "Rate you see is the rate you pay", copy: "Taxes and breakfast included. No resort fee, no card surcharge." },
   { title: "Free cancellation", copy: "Cancel up to 24 hours before arrival on every direct booking." },
   { title: "Safety first", copy: "CCTV on all common floors, secure entry, fire equipment serviced annually." },

@@ -4,18 +4,19 @@ import { motion } from "motion/react";
 import { Pencil } from "lucide-react";
 import type { Hotel, Suite } from "@/data/hotels";
 import { getHotelCarouselImages } from "@/data/hotel-images";
+import { PhotoDots } from "@/components/HotelImageCarousel";
 import { hotelFaqs } from "@/data/faqs";
 import { formatStayCompact, nightsBetween } from "@/lib/booking-dates";
 import { easeLuxe, tapSoft } from "@/lib/motion-ui";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { id: "rooms", label: "Rooms" },
-  { id: "amenities", label: "Amenities" },
-  { id: "reviews", label: "Reviews" },
-  { id: "location", label: "Location" },
-  { id: "highlights", label: "Highlights" },
-  { id: "faqs", label: "FAQs" },
+  { id: "rooms", label: "Rooms", icon: "bed" },
+  { id: "amenities", label: "Amenities", icon: "lamp" },
+  { id: "reviews", label: "Reviews", icon: "chat" },
+  { id: "location", label: "Location", icon: "pin" },
+  { id: "highlights", label: "Highlights", icon: "star" },
+  { id: "faqs", label: "FAQs", icon: "help" },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -141,17 +142,7 @@ export function BookingHotelDetail({
             ›
           </button>
           <div className="absolute inset-x-0 bottom-3 flex items-end justify-between gap-3 px-4 sm:bottom-4 sm:gap-4 sm:px-8">
-            <div className="flex min-w-0 flex-1 gap-1">
-              {images.slice(0, 8).map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  aria-label={`Photo ${i + 1}`}
-                  onClick={() => setIndex(i)}
-                  className={cn("h-0.5 flex-1 rounded-full sm:h-1", i === index ? "bg-ivory" : "bg-white/50")}
-                />
-              ))}
-            </div>
+            <PhotoDots count={images.length} index={index} onSelect={setIndex} />
             <Link
               to="/hotels/$slug/gallery"
               params={{ slug: hotel.slug }}
@@ -164,7 +155,7 @@ export function BookingHotelDetail({
 
         {/* Property info card */}
         <div className="page-wrap relative z-10 -mt-8 sm:-mt-14">
-          <div className="rounded-t-[12px] bg-forest px-4 pt-5 pb-4 text-ivory sm:rounded-t-[10px] sm:px-8 sm:pt-8 sm:pb-5">
+          <div className="rounded-t-[22px] bg-forest px-4 pt-5 pb-4 text-ivory sm:rounded-t-[28px] sm:px-8 sm:pt-8 sm:pb-5">
             <button
               type="button"
               onClick={onBack}
@@ -175,23 +166,21 @@ export function BookingHotelDetail({
             <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between lg:gap-4">
               <div>
                 <h1 className="display-nav text-[clamp(1.45rem,5.2vw,2.25rem)] text-ivory">
-                  {hotel.name} — {hotel.place}
+                  {hotel.name}
                 </h1>
-                <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:mt-3 sm:gap-3">
-                  <p className="font-nav text-lg font-extrabold text-ivory sm:text-2xl">
-                    {hotel.fromRate} <span className="text-sm font-bold sm:text-base">/ night</span>
-                  </p>
-                  <p className="text-[11px] text-ivory/80 sm:text-xs">Incl. taxes</p>
-                  <p className="rounded-[8px] bg-white/20 px-2 py-0.5 text-xs font-bold text-ivory sm:py-1 sm:text-sm">
-                    ★ {hotel.rating}
-                  </p>
-                </div>
+                <p className="mt-2.5 font-nav text-lg font-extrabold text-ivory sm:mt-3 sm:text-2xl">
+                  {hotel.fromRate} <span className="text-sm font-bold sm:text-base">/ night onwards</span>
+                </p>
+                <p className="mt-1 text-[11px] text-ivory/80 sm:text-xs">Incl. taxes</p>
               </div>
-              <ul className="hidden space-y-1 text-sm text-ivory/80 sm:block">
-                {hotel.offers.slice(0, 2).map((o) => (
-                  <li key={o}>• {o}</li>
-                ))}
-              </ul>
+              <div className="flex flex-col items-start gap-2 lg:items-end">
+                <p className="font-nav text-lg font-extrabold">★ {hotel.rating}</p>
+                <ul className="space-y-1 text-sm text-ivory/80">
+                  {hotel.offers.slice(0, 3).map((o) => (
+                    <li key={o}>• {o}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <button
@@ -215,17 +204,18 @@ export function BookingHotelDetail({
 
       {/* Subnav */}
       <nav className="sticky top-[4.5rem] z-30 border-b border-neutral-100 bg-white/95 backdrop-blur-md">
-        <div className="page-wrap edge-scroll gap-0.5 py-2 sm:py-2.5">
+        <div className="page-wrap edge-scroll justify-between gap-2 py-3 sm:py-4">
           {tabs.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => scrollTo(t.id)}
               className={cn(
-                "shrink-0 rounded-[10px] px-3 py-1.5 text-[13px] font-semibold transition-colors sm:px-3.5 sm:py-2 sm:text-sm",
-                activeTab === t.id ? "bg-forest/10 text-forest" : "text-neutral-400 hover:text-neutral-700",
+                "flex min-w-[4.5rem] flex-col items-center gap-1 px-2 text-[11px] font-semibold sm:min-w-[5.5rem] sm:text-xs",
+                activeTab === t.id ? "text-forest" : "text-neutral-400 hover:text-neutral-700",
               )}
             >
+              <DeskTabIcon name={t.icon} />
               {t.label}
             </button>
           ))}
@@ -561,6 +551,52 @@ function LuggageArt() {
       <path d="M64 28 v-8 h10 v8" stroke="currentColor" strokeWidth="1.4" />
       <circle cx="70" cy="48" r="3" className="fill-bronze" />
       <path d="M28 38 v-6 h8 v6" stroke="currentColor" strokeWidth="1.3" />
+    </svg>
+  );
+}
+
+function DeskTabIcon({ name }: { name: string }) {
+  const common = "h-5 w-5";
+  if (name === "bed") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M3 18V10h18v8M3 14h18M6 10V7h5v3" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (name === "lamp") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M8 14h8l-1.2-6H9.2L8 14ZM12 14v4M9 18h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (name === "chat") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M5 6h14v10H8l-3 3V6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (name === "pin") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10Z" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="12" cy="11" r="1.8" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    );
+  }
+  if (name === "star") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="m12 4 2.2 5.3 5.8.5-4.4 3.8 1.4 5.6L12 16.4 6.9 19.2l1.5-5.6L4 9.8l5.8-.5L12 4Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 11v5M12 8h.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }

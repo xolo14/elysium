@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { LegalPage } from "@/components/sections/LegalPage";
 import { pageMeta, SITE_EMAIL } from "@/lib/site";
 
@@ -46,29 +45,28 @@ function TermsRoute() {
               ],
             },
             {
-              heading: "House rules",
+              heading: "Stay rules",
               body: [
                 "Guests are responsible for reasonable care of the suite and furnishings. Damages beyond normal wear may be charged.",
-                "Quiet hours and building policies apply. Smoking policies follow house rules shared at check-in.",
+                "Quiet hours and building policies apply. Smoking policies follow the stay rules shared at check-in.",
               ],
             },
             {
               heading: "Liability",
               body: [
-                "We take care to keep the houses safe and well maintained. To the extent permitted by law, we are not liable for loss of personal belongings left unattended. Use the in-suite safe and front desk lockers where available.",
+                "We take care to keep Studio Suites and Premier Suites safe and well maintained. To the extent permitted by law, we are not liable for loss of personal belongings left unattended. Use the in-suite safe and front desk lockers where available.",
               ],
             },
             {
               heading: "Contact",
               body: [
-                `For booking or stay questions, email ${SITE_EMAIL} or call the number listed for your house on the contact page.`,
+                `For booking or stay questions, email ${SITE_EMAIL} or call the number listed for Studio Suites or Premier Suites on the contact page.`,
               ],
             },
           ]}
         />
       </main>
       <Footer />
-      <WhatsAppFloat />
     </HotelProvider>
   );
 }

@@ -7,6 +7,43 @@ import { cn } from "@/lib/utils";
 
 const AUTOPLAY_MS = 5000;
 
+/** Bloom-style beaded photo line — one dot per image, active in bronze. */
+export function PhotoDots({
+  count,
+  index,
+  onSelect,
+  className,
+}: {
+  count: number;
+  index: number;
+  onSelect: (i: number) => void;
+  className?: string;
+}) {
+  if (count < 2) return null;
+  return (
+    <div
+      className={cn("flex min-w-0 flex-1 items-center gap-[3px] overflow-hidden", className)}
+      role="tablist"
+      aria-label="Photos"
+    >
+      {Array.from({ length: count }, (_, i) => (
+        <button
+          key={i}
+          type="button"
+          role="tab"
+          aria-label={`Photo ${i + 1}`}
+          aria-selected={i === index}
+          onClick={() => onSelect(i)}
+          className={cn(
+            "h-[7px] w-[7px] shrink-0 rounded-full transition-colors duration-300",
+            i === index ? "bg-bronze" : "bg-white/70",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function useHotelCarousel(
   images: GalleryImage[],
   options: { autoplay?: boolean } = {},

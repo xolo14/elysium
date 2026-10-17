@@ -12,11 +12,11 @@ export function FaqBand() {
     <section id="faqs" className="relative overflow-hidden bg-background section-pad">
       <div className="page-wrap max-w-[800px]">
         <Reveal>
-          <p className="eyebrow text-muted-foreground">Before you book</p>
+          <p className="eyebrow text-muted-foreground">Before you reserve</p>
           <h2 className="mt-3 display-nav text-[clamp(2rem,4.5vw,3rem)] text-forest">
-            Frequently asked questions
+            Booking questions
           </h2>
-          <p className="mt-3 text-sm text-foreground/65">Madhapur and Hitec City.</p>
+          <p className="mt-3 text-sm text-foreground/65">Studio and Premier. One desk.</p>
         </Reveal>
 
         <ul className="mt-7 divide-y divide-border border-y border-border">

@@ -10,28 +10,28 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const values = [
   {
-    title: "Honesty",
-    copy: "Every great stay starts with trust. Rates with taxes in. Nothing hiding in the bill.",
+    title: "Clear rates",
+    copy: "The figure on the booking is the figure on the invoice. Taxes and breakfast are in. Nothing added at the desk.",
   },
   {
-    title: "Simplicity",
-    copy: "Two houses. One 4B standard. Book, arrive, rest — without a franchise script.",
+    title: "The 4B standard",
+    copy: "Bed, breakfast, bathroom, balcony. Studio and Premier, one checklist — inspected before handover.",
   },
   {
-    title: "Community",
-    copy: "Think of us as a desk you already know in Hyderabad, whatever hour you land.",
+    title: "A desk in the building",
+    copy: "Airport cabs, late check-in, a request at two in the morning. Answered by staff on the floor.",
   },
   {
-    title: "Generosity",
-    copy: "Breakfast at O Sorriso is included. We run the other way from hidden extras.",
+    title: "Breakfast included",
+    copy: "A buffet at O Sorriso is part of the stay when you book direct. Not a voucher, not an extra.",
   },
   {
-    title: "Affordability",
-    copy: "Direct rates that hold for a night or a month. Value packed into every stay.",
+    title: "Terms for longer stays",
+    copy: "Weekly and monthly rates, GST invoices, kitchenettes. Written for project weeks, not only weekends.",
   },
   {
-    title: "Consistency",
-    copy: "The same house on night one and night thirty. Otherwise, where is the rest?",
+    title: "The same suite later",
+    copy: "Night one and night thirty are held to the same standard. That is the reason guests return.",
   },
 ];
 
@@ -80,14 +80,19 @@ export function WhyPage() {
         <div className="page-wrap relative grid min-h-[min(100svh,40rem)] items-center gap-8 page-top pb-10 sm:min-h-[36rem] lg:grid-cols-2 lg:min-h-[88svh] lg:gap-10 lg:pb-14">
           <div className="relative z-10 max-w-xl">
             <h1 className="display-nav text-[clamp(2.4rem,6vw,3.85rem)] text-ivory">
-              Putting the trust
+              A standard
               <br />
-              back into travel.
+              guests can return to.
             </h1>
-            <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ivory/95 sm:mt-6 sm:text-[16px]">
-              Two houses in Hyderabad. One 4B standard. Direct rates, breakfast included, a desk that answers.
+            <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-ivory/80 sm:mt-7 sm:text-[16px]">
+              Elysium runs Studio Suites in Madhapur and Premier Suites in Hitec City. A published rate, a staffed desk, and a suite inspected before you arrive.
             </p>
-            <p className="mt-5 text-[15px] font-semibold text-ivory/90">Come stay with us.</p>
+            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-ivory/80 sm:text-[16px]">
+              The 4B standard is the checklist: bed, breakfast, bathroom, balcony. Studio Suites in Madhapur and Premier Suites in Hitec City are held to it, whether the stay is one night or one month.
+            </p>
+            <p className="mt-5 text-[15px] font-semibold text-ivory/90">
+              Book Studio or Premier directly.
+            </p>
           </div>
           <WhyLineScene />
         </div>
@@ -110,7 +115,7 @@ export function WhyPage() {
               <span className="ml-1 border-y-[10px] border-l-[16px] border-y-transparent border-l-ivory" />
             </span>
             <span className="mt-4 font-nav text-xl font-extrabold tracking-[-0.02em] sm:text-2xl">
-              Click to stay
+              A moment at Elysium
             </span>
           </span>
         </button>
@@ -120,7 +125,7 @@ export function WhyPage() {
         <div className="page-wrap">
           <Reveal>
             <h2 className="display-nav max-w-2xl text-[clamp(1.85rem,4vw,2.75rem)] text-bronze">
-              Our values make us trusted by guests.
+              What we will not compromise.
             </h2>
           </Reveal>
           <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-10">
@@ -177,9 +182,9 @@ export function WhyPage() {
       <section className="bg-forest text-ivory section-pad">
         <div className="page-wrap relative">
           <h2 className="display-nav text-[clamp(1.85rem,4vw,2.75rem)]">
-            Elysium Houses
+            Studio &amp; Premier
           </h2>
-          <p className="mt-2 text-[15px] text-ivory/90">Two addresses. One 4B standard.</p>
+          <p className="mt-2 text-[15px] text-ivory/90">Studio Suites and Premier Suites. One 4B standard.</p>
           <div className="relative mt-7 sm:mt-8">
             <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {visibleHouses.map((item) => (
@@ -198,7 +203,7 @@ export function WhyPage() {
               type="button"
               onClick={() => setHouse((n) => n + 1)}
               className="absolute top-[28%] right-0 hidden h-11 w-11 translate-x-1/2 items-center justify-center rounded-full bg-bronze text-ivory ring-2 ring-ivory lg:flex"
-              aria-label="Next house"
+              aria-label="Next"
             >
               <Chevron />
             </button>
@@ -307,28 +312,6 @@ function WhyLineScene() {
             strokeWidth="1.5"
             strokeLinecap="round"
           />
-        </g>
-
-        <g className="animate-why-plane">
-          <path
-            d="M210 118 L268 132 L248 142 L268 148 L200 138 Z"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinejoin="round"
-          />
-          <path d="M248 142 L232 158" stroke="white" strokeWidth="1.5" />
-          <path d="M268 132 C300 118 340 112 372 118" stroke="white" strokeWidth="1.4" strokeDasharray="5 5" />
-          <text
-            x="278"
-            y="114"
-            fill="white"
-            fontSize="13"
-            fontFamily="Nunito, sans-serif"
-            fontWeight="800"
-            letterSpacing="1.4"
-          >
-            STAY ELYSIUM
-          </text>
         </g>
 
         <g transform="translate(40 168)">

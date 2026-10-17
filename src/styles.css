@@ -164,16 +164,6 @@
     overflow-x: clip;
   }
 
-  /* Instant feel — avoid smooth-scroll jank on long pages */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (content-visibility: auto) {
-      main > section:not(:first-of-type),
-      .cv-auto {
-        content-visibility: auto;
-        contain-intrinsic-size: 1px 720px;
-      }
-    }
-  }
 
   html {
     overflow-x: clip;
@@ -489,44 +479,6 @@
     padding-bottom: calc(5.85rem + env(safe-area-inset-bottom, 0px));
   }
 
-  /* WhatsApp — lift above sticky bars on book flow */
-  .wa-float {
-    position: fixed;
-    right: 0.75rem;
-    bottom: max(0.75rem, env(safe-area-inset-bottom));
-    z-index: 45;
-    display: block;
-    height: 2.85rem;
-    width: 2.85rem;
-    border-radius: 10px;
-    box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.45);
-    transition:
-      opacity 0.3s var(--ease-luxe),
-      transform 0.3s var(--ease-luxe),
-      bottom 0.35s var(--ease-luxe);
-  }
-
-  .wa-float:active {
-    transform: scale(0.96);
-  }
-
-  .wa-float--raised {
-    bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  @media (min-width: 640px) {
-    .wa-float {
-      right: 1.25rem;
-      bottom: 1.25rem;
-      height: 3.5rem;
-      width: 3.5rem;
-    }
-
-    .wa-float--raised {
-      bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
-    }
-  }
-
   /* Phone-first luxury density */
   @media (max-width: 639.98px) {
     .page-wrap {
@@ -757,18 +709,6 @@
   }
 }
 
-@keyframes why-plane {
-  0% {
-    transform: translate(18px, 8px);
-  }
-  50% {
-    transform: translate(-28px, -14px);
-  }
-  100% {
-    transform: translate(18px, 8px);
-  }
-}
-
 @keyframes why-float {
   0%,
   100% {
@@ -794,10 +734,6 @@
   transform-origin: center;
 }
 
-@utility animate-why-plane {
-  animation: why-plane 9s ease-in-out infinite;
-}
-
 @utility animate-why-float {
   animation: why-float 5.5s ease-in-out infinite;
 }
@@ -813,9 +749,143 @@
   .animate-drift,
   .animate-slow-spin,
   .animate-why-sun,
-  .animate-why-plane,
   .animate-why-float,
   .animate-why-door {
     animation: none !important;
   }
+}
+
+/* Home shares the hero's column — 112px inset on a 1196px frame */
+.home-frame {
+  width: 100%;
+  max-width: 1196px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .home-frame {
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-frame {
+    padding-inline: 112px;
+  }
+}
+
+@keyframes clip-rise {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes photo-in {
+  from {
+    transform: scale(1.06);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .load-clip {
+    animation: clip-rise 0.95s var(--ease-luxe) both;
+  }
+
+  .load-rise {
+    animation: rise-in 0.9s var(--ease-luxe) both;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .view-rise {
+      animation: rise-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 28%;
+    }
+
+    .stagger > :nth-child(2) {
+      animation-range: entry 7% entry 34%;
+    }
+
+    .stagger > :nth-child(3) {
+      animation-range: entry 14% entry 40%;
+    }
+
+    .stagger > :nth-child(4) {
+      animation-range: entry 20% entry 46%;
+    }
+
+    .view-photo {
+      animation: photo-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 36%;
+    }
+  }
+}
+
+.still {
+  overflow: hidden;
+}
+
+.still img {
+  transition: transform 0.9s var(--ease-luxe);
+}
+
+.group:hover .still img,
+.still:hover img {
+  transform: scale(1.045);
+}
+
+.lift {
+  transition:
+    transform 0.6s var(--ease-luxe),
+    box-shadow 0.6s var(--ease-luxe);
+}
+
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px -24px rgba(6, 51, 44, 0.4);
+}
+
+.search-pill {
+  transition: box-shadow 0.5s var(--ease-luxe);
+}
+
+.search-pill:hover {
+  box-shadow: 0 18px 44px -20px rgba(0, 0, 0, 0.55);
+}
+
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ease-luxe);
+}
+
+.faq-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.faq-panel > div {
+  overflow: hidden;
 }

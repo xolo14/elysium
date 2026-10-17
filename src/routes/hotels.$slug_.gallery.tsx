@@ -6,7 +6,6 @@ import { getHotelGalleryAlbums } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { Reveal } from "@/components/Reveal";
 import { pageMeta } from "@/lib/site";
 
@@ -70,7 +69,7 @@ function HotelGalleryPage() {
                 <h2 className="font-display text-3xl text-accent sm:text-4xl">{album.title}</h2>
               </Reveal>
 
-              <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-4 lg:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
                 {album.images.map((image) => (
                   <figure
                     key={`${album.title}-${image.src}`}
@@ -80,7 +79,7 @@ function HotelGalleryPage() {
                       src={image.src}
                       alt={image.caption}
                       loading="lazy"
-                      className="aspect-[4/3] h-full w-full object-cover transition-transform duration-[1200ms] ease-luxe group-hover:scale-[1.03]"
+                      className="aspect-[16/10] w-full object-cover transition-transform duration-[1200ms] ease-luxe group-hover:scale-[1.03]"
                     />
                     <figcaption className="eyebrow px-3 pt-4 pb-3 text-foreground/70 sm:px-4 sm:pt-5 sm:pb-4">
                       {image.caption}
@@ -94,7 +93,6 @@ function HotelGalleryPage() {
       </div>
 
       <Footer />
-      <WhatsAppFloat />
       </main>
     </HotelProvider>
   );

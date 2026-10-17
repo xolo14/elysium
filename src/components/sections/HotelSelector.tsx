@@ -1,83 +1,79 @@
 import { Link } from "@tanstack/react-router";
 import { useHotel } from "@/context/hotel";
-import { Reveal } from "@/components/Reveal";
+import type { Hotel } from "@/data/hotels";
+import { cn } from "@/lib/utils";
 
-/** Bloom “Blooming across…” property grid — Elysium houses. */
+function HotelCard({ hotel, large, onSelect }: { hotel: Hotel; large: boolean; onSelect: () => void }) {
+  return (
+    <Link
+      to="/hotels/$slug"
+      params={{ slug: hotel.slug }}
+      onClick={onSelect}
+      className="group view-rise block overflow-hidden rounded-[16px] bg-white ring-1 ring-neutral-100"
+    >
+      <span className="still block">
+        <img
+          src={hotel.hero}
+          alt={`${hotel.name}, ${hotel.region}`}
+          width={large ? 800 : 480}
+          height={large ? 560 : 300}
+          className={cn("w-full object-cover", large ? "aspect-[16/10] sm:aspect-[4/3]" : "aspect-[4/3]")}
+        />
+      </span>
+      <div className={cn(large ? "px-6 py-5" : "px-4 py-3")}>
+        <h3
+          className={cn(
+            "font-nav font-bold tracking-[-0.02em] text-forest",
+            large ? "text-[22px] leading-tight sm:text-[26px]" : "truncate text-[16px]",
+          )}
+        >
+          {hotel.name}
+        </h3>
+        <p className={cn("text-neutral-400", large ? "mt-1 text-[15px]" : "mt-0.5 text-[13px]")}>
+          {hotel.place}
+        </p>
+        {large ? (
+          <p className="mt-3 max-w-md text-[15px] leading-relaxed text-neutral-500">{hotel.summary}</p>
+        ) : null}
+        <p className={cn("font-semibold text-forest", large ? "mt-4 text-[16px]" : "mt-2 text-[13px]")}>
+          From {hotel.fromRate}
+        </p>
+      </div>
+    </Link>
+  );
+}
+
+/** Two suites fill the band. A third or more switches this to a grid. */
 export function HotelSelector() {
   const { hotels, selectHotel } = useHotel();
+  const large = hotels.length <= 2;
 
   return (
-    <section id="properties" className="relative overflow-hidden bg-background section-pad">
-      <div className="page-wrap relative">
-        <Reveal>
-          <h2 className="display-nav text-[clamp(2.25rem,5vw,3.75rem)] text-forest">
-            Living across Hyderabad
-          </h2>
-          <p className="mt-3 prose-quiet sm:text-base">
-            Madhapur &amp; Hitec City.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
-            {hotels.map((h) => (
-              <a
-                key={h.id}
-                href={`#hotel-${h.id}`}
-                className="text-sm font-semibold text-forest underline decoration-forest/20 underline-offset-4 transition-colors hover:decoration-forest"
-              >
-                {h.place}
-              </a>
-            ))}
-          </div>
-        </Reveal>
+    <section id="properties" className="bg-white pt-6 pb-2">
+      <div className="home-frame view-rise">
+        <h2 className="font-nav text-[28px] leading-[34px] font-bold tracking-[-0.02em] text-bronze sm:text-[36px] sm:leading-[42px]">
+          Where the work actually is.
+        </h2>
+        <p className="mt-3 max-w-3xl text-[16px] leading-relaxed text-neutral-400 sm:text-[18px]">
+          Studio Suites, ten minutes from Hitec City. Premier Suites, beside it. Breakfast included
+          either way.
+        </p>
+      </div>
 
-        <div className="mt-7 grid gap-7 sm:mt-8 sm:grid-cols-2 sm:gap-6 lg:gap-8">
-          {hotels.map((h, i) => (
-            <Reveal key={h.id} delay={i * 0.08}>
-              <article id={`hotel-${h.id}`} className="group scroll-mt-24">
-                <Link
-                  to="/hotels/$slug"
-                  params={{ slug: h.slug }}
-                  onClick={() => selectHotel(h.id)}
-                  className="block overflow-hidden rounded-[10px]"
-                >
-                  <div className="aspect-[16/11] overflow-hidden rounded-[10px] bg-secondary">
-                    <picture>
-                      <source srcSet={h.hero.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
-                      <img
-                        src={h.hero}
-                        alt={`${h.name}, ${h.region}`}
-                        loading="lazy"
-                        decoding="async"
-                        width={1200}
-                        height={825}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      />
-                    </picture>
-                  </div>
-                </Link>
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                  <div className="min-w-0">
-                    <h3 className="font-display text-xl leading-snug sm:text-2xl">
-                      {h.name}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{h.place}</p>
-                    <p className="mt-2 text-sm font-medium text-forest">
-                      From {h.fromRate}
-                      <span className="font-normal text-muted-foreground"> / night</span>
-                    </p>
-                  </div>
-                  <Link
-                    to="/book"
-                    search={{ hotel: h.slug }}
-                    onClick={() => selectHotel(h.id)}
-                    className="btn-primary w-full shrink-0 px-4 py-2.5 text-[13px] sm:w-auto"
-                  >
-                    Book Now
-                  </Link>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
+      <div
+        className={cn(
+          "stagger home-frame mt-8 grid gap-6",
+          large ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3",
+        )}
+      >
+        {hotels.map((hotel) => (
+          <HotelCard
+            key={hotel.id}
+            hotel={hotel}
+            large={large}
+            onSelect={() => selectHotel(hotel.id)}
+          />
+        ))}
       </div>
     </section>
   );

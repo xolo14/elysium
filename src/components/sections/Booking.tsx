@@ -83,6 +83,9 @@ export function Booking({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bookingId, setBookingId] = useState<string | null>(null);
+  const [dateReturn, setDateReturn] = useState<"pick" | "hotel">(
+    initialHotelSlug ? "hotel" : "pick",
+  );
 
   useEffect(() => {
     const match = hotels.find((h) => h.slug === initialHotelSlug || h.id === initialHotelSlug);
@@ -138,12 +141,22 @@ export function Booking({
   );
 
   const afterDates = () => {
-    setStep("hotel");
+    setStep(dateReturn === "pick" && !hotelLocked ? "pick" : "hotel");
+  };
+
+  const openCityDates = () => {
+    setDateReturn("pick");
+    setStep("dates");
   };
 
   const pickHouse = (h: Hotel) => {
     setHouseId(h.id);
     setSuite(suiteFromHotel(h, initialSuite));
+    if (checkIn && checkOut && checkOut > checkIn) {
+      setStep("hotel");
+      return;
+    }
+    setDateReturn("hotel");
     setStep("dates");
   };
 
@@ -237,95 +250,129 @@ export function Booking({
 
 
   return (
-    <div className="relative min-h-[100svh] overflow-hidden">
-      <AnimatePresence mode="wait">
+    <div className="relative min-h-[100svh] bg-white">
+      <AnimatePresence mode="popLayout">
         {step === "pick" ? (
           <motion.div
             key="pick"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.99 }}
-            transition={{ duration: 0.28, ease }}
-            className="min-h-[100svh] bg-forest pt-[4.5rem]"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease }}
+            className="bg-white pt-[4.5rem] pb-16"
           >
-            <div className="page-wrap py-6 sm:py-10">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, ease }}
-              >
-                <button
-                  type="button"
-                  onClick={() => window.history.back()}
-                  className="mb-5 inline-flex items-center gap-2 font-nav text-lg font-extrabold text-ivory/85 sm:text-xl"
-                >
-                  <span aria-hidden="true">‹</span>
-                  Hyderabad
-                </button>
-                <h1 className="display-nav text-[clamp(2rem,6vw,3rem)] text-ivory">
-                  Choose your Elysium
-                </h1>
-                <p className="mt-2 max-w-lg text-sm text-ivory/75 sm:text-base">
-                  Studio Suites or Premier Suites — then lock your dates.
-                </p>
-              </motion.div>
-
-              <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-2 lg:gap-7">
-                {hotels.map((h, i) => {
-                  const kind = h.id === "madhapur" ? "Studio Suites" : "Premier Suites";
-                  return (
-                    <motion.button
-                      key={h.id}
-                      type="button"
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.06 + i * 0.05, duration: 0.3, ease }}
-                      whileHover={{ y: -3 }}
-                      whileTap={{ scale: 0.985 }}
-                      onClick={() => pickHouse(h)}
-                      className="group overflow-hidden rounded-[14px] bg-white text-left shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)]"
-                    >
-                      <div className="relative aspect-[16/11] overflow-hidden bg-neutral-200">
-                        <picture>
-                          <source
-                            srcSet={h.hero.replace(/\.(png|jpe?g)$/i, ".webp")}
-                            type="image/webp"
-                          />
-                          <img
-                            src={h.hero}
-                            alt=""
-                            loading="eager"
-                            decoding="async"
-                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                          />
-                        </picture>
-                        <div className="absolute inset-0 bg-gradient-to-t from-forest/55 via-transparent to-transparent" />
-                        <span className="absolute top-3 left-3 rounded-[8px] bg-forest/90 px-2.5 py-1 text-[11px] font-bold tracking-wide text-ivory uppercase">
-                          {kind}
-                        </span>
-                      </div>
-                      <div className="p-5 sm:p-6">
-                        <h2 className="font-nav text-xl font-extrabold text-neutral-800 sm:text-2xl">
-                          {h.name}
-                        </h2>
-                        <p className="mt-1 text-sm text-neutral-500">{h.place}, Hyderabad</p>
-                        <div className="mt-5 flex items-end justify-between gap-3">
-                          <div>
-                            <p className="font-nav text-lg font-extrabold text-forest">
-                              {h.fromRate}{" "}
-                              <span className="text-sm font-semibold">/ night</span>
-                            </p>
-                            <p className="text-[11px] text-neutral-400">Incl. taxes</p>
-                          </div>
-                          <span className="btn-primary !min-h-10 px-5 text-[13px]">
-                            Select
-                          </span>
-                        </div>
-                      </div>
-                    </motion.button>
-                  );
-                })}
+            <section className="relative overflow-hidden bg-forest text-ivory lg:h-[23rem]">
+              <div className="page-wrap relative z-10 flex h-full flex-col justify-center py-6 sm:py-8 lg:py-0 lg:pr-72">
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => window.history.back()}
+                    className="mb-3 inline-flex items-center gap-1.5 font-nav text-[15px] font-bold text-ivory/80"
+                  >
+                    <span aria-hidden="true">‹</span>
+                    City
+                  </button>
+                  <h1 className="display-nav text-[clamp(2.4rem,8vw,4.25rem)] leading-[0.9] text-ivory">
+                    Hyderabad
+                  </h1>
+                  <button
+                    type="button"
+                    onClick={openCityDates}
+                    className="mt-6 flex w-full max-w-xl items-center gap-3 rounded-[999px] bg-white px-3 py-2.5 text-left text-neutral-800 sm:px-4 sm:py-3"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-500">
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
+                        <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" strokeWidth="1.8" />
+                        <path d="M4 10h16M8 5V3M16 5V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                    <span className="min-w-0 flex-1 truncate font-nav text-[14px] font-bold sm:text-[15px]">
+                      {checkIn && checkOut
+                        ? `${formatStayCompact(checkIn)} → ${formatStayCompact(checkOut)}`
+                        : "Pick Check-in & Check-out Dates"}
+                    </span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest text-ivory sm:h-11 sm:w-auto sm:rounded-[999px] sm:px-5">
+                      <span className="hidden font-nav text-[13px] font-extrabold sm:inline">Select</span>
+                      <span className="sm:hidden" aria-hidden>
+                        →
+                      </span>
+                    </span>
+                  </button>
+                </div>
               </div>
+              <img
+                src="/images/charminar.png"
+                alt=""
+                className="pointer-events-none absolute bottom-0 right-0 hidden h-full w-auto max-w-[42%] object-contain object-bottom object-right lg:block"
+              />
+            </section>
+
+            <div className="page-wrap mt-5 space-y-5 sm:mt-7 sm:space-y-6">
+              {hotels.map((h, i) => (
+                <motion.article
+                  key={h.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.04 + i * 0.04, duration: 0.28, ease }}
+                  className="overflow-hidden rounded-[22px] bg-white ring-1 ring-neutral-100 sm:grid sm:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]"
+                >
+                  <div className="relative aspect-[16/11] bg-neutral-100 sm:aspect-auto sm:min-h-[17rem]">
+                    <picture>
+                      <source
+                        srcSet={h.hero.replace(/\.(png|jpe?g)$/i, ".webp")}
+                        type="image/webp"
+                      />
+                      <img
+                        src={h.hero}
+                        alt={h.name}
+                        loading="eager"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    </picture>
+                  </div>
+                  <div className="flex flex-col p-5 sm:p-6 lg:p-8">
+                    <div className="flex items-start justify-between gap-3">
+                      <h2 className="font-nav text-[1.35rem] leading-tight font-extrabold text-neutral-800 sm:text-[1.7rem]">
+                        {h.name}
+                      </h2>
+                      <span className="shrink-0 font-nav text-sm font-extrabold text-forest">
+                        ★ {h.rating}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-[13px] leading-relaxed text-neutral-500">
+                      {h.contact.address.slice(1).join(" ")}
+                    </p>
+                    <ul className="mt-4 space-y-1.5 text-[13px] text-neutral-600 sm:text-sm">
+                      {h.sellingPoints.map((point) => (
+                        <li key={point} className="flex gap-2">
+                          <span className="text-forest">*</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-auto flex items-end justify-between gap-3 pt-6">
+                      <div>
+                        <p className="font-nav text-xl font-extrabold text-forest">
+                          {h.fromRate}{" "}
+                          <span className="text-sm font-semibold">/ night</span>
+                        </p>
+                        <p className="text-[11px] text-neutral-400">Incl. taxes</p>
+                        <p className="mt-1 text-[11px] font-semibold text-forest">
+                          ⚡ Lowest Price, Guaranteed!
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => pickHouse(h)}
+                        className="inline-flex min-h-11 items-center rounded-[999px] bg-forest px-6 font-nav text-[13px] font-extrabold text-ivory"
+                      >
+                        Select
+                      </button>
+                    </div>
+                  </div>
+                </motion.article>
+              ))}
             </div>
           </motion.div>
         ) : null}
@@ -337,45 +384,31 @@ export function Booking({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.28, ease }}
-            className="min-h-[100svh] bg-forest pt-[4.5rem]"
+            className="flex min-h-[100svh] flex-col bg-forest pt-[4.5rem]"
           >
-            <div className="page-wrap py-4 sm:py-6 lg:py-8">
+            <div className="page-wrap py-4 sm:py-5">
               <button
                 type="button"
                 onClick={() => (hotelLocked ? window.history.back() : setStep("pick"))}
-                className="mb-5 inline-flex items-center gap-2 font-nav text-xl font-extrabold text-ivory sm:text-2xl"
+                className="inline-flex items-center gap-2 font-nav text-[clamp(1.35rem,3.2vw,1.85rem)] font-extrabold text-ivory"
               >
                 <span aria-hidden="true">‹</span>
-                {hotel.name}
+                {dateReturn === "pick" ? "Hyderabad" : hotel.name}
               </button>
-              <motion.p
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.04, duration: 0.25, ease }}
-                className="mb-4 font-nav text-sm font-semibold text-ivory/80"
-              >
-                Choose check-in &amp; check-out for {hotel.place}
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.06, duration: 0.28, ease }}
-              >
-                <DateRangePicker
-                  bloom
-                  checkIn={checkIn}
-                  checkOut={checkOut}
-                  minDate={today}
-                  onRangeChange={(inDate, outDate) => {
-                    setCheckIn(inDate);
-                    setCheckOut(outDate);
-                  }}
-                  onConfirm={afterDates}
-                />
-              </motion.div>
-              <p className="mt-5 text-center text-sm font-medium text-ivory/85">
-                {hotel.name} · {hotel.place}
-              </p>
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-t-[22px] bg-white sm:rounded-t-[28px]">
+              <DateRangePicker
+                bloom
+                className="min-h-0 flex-1 rounded-none"
+                checkIn={checkIn}
+                checkOut={checkOut}
+                minDate={today}
+                onRangeChange={(inDate, outDate) => {
+                  setCheckIn(inDate);
+                  setCheckOut(outDate);
+                }}
+                onConfirm={afterDates}
+              />
             </div>
           </motion.div>
         ) : null}

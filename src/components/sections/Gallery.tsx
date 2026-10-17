@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useHotel } from "@/context/hotel";
 import { BrandLineBurst, BrandLineStar, BrandStar } from "@/lib/brand";
 import { MaskImage, Reveal } from "@/components/Reveal";
-import { cn } from "@/lib/utils";
 
 
 export function Gallery() {
@@ -19,12 +18,12 @@ export function Gallery() {
           </h2>
         </Reveal>
 
-        <div className="mt-10 grid auto-rows-[150px] grid-cols-2 gap-3 sm:mt-16 sm:auto-rows-[200px] sm:gap-4 lg:auto-rows-[260px] lg:grid-cols-3 lg:gap-6">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
           {hotel.gallery.map((g, i) => (
             <button
               key={`${hotel.id}-${g.caption}`}
               onClick={() => setOpen(i)}
-              className={cn("group relative overflow-hidden max-lg:row-span-1", g.span)}
+              className="group relative aspect-[16/10] overflow-hidden"
             >
               <MaskImage
                 src={g.image}

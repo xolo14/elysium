@@ -26,7 +26,7 @@ export function Instagram() {
             rel="noopener noreferrer"
             className="link-luxe eyebrow flex items-center gap-2"
           >
-            <BrandStar className="h-2.5 w-2.5 text-accent" /> Follow the houses
+            <BrandStar className="h-2.5 w-2.5 text-accent" /> Follow Elysium
           </a>
         </Reveal>
       </div>

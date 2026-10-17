@@ -4,7 +4,6 @@ import { HotelProvider } from "@/context/hotel";
 import { useGuest } from "@/context/guest";
 import { Nav } from "@/components/Nav";
 import { AccountDesk } from "@/components/account/AccountDesk";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { pageMeta } from "@/lib/site";
 
 const title = "Your Elysium — Loyalty & Bookings";
@@ -27,7 +26,6 @@ function AccountRoute() {
     <HotelProvider>
       <Nav />
       <AccountGate />
-      <WhatsAppFloat />
     </HotelProvider>
   );
 }

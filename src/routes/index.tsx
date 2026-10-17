@@ -6,7 +6,6 @@ import { HotelProvider, useHotel } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { HotelSelector } from "@/components/sections/HotelSelector";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { pageMeta, SITE_EMAIL } from "@/lib/site";
 
 const ValueStay = lazy(() =>
@@ -15,20 +14,14 @@ const ValueStay = lazy(() =>
 const WhatMakesUs = lazy(() =>
   import("@/components/sections/WhatMakesUs").then((m) => ({ default: m.WhatMakesUs })),
 );
-const FourBHighlight = lazy(() =>
-  import("@/components/sections/FourBHighlight").then((m) => ({ default: m.FourBHighlight })),
+const StayDay = lazy(() =>
+  import("@/components/sections/StayDay").then((m) => ({ default: m.StayDay })),
 );
-const Amenities = lazy(() =>
-  import("@/components/sections/Amenities").then((m) => ({ default: m.Amenities })),
+const StayStandard = lazy(() =>
+  import("@/components/sections/HomeBrief").then((m) => ({ default: m.StayStandard })),
 );
-const SocialProof = lazy(() =>
-  import("@/components/sections/SocialProof").then((m) => ({ default: m.SocialProof })),
-);
-const MediaLogos = lazy(() =>
-  import("@/components/sections/MediaLogos").then((m) => ({ default: m.MediaLogos })),
-);
-const FaqBand = lazy(() =>
-  import("@/components/sections/FaqBand").then((m) => ({ default: m.FaqBand })),
+const HomeQuestions = lazy(() =>
+  import("@/components/sections/HomeBrief").then((m) => ({ default: m.HomeQuestions })),
 );
 const Partnerships = lazy(() =>
   import("@/components/sections/Partnerships").then((m) => ({ default: m.Partnerships })),
@@ -99,20 +92,17 @@ function Index() {
       <Nav />
       <main className="relative">
         <Hero />
-        <HotelSelector />
         <Suspense fallback={<div className="section-pad" aria-hidden="true" />}>
-          <WhatMakesUs />
-          <FourBHighlight />
           <ValueStay />
-          <Amenities />
-          <SocialProof />
-          <MediaLogos />
-          <FaqBand />
+          <HotelSelector />
+          <StayDay />
+          <WhatMakesUs />
+          <StayStandard />
+          <HomeQuestions />
           <Partnerships />
           <Footer />
         </Suspense>
       </main>
-      <WhatsAppFloat />
     </HotelProvider>
   );
 }

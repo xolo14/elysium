@@ -48,7 +48,7 @@ export function LegalPage({
             </a>{" "}
             or{" "}
             <Link to="/" hash="contact" className="font-medium text-forest underline-offset-4 hover:underline">
-              contact either house
+              contact Studio Suites or Premier Suites
             </Link>
             .
           </p>

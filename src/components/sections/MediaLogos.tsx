@@ -7,7 +7,7 @@ const promises = [
   "GST invoices",
   "Long-stay ready",
   "24-hour front desk",
-  "Two Hyderabad houses",
+  "Studio & Premier, Hyderabad",
 ];
 
 /** Honest trust strip — no fake press brands. */

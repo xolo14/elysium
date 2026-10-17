@@ -37,6 +37,7 @@ export function Nav() {
     setOpen(false);
     setHotelsOpen(false);
     if (pathname === "/why") setActive("/why");
+    else if (pathname === "/owners") setActive("/owners");
     else setActive("");
   }, [pathname]);
 

@@ -30,7 +30,7 @@ function AdminDashboardPage() {
   return (
     <AdminShell
       title="Reservations"
-      subtitle="New booking requests and guests currently in house."
+      subtitle="New booking requests and guests currently staying."
       activeTab="reservations"
     >
       <AdminBookingList bookings={bookings} mode="active" onUpdated={refresh} />

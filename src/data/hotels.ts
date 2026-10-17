@@ -80,6 +80,8 @@ export type Hotel = {
   contact: { address: string[]; phone: string; email: string };
   coords: string;
   mapQuery: string;
+  sellingPoints: string[];
+  nearby: { name: string; mins: string }[];
   /** Optional suite 360° experiences (Panoee embed and/or equirectangular panoramas). */
   virtualTours?: Suite360View[];
 };
@@ -142,9 +144,20 @@ export const hotels: Hotel[] = [
     rating: "4.7",
     fromRate: "₹4,200",
     offers: [
+      "Free Early Check-In*",
+      "Free Late Check-Out*",
+      "Flat 15% F&B Discount",
+    ],
+    sellingPoints: [
+      "10 minutes away from Hitec City",
       "Complimentary breakfast buffet",
-      "Free high-speed Wi-Fi",
-      "Long-stay rates from 7 nights",
+      "Kitchenettes in select suites",
+    ],
+    nearby: [
+      { name: "Inorbit Mall", mins: "8 Mins" },
+      { name: "Hitec City", mins: "10 Mins" },
+      { name: "Cyber Towers", mins: "12 Mins" },
+      { name: "Botanical Garden", mins: "15 Mins" },
     ],
     story: {
       image: entrance,
@@ -286,9 +299,9 @@ export const hotels: Hotel[] = [
     about: {
       image: banquet,
       lines: [
-        "Elysium is a family-run house in Hyderabad, run by the people who built it — not a franchise operating a brand manual.",
+        "Elysium is family-run in Hyderabad — Studio Suites and Premier Suites, not a franchise operating a brand manual.",
         "Every suite is inspected before handover, every rate is quoted with taxes included, and every guest gets the same front desk from arrival to invoice.",
-        "We keep two addresses instead of twenty so the standard never drifts.",
+        "We keep Studio Suites and Premier Suites so the standard never drifts.",
       ],
     },
 
@@ -332,9 +345,20 @@ export const hotels: Hotel[] = [
     rating: "4.8",
     fromRate: "₹5,600",
     offers: [
+      "Free Early Check-In*",
+      "Free Late Check-Out*",
+      "Flat 15% F&B Discount",
+    ],
+    sellingPoints: [
+      "5 minutes away from Cyber Towers",
       "Complimentary breakfast buffet",
       "Full kitchen in every suite",
-      "10% off on stays above 14 nights",
+    ],
+    nearby: [
+      { name: "Cyber Towers", mins: "5 Mins" },
+      { name: "Hitec City Metro", mins: "8 Mins" },
+      { name: "Inorbit Mall", mins: "10 Mins" },
+      { name: "Durgam Cheruvu", mins: "12 Mins" },
     ],
     story: {
       image: premierFacade,
@@ -497,9 +521,9 @@ export const hotels: Hotel[] = [
     about: {
       image: premierEntrance,
       lines: [
-        "Elysium is a family-run house in Hyderabad, run by the people who built it — not a franchise operating a brand manual.",
+        "Elysium is family-run in Hyderabad — Studio Suites and Premier Suites, not a franchise operating a brand manual.",
         "Every suite is inspected before handover, every rate is quoted with taxes included, and every guest gets the same front desk from arrival to invoice.",
-        "We keep two addresses instead of twenty so the standard never drifts.",
+        "We keep Studio Suites and Premier Suites so the standard never drifts.",
       ],
     },
 
@@ -531,4 +555,5 @@ export const hotels: Hotel[] = [
 
 export const navItems = [
   { label: "Why Elysium?", href: "/why" },
+  { label: "Developers & Owners", href: "/owners" },
 ];

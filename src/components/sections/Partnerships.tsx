@@ -1,4 +1,4 @@
-import { Reveal } from "@/components/Reveal";
+import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 
 type PartnerCard = {
@@ -14,15 +14,15 @@ const cards: PartnerCard[] = [
   {
     id: "owners",
     title: "Developers & Owners",
-    copy: "Growing carefully across Hyderabad.",
-    cta: "Partner with us",
-    href: "/about",
+    copy: "A named operator for buildings that can be held to the 4B standard.",
+    cta: "Read the partnership brief",
+    href: "/owners",
     illustration: "building",
   },
   {
     id: "corporate",
     title: "Corporate Bookings",
-    copy: "Project stays and relocating teams — two houses, one desk.",
+    copy: "Project stays and relocating teams — Studio and Premier, one desk.",
     cta: "Get in touch",
     href: "mailto:elysium.hyd@gmail.com?subject=Corporate%20bookings",
     illustration: "desk",
@@ -30,7 +30,7 @@ const cards: PartnerCard[] = [
   {
     id: "careers",
     title: "Careers @ Elysium",
-    copy: "Hospitality kept personal. Two houses, one standard.",
+    copy: "Hospitality kept personal. Studio and Premier, one standard.",
     cta: "Write to us",
     href: "mailto:elysium.hyd@gmail.com?subject=Careers%20at%20Elysium",
     illustration: "lounge",
@@ -97,19 +97,34 @@ const art = {
 /** Partner row — open layout, bronze accents, no dashboard cards. */
 export function Partnerships() {
   return (
-    <section id="partners" className="relative overflow-hidden bg-secondary section-pad">
-      <div className="page-wrap relative">
-        <ul className="grid gap-6 sm:grid-cols-3 sm:gap-8">
-          {cards.map((card, index) => {
+    <section id="partners" className="bg-white">
+      <div className="home-frame py-12 lg:py-20">
+        <ul className="stagger grid gap-10 sm:grid-cols-3 sm:gap-8">
+          {cards.map((card) => {
             const Art = art[card.illustration];
             return (
-              <li key={card.id}>
-                <Reveal delay={0.06 * index}>
+              <li key={card.id} className="view-rise">
+                  {card.href.startsWith("/") ? (
+                  <Link
+                    to={card.href}
+                    className={cn(
+                      "group flex h-full flex-col border-t border-forest/15 pt-6",
+                    )}
+                  >
+                    <h3 className="font-display text-xl leading-tight text-forest sm:text-2xl">{card.title}</h3>
+                    <p className="mt-3 flex-1 prose-quiet">{card.copy}</p>
+                    <div className="mt-8 flex items-end justify-between gap-4">
+                      <span className="text-[14px] font-semibold text-bronze underline decoration-bronze/30 underline-offset-4 transition-colors group-hover:decoration-bronze">
+                        {card.cta}
+                      </span>
+                      <Art className="h-14 w-20 text-foreground/25" />
+                    </div>
+                  </Link>
+                  ) : (
                   <a
                     href={card.href}
                     className={cn(
-                      "group flex h-full flex-col border-t border-forest/15 pt-6 transition-opacity duration-500",
-                      "hover:opacity-90",
+                      "group flex h-full flex-col border-t border-forest/15 pt-6",
                     )}
                   >
                     <h3 className="font-display text-xl leading-tight text-forest sm:text-2xl">{card.title}</h3>
@@ -121,7 +136,7 @@ export function Partnerships() {
                       <Art className="h-14 w-20 text-foreground/25" />
                     </div>
                   </a>
-                </Reveal>
+                  )}
               </li>
             );
           })}

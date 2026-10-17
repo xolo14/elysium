@@ -10,9 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as OwnersRouteImport } from './routes/owners'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
@@ -27,11 +27,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -40,6 +35,11 @@ const AccountRoute = AccountRouteImport.update({
 const BookRoute = BookRouteImport.update({
   id: '/book',
   path: '/book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OwnersRoute = OwnersRouteImport.update({
+  id: '/owners',
+  path: '/owners',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -85,9 +85,9 @@ const HotelsSlugGalleryRoute = HotelsSlugGalleryRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/book': typeof BookRoute
+  '/owners': typeof OwnersRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
@@ -99,9 +99,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/book': typeof BookRoute
+  '/owners': typeof OwnersRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
@@ -114,9 +114,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/account': typeof AccountRoute
   '/book': typeof BookRoute
+  '/owners': typeof OwnersRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
@@ -130,9 +130,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/account'
     | '/book'
+    | '/owners'
     | '/privacy'
     | '/terms'
     | '/why'
@@ -144,9 +144,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/account'
     | '/book'
+    | '/owners'
     | '/privacy'
     | '/terms'
     | '/why'
@@ -158,9 +158,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/about'
     | '/account'
     | '/book'
+    | '/owners'
     | '/privacy'
     | '/terms'
     | '/why'
@@ -173,9 +173,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
   BookRoute: typeof BookRoute
+  OwnersRoute: typeof OwnersRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   WhyRoute: typeof WhyRoute
@@ -195,13 +195,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/account': {
       id: '/account'
       path: '/account'
@@ -214,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/book'
       fullPath: '/book'
       preLoaderRoute: typeof BookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/owners': {
+      id: '/owners'
+      path: '/owners'
+      fullPath: '/owners'
+      preLoaderRoute: typeof OwnersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -277,9 +277,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
   BookRoute: BookRoute,
+  OwnersRoute: OwnersRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   WhyRoute: WhyRoute,

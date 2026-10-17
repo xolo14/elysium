@@ -2,7 +2,7 @@ export const loyaltyLevels = [
   {
     id: 0,
     pill: "Level 1",
-    title: "House Guest",
+    title: "Elysium Guest",
     copy: "Get a 5% extra discount after your first stay.",
     art: "drive" as const,
   },
@@ -16,7 +16,7 @@ export const loyaltyLevels = [
   {
     id: 2,
     pill: "Level 3",
-    title: "House Regular",
+    title: "Elysium Regular",
     copy: "Get a 15% extra discount after 10 stays.",
     art: "desk" as const,
   },

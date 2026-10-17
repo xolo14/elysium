@@ -196,7 +196,7 @@ export function Amenities() {
           <h2 className="display-nav text-[clamp(2rem,4vw,3rem)] text-forest">
             Amenities
           </h2>
-          <p className="mt-2 text-sm text-foreground/65">Both houses. Same standard.</p>
+          <p className="mt-2 text-sm text-foreground/65">Studio and Premier. Same standard.</p>
         </Reveal>
         <div className="mt-6 sm:mt-7">
           <AmenitiesGrid hotel={hotel} />

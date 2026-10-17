@@ -37,7 +37,7 @@ export const socialProofFeatures: SocialProofFeature[] = [
   { label: "Long-stay ready", note: "Kitchenettes & weekly service" },
   { label: "Family-run", note: "Same front desk from check-in" },
   { label: "Business stays", note: "Invoices & corporate billing" },
-  { label: "Guest rated", note: "4.7★+ across both houses" },
+  { label: "Guest rated", note: "4.7★+ across Studio & Premier" },
   { label: "Prime locations", note: "Madhapur & Hitec City" },
   { label: "Breakfast in", note: "O Sorriso buffet every morning" },
   { label: "24-hour desk", note: "Always staffed, always local" },
@@ -53,8 +53,8 @@ export const socialProofTiles: SocialProofTile[] = [
   {
     kind: "award",
     title: "Voted a top place to stay for business in Hyderabad",
-    subtitle: "Guest satisfaction across both houses",
-    source: "House standard",
+    subtitle: "Guest satisfaction across Studio & Premier",
+    source: "Elysium standard",
     layout: "col-span-2 row-span-2",
   },
   {
@@ -105,14 +105,14 @@ export const socialProofTiles: SocialProofTile[] = [
   {
     kind: "stat",
     value: "2",
-    label: "Houses in Hyderabad’s tech corridor",
+    label: "Studio & Premier in Hyderabad’s tech corridor",
     layout: "col-span-1 row-span-1",
   },
   {
     kind: "award",
     title: "Breakfast included on every direct booking",
     subtitle: "O Sorriso buffet, 7:00–10:30 am",
-    source: "House promise",
+    source: "Stay promise",
     layout: "col-span-1 row-span-2",
   },
   {

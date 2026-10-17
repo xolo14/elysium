@@ -1,72 +1,60 @@
 import { Link } from "@tanstack/react-router";
-import { Reveal } from "@/components/Reveal";
-import { BrandStar } from "@/lib/brand";
 
-const pillars = [
+const highlights = [
   {
-    title: "Hospitality with heart",
-    copy: "A host at every step — from check-in to the quiet of your suite.",
+    title: "A host on the floor",
+    copy: "Check-in, a late key, the 2 a.m. request — answered by someone in the building.",
     image: "/images/image-9.png",
-    alt: "Quiet bedroom suite at Elysium",
+    alt: "A quiet room at Elysium",
   },
   {
     title: "Kept spotless",
-    copy: "Daily housekeeping, fresh linen, and the details guests notice first.",
+    copy: "Housekeeping every day, linen on a fixed cycle, and the room inspected before the next guest.",
     image: "/images/image-10.png",
-    alt: "Serviced living space at Elysium",
+    alt: "A serviced room at Elysium",
   },
   {
-    title: "Sleep, properly",
-    copy: "Quiet floors and considered beds — for a night or a month.",
+    title: "Sleep that holds",
+    copy: "Quiet floors and a considered bed — the same on one night as on a four-week stay.",
     image: "/images/hero-suite-living.png",
-    alt: "Living room suite at Elysium",
+    alt: "A bed at Elysium",
   },
 ];
 
-/** Bloom “What makes us” band — Elysium forest theme. */
+/** Bloom highlight band — title, three photos, copy under each. */
 export function WhatMakesUs() {
   return (
-    <section id="makes-us" className="relative overflow-hidden bg-forest text-ivory section-pad">
-      <div className="page-wrap">
-        <Reveal>
-          <h2 className="text-center display-nav text-[clamp(2.25rem,5vw,3.5rem)]">
-            What makes us Elysium?
-          </h2>
-          <p className="mx-auto mt-4 max-w-md text-center text-sm text-ivory/70">
-            Three things we never compromise.
-          </p>
-        </Reveal>
+    <section id="makes-us" className="bg-forest text-ivory">
+      <div className="home-frame py-12 lg:py-20">
+        <h2 className="view-rise text-center font-nav text-[28px] leading-[34px] font-bold tracking-[-0.02em] sm:text-[36px] sm:leading-[42px]">
+          The things you notice at 2 a.m.
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-center text-[16px] leading-relaxed text-ivory/70 sm:text-[18px]">
+          Someone is still in the building. The room was checked. The bed holds for a month, not
+          just a night.
+        </p>
 
-        <div className="mt-7 grid gap-5 sm:mt-8 sm:grid-cols-3 sm:gap-6">
-          {pillars.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.08}>
-              <article className="flex h-full flex-col overflow-hidden rounded-[10px] bg-ivory text-forest">
-                <div className="aspect-[5/4] overflow-hidden rounded-t-[10px]">
-                  <img
-                    src={p.image}
-                    alt={p.alt}
-                    loading="lazy"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col p-5 sm:p-6">
-                  <h3 className="font-display text-xl leading-tight sm:text-2xl">{p.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-foreground/70">{p.copy}</p>
-                </div>
-              </article>
-            </Reveal>
+        <ul className="stagger mt-10 grid gap-6 sm:grid-cols-3">
+          {highlights.map((item) => (
+            <li key={item.title} className="group view-rise">
+              <span className="still block rounded-[16px]">
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  className="aspect-[3/2] w-full object-cover sm:aspect-[4/5]"
+                />
+              </span>
+              <h3 className="mt-5 font-nav text-[22px] leading-tight font-bold">{item.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-ivory/75">{item.copy}</p>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <Reveal delay={0.15}>
-          <Link
-            to="/why"
-            className="eyebrow mx-auto mt-7 flex w-fit items-center justify-center gap-2.5 rounded-[10px] bg-ivory px-7 py-3.5 text-[0.8rem] tracking-[0.2em] text-forest transition-opacity hover:opacity-90 sm:mt-8 sm:px-8 sm:py-4 sm:text-[0.875rem]"
-          >
-            Why Elysium
-            <BrandStar className="h-3 w-3" />
+        <div className="mt-10 text-center">
+          <Link to="/why" className="font-nav text-[16px] font-bold text-ivory underline underline-offset-4">
+            See the full standard
           </Link>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

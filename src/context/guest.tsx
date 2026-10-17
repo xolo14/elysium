@@ -78,12 +78,12 @@ export function maskEmail(email: string) {
 
 export function loyaltyStatus(stays: number) {
   if (stays < 1) {
-    return { label: "New Guest", staysLabel: "0 Stays", next: "1 stay to House Guest" };
+    return { label: "New Guest", staysLabel: "0 Stays", next: "1 stay to Elysium Guest" };
   }
   if (stays < 4) {
     const left = 4 - stays;
     return {
-      label: "House Guest",
+      label: "Elysium Guest",
       staysLabel: `${stays} Stay${stays === 1 ? "" : "s"}`,
       next: `${left} stay${left === 1 ? "" : "s"} to Return Stay`,
     };
@@ -93,10 +93,10 @@ export function loyaltyStatus(stays: number) {
     return {
       label: "Return Stay",
       staysLabel: `${stays} Stays`,
-      next: `${left} stay${left === 1 ? "" : "s"} to House Regular`,
+      next: `${left} stay${left === 1 ? "" : "s"} to Elysium Regular`,
     };
   }
-  return { label: "House Regular", staysLabel: `${stays} Stays`, next: "Top tier unlocked" };
+  return { label: "Elysium Regular", staysLabel: `${stays} Stays`, next: "Top tier unlocked" };
 }
 
 export function GuestProvider({ children }: { children: React.ReactNode }) {

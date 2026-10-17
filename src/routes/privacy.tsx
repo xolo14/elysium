@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { LegalPage } from "@/components/sections/LegalPage";
 import { pageMeta, SITE_EMAIL } from "@/lib/site";
 
@@ -28,7 +27,7 @@ function PrivacyRoute() {
             {
               heading: "Who we are",
               body: [
-                `Elysium Hotels operates two serviced-suite houses in Hyderabad. For privacy questions, contact ${SITE_EMAIL}.`,
+                `Elysium Hotels runs Studio Suites in Madhapur and Premier Suites in Hitec City. For privacy questions, contact ${SITE_EMAIL}.`,
               ],
             },
             {
@@ -67,7 +66,6 @@ function PrivacyRoute() {
         />
       </main>
       <Footer />
-      <WhatsAppFloat />
     </HotelProvider>
   );
 }

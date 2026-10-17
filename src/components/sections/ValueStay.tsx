@@ -1,51 +1,49 @@
 import { Link } from "@tanstack/react-router";
-import { Reveal } from "@/components/Reveal";
-import { BrandStar } from "@/lib/brand";
 
-/** Bloom membership / value band — Elysium long-stay offer. */
+/** Bloom loyalty band — headline, one line, membership card. */
 export function ValueStay() {
   return (
-    <section id="value" className="relative overflow-hidden bg-secondary section-pad">
-      <div className="page-wrap grid items-center gap-7 lg:grid-cols-2 lg:gap-12">
-        <Reveal>
-          <h2 className="display-nav text-[clamp(2.4rem,5.5vw,3.85rem)] text-bronze">
-            The more you stay,
+    <section id="value" className="bg-[#f4f4f2]">
+      <div className="home-frame grid items-center gap-8 py-12 lg:grid-cols-[minmax(0,1fr)_370px] lg:gap-10 lg:py-20">
+        <div className="view-rise max-w-[34rem]">
+          <h2 className="font-nav text-[clamp(2rem,4vw,2.75rem)] leading-[1.12] font-bold tracking-[-0.02em] text-bronze">
+            Week two should
             <br />
-            the less you pay.
+            cost less.
           </h2>
-          <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-forest">
-            <BrandStar className="h-2.5 w-2.5" />
-            Extra off on weekly &amp; monthly stays.
+          <p className="mt-5 flex items-center gap-2 text-[16px] font-bold text-forest">
+            <span aria-hidden="true">⚡</span>
+            It does, from the seventh night.
           </p>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-foreground/75">
-            Weekly and monthly rates, kitchenettes, and a desk that knows your name.
+          <p className="mt-4 max-w-md text-[16px] leading-relaxed text-neutral-500">
+            Weekly and monthly rates are written once. Breakfast, Wi-Fi, and taxes do not show up
+            on a second bill.
           </p>
-        </Reveal>
+        </div>
 
-        <Reveal delay={0.1}>
-          <div className="relative overflow-hidden rounded-[10px] border border-bronze/50 bg-forest p-6 text-ivory sm:p-8">
-            <div className="flex items-start justify-between gap-6">
-              <div>
-                <p className="eyebrow text-ivory/55">Elysium Value Stay</p>
-                <p className="mt-3 display-nav text-3xl text-ivory sm:text-4xl">
-                  Stay longer.
-                  <br />
-                  Pay less.
-                </p>
-                <p className="mt-4 max-w-xs text-sm leading-relaxed text-ivory/75">
-                  From 7 nights — discounted rates, kitchenettes &amp; GST invoices.
-                </p>
-              </div>
-              <BrandStar className="mt-1 h-10 w-10 shrink-0 text-ivory/25" />
-            </div>
-            <Link
-              to="/book"
-              className="eyebrow mt-8 inline-flex items-center gap-2 rounded-[10px] bg-ivory px-5 py-3 text-forest transition-opacity hover:opacity-90"
-            >
-              Enquire now
-            </Link>
+        <div className="view-rise" style={{ animationRange: "entry 8% entry 36%" }}>
+        <Link
+          to="/book"
+          className="lift block overflow-hidden rounded-[12px] bg-white shadow-[0_8px_30px_-18px_rgba(6,51,44,0.35)]"
+        >
+          <div className="flex h-[148px] items-end justify-between px-6 pt-5 pb-4 text-forest/70">
+            <p className="font-nav text-[18px] font-extrabold tracking-[-0.03em] text-forest">Elysium</p>
+            <svg viewBox="0 0 180 72" className="h-16 w-40" aria-hidden="true">
+              <path
+                d="M8 58 V34 H28 V58 M22 58 V22 H48 V58 M42 58 V14 H78 V58 M70 58 V28 H104 V58 M98 58 V18 H132 V58 M126 58 V36 H160 V58"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+              />
+              <circle cx="154" cy="16" r="6" className="fill-bronze stroke-none" />
+            </svg>
           </div>
-        </Reveal>
+          <div className="flex items-center justify-between bg-forest px-6 py-4 text-ivory">
+            <span className="font-nav text-[16px] font-extrabold">See long-stay rates</span>
+            <span aria-hidden="true">›</span>
+          </div>
+        </Link>
+        </div>
       </div>
     </section>
   );

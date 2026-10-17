@@ -2,12 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Booking } from "@/components/sections/Booking";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { pageMeta } from "@/lib/site";
 
 const title = "Book Now — Elysium Hotels, Hyderabad";
 const description =
-  "Book direct at Elysium Studio Suites, Madhapur or Elysium Premier Suites, Hitec City. Pick a house, choose a suite and reserve with taxes and breakfast included.";
+  "Book direct at Elysium Studio Suites, Madhapur or Elysium Premier Suites, Hitec City. Choose a property, pick a suite and reserve with taxes and breakfast included.";
 
 type BookSearch = {
   hotel?: string;
@@ -52,7 +51,6 @@ function BookPage() {
           initialGuests={search.guests}
         />
       </main>
-      <WhatsAppFloat raised />
     </HotelProvider>
   );
 }

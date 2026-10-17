@@ -3,21 +3,11 @@ import { useMemo, useState } from "react";
 import { hotels, type Hotel } from "@/data/hotels";
 import { hotelFaqs } from "@/data/faqs";
 import { getHotelCarouselImages } from "@/data/hotel-images";
+import { PhotoDots } from "@/components/HotelImageCarousel";
 import { HotelProvider } from "@/context/hotel";
-import {
-  HotelGalleryBar,
-  HotelImageCarousel,
-  useHotelCarousel,
-} from "@/components/HotelImageCarousel";
-import { Suite360Experience, View360HeroControl } from "@/components/Suite360Experience";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
-import { SocialProof } from "@/components/sections/SocialProof";
-import { AmenitiesGrid } from "@/components/sections/Amenities";
-import { FourBHighlight } from "@/components/sections/FourBHighlight";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
-import { Reveal } from "@/components/Reveal";
-import { BrandStar } from "@/lib/brand";
+import { cn } from "@/lib/utils";
 import { pageMeta } from "@/lib/site";
 
 export const Route = createFileRoute("/hotels/$slug")({
@@ -43,306 +33,251 @@ export const Route = createFileRoute("/hotels/$slug")({
   component: HotelPage,
 });
 
+const tabs = [
+  { id: "rooms", label: "Rooms", icon: "bed" },
+  { id: "amenities", label: "Amenities", icon: "lamp" },
+  { id: "reviews", label: "Reviews", icon: "chat" },
+  { id: "location", label: "Location", icon: "pin" },
+  { id: "highlights", label: "Highlights", icon: "star" },
+  { id: "faqs", label: "FAQs", icon: "help" },
+] as const;
+
+function strikeFrom(rate: string) {
+  const n = Number(rate.replace(/[^\d]/g, "")) || 0;
+  return n ? `₹${Math.round(n * 1.1).toLocaleString("en-IN")}` : "";
+}
+
 function HotelPage() {
   const { hotel } = Route.useLoaderData();
-  const pageTabs = [
-    { label: "Photos", href: "#photos" },
-    { label: "Rooms", href: "#rooms" },
-    { label: "Amenities", href: "#amenities" },
-    { label: "Reviews", href: "#reviews" },
-    { label: "Location", href: "#location" },
-    { label: "FAQs", href: "#faqs" },
-  ];
-
   return (
     <HotelProvider initialId={hotel.id}>
-      <main className="bg-background">
+      <main className="bg-white">
         <Nav />
-        <HotelIntro hotel={hotel} tabs={pageTabs} />
-        <Rooms hotel={hotel} />
-        <Amenities hotel={hotel} />
-        <FourBHighlight />
-        <Reviews hotel={hotel} />
-        <LocationBlock hotel={hotel} />
-        <FaqBlock />
-        <DiscoverOther currentId={hotel.id} />
-        <SocialProof hotel={hotel} />
+        <HotelDesk hotel={hotel} />
         <Footer />
-        <WhatsAppFloat />
       </main>
     </HotelProvider>
   );
 }
 
-function HotelIntro({
-  hotel,
-  tabs: navTabs,
-}: {
-  hotel: Hotel;
-  tabs: { label: string; href: string }[];
-}) {
+function HotelDesk({ hotel }: { hotel: Hotel }) {
   const navigate = useNavigate();
-  const carouselImages = useMemo(() => getHotelCarouselImages(hotel), [hotel]);
-  const { slides, index, currentSlide, progress, goPrev, goNext } = useHotelCarousel(carouselImages);
-  const [tourOpen, setTourOpen] = useState(false);
-  const tours = hotel.virtualTours;
+  const images = useMemo(() => {
+    const gallery = getHotelCarouselImages(hotel).map((g) => g.src);
+    return [hotel.hero, ...gallery].filter((src, i, arr) => arr.indexOf(src) === i);
+  }, [hotel]);
+  const [index, setIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<(typeof tabs)[number]["id"]>("rooms");
+  const others = hotels.filter((h) => h.id !== hotel.id);
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(hotel.mapQuery)}&output=embed`;
 
-  const onBookNow = () => {
+  const goBook = (suite?: string) => {
     void navigate({
       to: "/book",
-      search: { hotel: hotel.slug },
+      search: { hotel: hotel.slug, suite },
     });
   };
 
+  const scrollTo = (id: (typeof tabs)[number]["id"]) => {
+    setActiveTab(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <section id="photos" className="relative">
-      <div className="relative z-20 h-[70svh] min-h-[480px] w-full overflow-hidden bg-forest sm:h-[78svh] sm:min-h-[560px]">
-        <HotelImageCarousel
-          key={hotel.id}
-          images={carouselImages}
-          hotelSlug={hotel.slug}
-          hotelName={hotel.name}
-          place={hotel.place}
-          layout="hero"
-          index={index}
-          progress={progress}
-          className="h-full w-full"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest/70 via-transparent to-forest/20" />
-      </div>
-
-      {tours && tours.length > 0 ? (
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-40 h-[70svh] min-h-[480px] sm:h-[78svh] sm:min-h-[560px]">
-          <View360HeroControl
-            imageSrc={tours[0]!.thumbnail}
-            onClick={() => setTourOpen(true)}
-            className="pointer-events-auto absolute bottom-36 left-4 sm:bottom-40 sm:left-8 lg:left-12"
-          />
+    <div className="pt-[4.5rem]">
+      <section className="relative">
+        <div className="relative h-[min(62vw,18.5rem)] overflow-hidden bg-neutral-200 sm:h-[28rem] lg:h-[32rem]">
+          {images.map((src, i) => (
+            <picture key={src}>
+              <source srcSet={src.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
+              <img
+                src={src}
+                alt={`${hotel.name} photo ${i + 1}`}
+                loading={i === 0 ? "eager" : "lazy"}
+                className={cn(
+                  "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
+                  i === index ? "opacity-100" : "opacity-0",
+                )}
+              />
+            </picture>
+          ))}
+          <button
+            type="button"
+            onClick={() => setIndex((n) => (n - 1 + images.length) % images.length)}
+            className="absolute top-1/2 left-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:left-5 sm:h-11 sm:w-11"
+            aria-label="Previous photo"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onClick={() => setIndex((n) => (n + 1) % images.length)}
+            className="absolute top-1/2 right-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:right-5 sm:h-11 sm:w-11"
+            aria-label="Next photo"
+          >
+            ›
+          </button>
+          <div className="absolute inset-x-0 bottom-3 flex items-end justify-between gap-3 px-4 sm:bottom-4 sm:px-8">
+            <PhotoDots count={images.length} index={index} onSelect={setIndex} />
+            <Link
+              to="/hotels/$slug/gallery"
+              params={{ slug: hotel.slug }}
+              className="shrink-0 text-[12px] font-semibold text-ivory underline underline-offset-4 sm:text-sm"
+            >
+              View All Images
+            </Link>
+          </div>
         </div>
-      ) : null}
 
-      <div className="page-wrap relative z-30 -mt-16 sm:-mt-20">
-        <HotelGalleryBar
-          caption={currentSlide?.caption}
-          hotelSlug={hotel.slug}
-          slideCount={slides.length}
-          onPrev={goPrev}
-          onNext={goNext}
-          className="mb-3 rounded-[10px] border border-ivory/15 bg-forest/55 backdrop-blur-md sm:mb-4"
-        />
-
-        {/* Book Now — opens animated calendar → rooms flow */}
-        <div className="overflow-hidden rounded-[10px] border border-forest/10 bg-forest text-ivory shadow-[0_24px_60px_rgba(8,20,17,0.25)]">
-          <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6 sm:py-5">
-            <div className="min-w-0">
-              <p className="eyebrow text-ivory/60">Book direct</p>
-              <p className="mt-1 font-display text-xl leading-tight sm:text-2xl">{hotel.name}</p>
-              <p className="mt-1 flex items-center gap-2 text-sm text-ivory/70">
-                <BrandStar className="h-2 w-2" />
-                {hotel.rating}/5 · {hotel.place} · From {hotel.fromRate}/night
-              </p>
+        <div className="page-wrap relative z-10 -mt-8 sm:-mt-14">
+          <div className="rounded-t-[22px] bg-forest px-4 pt-6 pb-5 text-ivory sm:rounded-t-[28px] sm:px-8 sm:pt-8 sm:pb-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <h1 className="display-nav text-[clamp(1.55rem,5vw,2.4rem)] text-ivory">
+                  {hotel.name}
+                </h1>
+                <p className="mt-3 font-nav text-lg font-extrabold sm:text-2xl">
+                  {hotel.fromRate}{" "}
+                  <span className="text-sm font-bold">/ night onwards</span>
+                </p>
+                <p className="mt-1 text-xs text-ivory/75">Incl. taxes</p>
+              </div>
+              <div className="flex flex-col items-start gap-3 lg:items-end">
+                <p className="font-nav text-lg font-extrabold">★ {hotel.rating}</p>
+                <ul className="space-y-1 text-sm text-ivory/85">
+                  {hotel.offers.slice(0, 3).map((o) => (
+                    <li key={o}>• {o}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
             <button
               type="button"
-              onClick={onBookNow}
-              className="btn-primary min-h-12 w-full shrink-0 bg-ivory px-10 !text-forest sm:w-auto"
+              onClick={() => goBook()}
+              className="mt-5 flex w-full max-w-xl items-center gap-3 rounded-[999px] bg-white px-4 py-3.5 text-left text-neutral-700 sm:px-5"
             >
-              Book Now
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-100">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
+                  <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" strokeWidth="1.8" />
+                  <path d="M4 10h16M8 5V3M16 5V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </span>
+              <span className="min-w-0 flex-1 font-nav text-[14px] font-bold sm:text-[15px]">
+                Pick Check-in &amp; Check-out Dates
+              </span>
+              <span className="shrink-0 rounded-[999px] bg-forest px-5 py-2 font-nav text-[13px] font-extrabold text-ivory">
+                Book
+              </span>
             </button>
           </div>
         </div>
+      </section>
 
-        <div className="mt-5 rounded-[10px] bg-background px-4 py-6 sm:mt-6 sm:px-8 sm:py-8">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-            <div className="min-w-0 max-w-2xl">
-              <h1 className="display-nav text-[clamp(1.85rem,4vw,3rem)] text-forest">
-                {hotel.name}
-              </h1>
-              <p className="mt-2 flex items-center gap-2 text-sm text-foreground/70">
-                <BrandStar className="h-2.5 w-2.5 text-forest" />
-                {hotel.rating}/5 · {hotel.place}
-              </p>
-              <p className="mt-4 max-w-lg text-sm leading-relaxed text-foreground/75">
-                {hotel.summary}
-              </p>
-            </div>
-            <div className="shrink-0 lg:text-right">
-              <p className="font-display text-3xl sm:text-4xl">{hotel.fromRate}</p>
-              <p className="mt-1 text-xs tracking-[0.14em] text-muted-foreground uppercase">
-                / night onwards · Incl. taxes
-              </p>
-              <ul className="mt-5 flex flex-col gap-2 lg:items-end">
-                {hotel.offers.slice(0, 3).map((o) => (
-                  <li key={o} className="flex items-center gap-2 text-sm text-foreground/70">
-                    <BrandStar className="h-2 w-2 text-forest" />
-                    {o}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <nav className="edge-scroll gap-x-5 border-b border-border py-3.5 sm:flex-wrap sm:gap-x-7 sm:overflow-visible">
-          <Link to="/" className="eyebrow font-semibold text-muted-foreground hover:text-foreground">
-            All hotels
-          </Link>
-          {navTabs.map((t) => (
-            <a key={t.href} href={t.href} className="eyebrow font-semibold hover:text-muted-foreground">
+      <nav className="sticky top-[4.5rem] z-30 border-b border-neutral-100 bg-white/95 backdrop-blur-md">
+        <div className="page-wrap edge-scroll justify-between gap-2 py-3 sm:py-4">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => scrollTo(t.id)}
+              className={cn(
+                "flex min-w-[4.5rem] flex-col items-center gap-1 px-2 text-[11px] font-semibold sm:min-w-[5.5rem] sm:text-xs",
+                activeTab === t.id ? "text-forest" : "text-neutral-400",
+              )}
+            >
+              <TabIcon name={t.icon} />
               {t.label}
-            </a>
+            </button>
           ))}
-        </nav>
-      </div>
-
-      {tours?.length ? (
-        <Suite360Experience views={tours} open={tourOpen} onClose={() => setTourOpen(false)} />
-      ) : null}
-    </section>
-  );
-}
-
-function Rooms({ hotel }: { hotel: Hotel }) {
-  return (
-    <section id="rooms" data-anchor="booking" className="page-wrap section-pad">
-      <span id="booking" className="block" />
-      <Reveal>
-        <h2 className="font-display text-4xl text-forest sm:text-5xl">Rooms</h2>
-        <p className="mt-3 text-sm text-muted-foreground">Early check-in on request.</p>
-      </Reveal>
-
-      <div className="mt-10 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
-        {hotel.suites.map((s, idx) => (
-          <Reveal key={s.name} delay={idx * 0.05}>
-            <article className="flex h-full flex-col overflow-hidden rounded-[10px] border border-border bg-background">
-              <img
-                src={s.image}
-                alt={`${s.name} at ${hotel.name}, ${hotel.place}`}
-                loading="lazy"
-                className="aspect-[4/3] w-full object-cover"
-              />
-              <div className="flex flex-1 flex-col p-5">
-                <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  {s.capacity}
-                </p>
-                <h3 className="mt-1 font-display text-xl">{s.name}</h3>
-                <p className="mt-2 text-xs font-medium text-muted-foreground">
-                  {s.size} · {s.view} view
-                </p>
-                <p className="mt-auto pt-5 font-display text-lg">
-                  {s.rate.replace(" / night", "")}
-                  <span className="ml-1 text-xs font-sans font-normal tracking-wide text-muted-foreground uppercase">
-                    onwards
-                  </span>
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">Incl. taxes</p>
-                <Link
-                  to="/book"
-                  search={{ hotel: hotel.slug, suite: s.name }}
-                  className="eyebrow mt-4 block w-full rounded-[10px] bg-forest py-3 text-center text-ivory transition-colors hover:bg-forest/90"
-                >
-                  Book
-                </Link>
-              </div>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-
-function Amenities({ hotel }: { hotel: Hotel }) {
-  return (
-    <section id="amenities" className="border-y border-border bg-background py-10 sm:py-12">
-      <div className="page-wrap">
-        <Reveal>
-          <p className="eyebrow tracking-[0.28em] text-forest/55">Amenities</p>
-        </Reveal>
-        <div className="mt-7 sm:mt-8">
-          <AmenitiesGrid hotel={hotel} />
         </div>
-      </div>
-    </section>
-  );
-}
+      </nav>
 
-function Reviews({ hotel }: { hotel: Hotel }) {
-  return (
-    <section id="reviews" className="page-wrap section-pad">
-      <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="font-display text-4xl text-forest sm:text-5xl">Reviews</h2>
-          <p className="eyebrow flex items-center gap-2 text-muted-foreground">
-            <BrandStar className="h-2.5 w-2.5 text-forest" />
-            {hotel.rating}/5 guest rating
-          </p>
-        </div>
-      </Reveal>
+      <div className="page-wrap space-y-12 py-8 sm:space-y-16 sm:py-12">
+        <section id="rooms">
+          <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">Rooms</h2>
+          <ul className="mt-6 grid gap-4 sm:mt-8 lg:grid-cols-2">
+            {hotel.suites.map((suite) => (
+              <li
+                key={suite.name}
+                className="grid grid-cols-[7rem_minmax(0,1fr)] overflow-hidden rounded-[16px] bg-white ring-1 ring-neutral-100 sm:grid-cols-[1.05fr_1fr]"
+              >
+                <div className="relative min-h-[8rem] overflow-hidden sm:min-h-[12rem]">
+                  <img src={suite.image} alt={suite.name} className="absolute inset-0 h-full w-full object-cover" />
+                </div>
+                <div className="flex flex-col p-4 sm:p-5">
+                  <p className="text-[11px] font-semibold text-neutral-400">{suite.capacity} max</p>
+                  <h3 className="mt-1 font-nav text-lg font-extrabold text-neutral-800">{suite.name}</h3>
+                  <div className="mt-auto flex items-end justify-between gap-3 pt-4">
+                    <div>
+                      <p className="text-[11px] text-neutral-400 line-through">{strikeFrom(suite.rate)}</p>
+                      <p className="font-nav text-base font-extrabold text-forest">
+                        {suite.rate.replace(" / night", "")}{" "}
+                        <span className="text-xs font-semibold">onwards</span>
+                      </p>
+                      <p className="text-[10px] text-neutral-400">Incl. taxes</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => goBook(suite.name)}
+                      className="rounded-[999px] bg-forest px-5 py-2 font-nav text-[13px] font-extrabold text-ivory"
+                    >
+                      Book
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {hotel.testimonials.map((t, i) => (
-          <Reveal key={t.name} delay={i * 0.06}>
-            <blockquote className="flex h-full flex-col rounded-[10px] border border-border p-6">
-              <div className="flex gap-1 text-forest">
-                {Array.from({ length: 5 }).map((_, s) => (
-                  <BrandStar key={s} className="h-2.5 w-2.5" />
-                ))}
-              </div>
-              <p className="mt-5 flex-1 text-sm leading-relaxed text-foreground/80">“{t.quote}”</p>
-              <footer className="mt-6 border-t border-border pt-4">
-                <cite className="not-italic font-display text-lg">{t.name}</cite>
-                <p className="mt-1 text-xs text-muted-foreground">
+        <section id="amenities">
+          <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">Amenities</h2>
+          <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
+            {hotel.amenities.slice(0, 10).map((a) => (
+              <li key={a.label} className="text-center">
+                <p className="font-nav text-sm font-extrabold text-forest">{a.label}</p>
+                <p className="mt-1 text-xs text-neutral-500">{a.note}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="reviews">
+          <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">Reviews</h2>
+          <p className="mt-2 text-sm text-neutral-500">From guest stays at {hotel.place}</p>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {hotel.testimonials.map((t) => (
+              <li key={t.name} className="rounded-[16px] bg-neutral-50 p-5">
+                <p className="text-sm leading-relaxed text-neutral-600">“{t.quote}”</p>
+                <p className="mt-4 font-nav text-sm font-extrabold text-forest">{t.name}</p>
+                <p className="text-xs text-neutral-400">
                   {t.origin} · {t.stay}
                 </p>
-              </footer>
-            </blockquote>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
+              </li>
+            ))}
+          </ul>
+        </section>
 
-function LocationBlock({ hotel }: { hotel: Hotel }) {
-  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(hotel.mapQuery)}&output=embed`;
-
-  return (
-    <section id="location" className="border-y border-border bg-background section-pad">
-      <div className="page-wrap">
-        <Reveal>
-          <h2 className="font-display text-4xl text-forest sm:text-5xl">Location</h2>
-        </Reveal>
-        <div className="mt-7 grid gap-7 lg:grid-cols-2 lg:gap-10">
-          <Reveal>
-            <address className="not-italic">
-              <div className="space-y-1 text-sm leading-relaxed text-foreground/80">
-                {hotel.contact.address.map((l) => (
-                  <p key={l}>{l}</p>
-                ))}
-              </div>
-              <div className="mt-8 space-y-3 text-sm text-foreground/70">
-                <p>Near Hitec City. Airport transfer on request.</p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-6">
-                <a
-                  href={`tel:${hotel.contact.phone.replace(/\s/g, "")}`}
-                  className="link-luxe text-sm"
-                >
-                  {hotel.contact.phone}
-                </a>
-                <a href={`mailto:${hotel.contact.email}`} className="link-luxe text-sm">
-                  {hotel.contact.email}
-                </a>
-              </div>
-              <p className="mt-8 text-sm text-muted-foreground">
+        <section id="location">
+          <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">Location</h2>
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <address className="not-italic text-sm leading-relaxed text-neutral-600">
+              {hotel.contact.address.map((l) => (
+                <p key={l}>{l}</p>
+              ))}
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.mapQuery)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-block font-nav text-sm font-extrabold text-forest"
+              >
+                View on Maps
+              </a>
+              <p className="mt-6 text-neutral-500">
                 Check-in from 2:00 pm · Check-out by 11:00 am
               </p>
             </address>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <div className="aspect-[4/3] overflow-hidden rounded-[10px] border border-border bg-secondary">
+            <div className="aspect-[4/3] overflow-hidden rounded-[16px] bg-neutral-100">
               <iframe
                 title={`Map — ${hotel.name}`}
                 src={mapSrc}
@@ -351,70 +286,130 @@ function LocationBlock({ hotel }: { hotel: Hotel }) {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
+          </div>
+        </section>
 
-function FaqBlock() {
-  return (
-    <section id="faqs" className="page-wrap section-pad">
-      <Reveal>
-        <h2 className="font-display text-4xl text-forest sm:text-5xl">Questions</h2>
-      </Reveal>
-      <dl className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
-        {hotelFaqs.map((item, i) => (
-          <Reveal key={item.q} delay={i * 0.04}>
+        <section id="highlights">
+          <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">Highlights</h2>
+          <div className="mt-6 grid gap-8 lg:grid-cols-2">
             <div>
-              <dt className="font-display text-xl leading-snug">{item.q}</dt>
-              <dd className="mt-3 text-sm leading-relaxed text-foreground/75">{item.a}</dd>
+              <h3 className="font-nav text-lg font-extrabold text-forest">Why Choose Elysium?</h3>
+              <ul className="mt-4 space-y-4">
+                {hotel.why.slice(0, 3).map((w) => (
+                  <li key={w.title}>
+                    <p className="font-nav font-extrabold text-neutral-800">{w.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-neutral-500">{w.copy}</p>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </Reveal>
-        ))}
-      </dl>
-    </section>
+            <div>
+              <h3 className="font-nav text-lg font-extrabold text-forest">
+                Where to hop around {hotel.name}?
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm text-neutral-600">
+                {hotel.nearby.map((n) => (
+                  <li key={n.name}>
+                    {n.name} — {n.mins}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="faqs">
+          <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">
+            Frequently Asked Questions
+          </h2>
+          <dl className="mt-8 grid gap-8 sm:grid-cols-2">
+            {hotelFaqs.map((item) => (
+              <div key={item.q}>
+                <dt className="font-nav text-lg font-extrabold text-neutral-800">{item.q}</dt>
+                <dd className="mt-2 text-sm leading-relaxed text-neutral-500">{item.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        {others.length ? (
+          <section>
+            <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">
+              Living across Hyderabad
+            </h2>
+            <ul className="mt-6 grid gap-5 sm:grid-cols-2">
+              {others.map((h) => (
+                <li key={h.id}>
+                  <Link
+                    to="/hotels/$slug"
+                    params={{ slug: h.slug }}
+                    className="block overflow-hidden rounded-[16px] ring-1 ring-neutral-100"
+                  >
+                    <img src={h.hero} alt={h.name} className="aspect-[16/10] w-full object-cover" />
+                    <div className="flex items-end justify-between gap-3 p-5">
+                      <div>
+                        <h3 className="font-nav text-lg font-extrabold text-neutral-800">{h.name}</h3>
+                        <p className="mt-1 text-sm text-neutral-500">
+                          {h.fromRate} / night onwards
+                        </p>
+                      </div>
+                      <span className="rounded-[999px] bg-forest px-4 py-2 font-nav text-[12px] font-extrabold text-ivory">
+                        View
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+      </div>
+    </div>
   );
 }
 
-function DiscoverOther({ currentId }: { currentId: Hotel["id"] }) {
-  const others = hotels.filter((h) => h.id !== currentId);
-
+function TabIcon({ name }: { name: string }) {
+  const common = "h-5 w-5";
+  if (name === "bed") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M3 18V10h18v8M3 14h18M6 10V7h5v3" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (name === "lamp") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M8 14h8l-1.2-6H9.2L8 14ZM12 14v4M9 18h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (name === "chat") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M5 6h14v10H8l-3 3V6Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (name === "pin") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="M12 21s6-5.2 6-10a6 6 0 1 0-12 0c0 4.8 6 10 6 10Z" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="12" cy="11" r="1.8" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    );
+  }
+  if (name === "star") {
+    return (
+      <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+        <path d="m12 4 2.2 5.3 5.8.5-4.4 3.8 1.4 5.6L12 16.4 6.9 19.2l1.5-5.6L4 9.8l5.8-.5L12 4Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      </svg>
+    );
+  }
   return (
-    <section className="border-t border-border bg-secondary section-pad">
-      <div className="page-wrap">
-        <Reveal>
-          <h2 className="font-display text-4xl text-forest sm:text-5xl">Living across Hyderabad</h2>
-        </Reveal>
-        <div className="mt-10 grid gap-8 sm:grid-cols-2">
-          {others.map((h, i) => (
-            <Reveal key={h.id} delay={i * 0.06}>
-              <article className="group overflow-hidden rounded-[10px] border border-border bg-background">
-                <Link to="/hotels/$slug" params={{ slug: h.slug }} className="block">
-                  <div className="aspect-[16/10] overflow-hidden">
-                    <img
-                      src={h.hero}
-                      alt={`${h.name}, ${h.place}`}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-1000 ease-luxe group-hover:scale-[1.04]"
-                    />
-                  </div>
-                  <div className="flex items-end justify-between gap-4 p-5">
-                    <div>
-                      <p className="eyebrow text-muted-foreground">{h.place}</p>
-                      <h3 className="mt-1 font-display text-2xl">{h.name}</h3>
-                    </div>
-                    <span className="eyebrow border border-foreground/20 px-4 py-2 transition-colors group-hover:bg-forest group-hover:text-ivory">
-                      View
-                    </span>
-                  </div>
-                </Link>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
+    <svg viewBox="0 0 24 24" className={common} fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M12 11v5M12 8h.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
   );
 }
