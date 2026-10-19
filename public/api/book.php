@@ -85,14 +85,7 @@ if ($dbError) {
 }
 
 $body = implode("\n", $lines);
-$from = $config['mail_from'] ?? ('noreply@' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
-$headers = [
-  'From: Elysium Website <' . $from . '>',
-  'Reply-To: ' . $data['guestEmail'],
-  'Content-Type: text/plain; charset=utf-8',
-];
-
-$ok = @mail($to, $subject, $body, implode("\r\n", $headers));
+$ok = elysium_send_booking_mail($config, $to, $subject, $body, (string) $data['guestEmail']);
 
 $logDir = __DIR__ . '/../_bookings';
 if (!is_dir($logDir)) {
@@ -130,3 +123,92 @@ echo json_encode([
   'mailed' => (bool) $ok,
   'neon' => $storedInNeon,
 ]);
+
+function elysium_send_booking_mail(array $config, string $to, string $subject, string $body, string $replyTo): bool
+{
+  $from = trim((string) ($config['mail_from'] ?? 'noreply@elysiumhotels.in'));
+  if (!filter_var($from, FILTER_VALIDATE_EMAIL)) {
+    $from = 'noreply@elysiumhotels.in';
+  }
+
+  $smtpHost = trim((string) ($config['smtp_host'] ?? ''));
+  $smtpUser = trim((string) ($config['smtp_user'] ?? ''));
+  $smtpPass = (string) ($config['smtp_password'] ?? '');
+  if ($smtpHost !== '' && $smtpUser !== '' && $smtpPass !== '') {
+    try {
+      elysium_smtp_send($config, $to, $subject, $body, $from, $replyTo);
+      return true;
+    } catch (Throwable $e) {
+      return false;
+    }
+  }
+
+  $headers = [
+    'From: Elysium Hotels <' . $from . '>',
+    'Reply-To: ' . $replyTo,
+    'Content-Type: text/plain; charset=utf-8',
+  ];
+
+  return @mail($to, $subject, $body, implode("\r\n", $headers), '-f ' . $from);
+}
+
+function elysium_smtp_send(array $config, string $to, string $subject, string $body, string $from, string $replyTo): void
+{
+  $host = trim((string) ($config['smtp_host'] ?? 'smtp.gmail.com'));
+  $port = (int) ($config['smtp_port'] ?? 465);
+  $user = trim((string) ($config['smtp_user'] ?? ''));
+  $pass = (string) ($config['smtp_password'] ?? '');
+  $remote = ($port === 465 ? 'ssl://' : 'tcp://') . $host . ':' . $port;
+  $fp = stream_socket_client($remote, $errno, $errstr, 20, STREAM_CLIENT_CONNECT);
+  if ($fp === false) {
+    throw new RuntimeException('SMTP connection failed');
+  }
+  stream_set_timeout($fp, 20);
+
+  $expect = static function ($socket, array $ok) : void {
+    $data = '';
+    while (($line = fgets($socket, 515)) !== false) {
+      $data .= $line;
+      if (isset($line[3]) && $line[3] === ' ') {
+        break;
+      }
+    }
+    $code = (int) substr($data, 0, 3);
+    if (!in_array($code, $ok, true)) {
+      throw new RuntimeException('SMTP rejected the message');
+    }
+  };
+  $expect($fp, [220]);
+  fwrite($fp, "EHLO elysiumhotels.in\r\n");
+  $expect($fp, [250]);
+  fwrite($fp, "AUTH LOGIN\r\n");
+  $expect($fp, [334]);
+  fwrite($fp, base64_encode($user) . "\r\n");
+  $expect($fp, [334]);
+  fwrite($fp, base64_encode($pass) . "\r\n");
+  $expect($fp, [235]);
+  $envelope = filter_var($user, FILTER_VALIDATE_EMAIL) ? $user : $from;
+  fwrite($fp, 'MAIL FROM:<' . $envelope . ">\r\n");
+  $expect($fp, [250]);
+  fwrite($fp, 'RCPT TO:<' . $to . ">\r\n");
+  $expect($fp, [250, 251]);
+  fwrite($fp, "DATA\r\n");
+  $expect($fp, [354]);
+  $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+  $message = implode("\r\n", [
+    'From: Elysium Hotels <' . $envelope . '>',
+    'To: <' . $to . '>',
+    'Reply-To: <' . $replyTo . '>',
+    'Subject: ' . $encodedSubject,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=utf-8',
+    '',
+    str_replace(["\r\n", "\r"], "\n", $body),
+  ]);
+  $message = str_replace("\n", "\r\n", $message);
+  $message = preg_replace('/^\./m', '..', $message) ?? $message;
+  fwrite($fp, $message . "\r\n.\r\n");
+  $expect($fp, [250]);
+  fwrite($fp, "QUIT\r\n");
+  fclose($fp);
+}

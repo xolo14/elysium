@@ -20,5 +20,11 @@ return [
 
   'admin_password' => 'change-me',
   'booking_email' => 'elysium.hyd@gmail.com',
-  'mail_from' => 'noreply@yourdomain.com',
+  'mail_from' => 'noreply@elysiumhotels.in',
+
+  // Gmail: Google Account → Security → App passwords. Leave blank to use the VPS mail server.
+  'smtp_host' => 'smtp.gmail.com',
+  'smtp_port' => '465',
+  'smtp_user' => 'elysium.hyd@gmail.com',
+  'smtp_password' => '',
 ];
