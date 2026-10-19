@@ -60,7 +60,7 @@ export function Hero() {
                 <source srcSet={asWebp(hotel.hero)} type="image/webp" />
                 <img
                   src={hotel.hero}
-                  alt={`${hotel.name} — ${hotel.region}`}
+                  alt={`${hotel.name}, ${hotel.region}`}
                   width={1600}
                   height={900}
                   fetchPriority="high"
@@ -75,7 +75,7 @@ export function Hero() {
             <source srcSet={asWebp(hotel.hero)} type="image/webp" />
             <img
               src={hotel.hero}
-              alt={`${hotel.name} — ${hotel.region}`}
+              alt={`${hotel.name}, ${hotel.region}`}
               width={1600}
               height={900}
               fetchPriority="high"

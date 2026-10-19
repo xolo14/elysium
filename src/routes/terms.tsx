@@ -5,7 +5,7 @@ import { Footer } from "@/components/sections/Footer";
 import { LegalPage } from "@/components/sections/LegalPage";
 import { pageMeta, SITE_EMAIL } from "@/lib/site";
 
-const title = "Terms of Stay — Elysium Hotels";
+const title = "Terms of Stay, Elysium Hotels";
 const description =
   "Terms for booking and staying at Elysium Studio Suites, Madhapur and Elysium Premier Suites, Hitec City.";
 

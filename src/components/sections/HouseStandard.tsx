@@ -5,7 +5,7 @@ const standard = [
   {
     mark: "01",
     title: "Bed",
-    copy: "Quiet floors, considered mattresses, and linen changed on a fixed cycle — not when someone remembers.",
+    copy: "Quiet floors, considered mattresses, and linen changed on a fixed cycle, not when someone remembers.",
   },
   {
     mark: "02",
@@ -35,7 +35,7 @@ export function HouseStandard() {
             What every suite is held to.
           </h2>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-foreground/65">
-            Studio Suites and Premier Suites, one checklist. Bed, breakfast, bathroom and balcony —
+            Studio Suites and Premier Suites, one checklist. Bed, breakfast, bathroom and balcony,
             inspected before handover, and the same on night thirty as night one.
           </p>
         </Reveal>

@@ -191,7 +191,7 @@ export function HotelImageCarousel({
         <img
           key={`${slide.src}-${slideIndex}`}
           src={slide.src}
-          alt={`${hotelName}, ${place} — ${slide.caption}`}
+          alt={`${hotelName}, ${place}. ${slide.caption}`}
           loading={slideIndex === 0 ? "eager" : "lazy"}
           className={cn(
             "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",

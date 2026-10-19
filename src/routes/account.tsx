@@ -6,7 +6,7 @@ import { Nav } from "@/components/Nav";
 import { AccountDesk } from "@/components/account/AccountDesk";
 import { pageMeta } from "@/lib/site";
 
-const title = "Your Elysium — Loyalty & Bookings";
+const title = "Your Elysium: Loyalty & Bookings";
 const description = "Manage Elysium loyalty, bookings and profile for Madhapur and Hitec City.";
 
 export const Route = createFileRoute("/account")({

@@ -22,7 +22,7 @@ const cards: PartnerCard[] = [
   {
     id: "corporate",
     title: "Corporate Bookings",
-    copy: "Project stays and relocating teams — Studio and Premier, one desk.",
+    copy: "Project stays and relocating teams. Studio and Premier, one desk.",
     cta: "Get in touch",
     href: "mailto:elysium.hyd@gmail.com?subject=Corporate%20bookings",
     illustration: "desk",

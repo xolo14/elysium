@@ -139,7 +139,7 @@ export const hotels: Hotel[] = [
     established: "2026",
     tagline: "Studio living in Madhapur",
     summary:
-      "Studio suites near Hitec City — kitchenettes, desks, daily housekeeping.",
+      "Studio suites near Hitec City: kitchenettes, desks, daily housekeeping.",
     hero: heroLivingUrl,
     rating: "4.7",
     fromRate: "₹4,200",
@@ -191,7 +191,7 @@ export const hotels: Hotel[] = [
         rate: "₹5,400 / night",
         amenities: ["Kitchenette", "King bed", "Dining nook", "Smart TV"],
         detail:
-          "An open-plan suite with a private kitchenette, refrigerator and dining nook — made for stays of a week or more.",
+          "An open-plan suite with a private kitchenette, refrigerator and dining nook, made for stays of a week or more.",
       },
       {
         name: "One Bedroom Suite",
@@ -257,7 +257,7 @@ export const hotels: Hotel[] = [
       {
         index: "01",
         title: "Serviced, not just cleaned",
-        copy: "Housekeeping every day, fresh linen on a fixed cycle and a maintenance team in the building — so a four-week stay feels like week one throughout.",
+        copy: "Housekeeping every day, fresh linen on a fixed cycle and a maintenance team in the building, so a four-week stay feels like week one throughout.",
         metric: "Daily",
         metricLabel: "Housekeeping",
       },
@@ -271,7 +271,7 @@ export const hotels: Hotel[] = [
       {
         index: "03",
         title: "Front desk that answers",
-        copy: "Staffed 24 hours, every hour. Airport cabs, late check-in, laundry, a doctor at 2 am — one number, answered by someone in the building.",
+        copy: "Staffed 24 hours, every hour. Airport cabs, late check-in, laundry, a doctor at 2 am. One number, answered by someone in the building.",
         metric: "24/7",
         metricLabel: "Front desk",
       },
@@ -299,7 +299,7 @@ export const hotels: Hotel[] = [
     about: {
       image: banquet,
       lines: [
-        "Elysium is family-run in Hyderabad — Studio Suites and Premier Suites, not a franchise operating a brand manual.",
+        "Elysium is family-run in Hyderabad: Studio Suites and Premier Suites, not a franchise operating a brand manual.",
         "Every suite is inspected before handover, every rate is quoted with taxes included, and every guest gets the same front desk from arrival to invoice.",
         "We keep Studio Suites and Premier Suites so the standard never drifts.",
       ],
@@ -416,7 +416,7 @@ export const hotels: Hotel[] = [
         rate: "₹9,400 / night",
         amenities: ["Corner windows", "Work corner", "Full kitchen", "Lounge seating"],
         detail:
-          "A corner apartment with light on two sides, a dedicated work corner, full kitchen and lounge seating — built for longer business stays.",
+          "A corner apartment with light on two sides, a dedicated work corner, full kitchen and lounge seating, built for longer business stays.",
       },
       {
         name: "Two Bedroom Residence",
@@ -428,7 +428,7 @@ export const hotels: Hotel[] = [
         rate: "₹14,500 / night",
         amenities: ["Two bedrooms", "Two bathrooms", "Full kitchen", "Washer & dryer"],
         detail:
-          "Our largest residence: two bedrooms, two bathrooms, a full kitchen with dining for six and two balconies — suited to relocating families and teams.",
+          "Our largest residence: two bedrooms, two bathrooms, a full kitchen with dining for six and two balconies, suited to relocating families and teams.",
       },
     ],
 
@@ -479,7 +479,7 @@ export const hotels: Hotel[] = [
       {
         index: "01",
         title: "Apartment-sized suites",
-        copy: "One and two bedroom residences with separate living rooms, balconies and dining tables — space to actually live in, not a room with a desk in it.",
+        copy: "One and two bedroom residences with separate living rooms, balconies and dining tables. Space to actually live in, not a room with a desk in it.",
         metric: "1,180",
         metricLabel: "Sq ft, largest suite",
       },
@@ -493,7 +493,7 @@ export const hotels: Hotel[] = [
       {
         index: "03",
         title: "Made for working travel",
-        copy: "Dedicated work corners, high-speed Wi-Fi on backup power and a meeting room for twelve on request — plus GST invoices for corporate accounts.",
+        copy: "Dedicated work corners, high-speed Wi-Fi on backup power and a meeting room for twelve on request, plus GST invoices for corporate accounts.",
         metric: "Seats 12",
         metricLabel: "Meeting room",
       },
@@ -521,7 +521,7 @@ export const hotels: Hotel[] = [
     about: {
       image: premierEntrance,
       lines: [
-        "Elysium is family-run in Hyderabad — Studio Suites and Premier Suites, not a franchise operating a brand manual.",
+        "Elysium is family-run in Hyderabad: Studio Suites and Premier Suites, not a franchise operating a brand manual.",
         "Every suite is inspected before handover, every rate is quoted with taxes included, and every guest gets the same front desk from arrival to invoice.",
         "We keep Studio Suites and Premier Suites so the standard never drifts.",
       ],

@@ -28,11 +28,11 @@ const winning = [
   },
   {
     title: "Rapid Execution",
-    copy: "When a building can be held to the standard, we fit suites, breakfast and the desk — then open. Not a two-year flag ceremony.",
+    copy: "When a building can be held to the standard, we fit suites, breakfast and the desk, then open. Not a two-year flag ceremony.",
   },
   {
     title: "Optimal Expenditure",
-    copy: "Capital goes into the guest room, the kitchen and the arrival — not a national brand tax on every key.",
+    copy: "Capital goes into the guest room, the kitchen and the arrival, not a national brand tax on every key.",
   },
   {
     title: "Best Product",
@@ -47,7 +47,7 @@ const winning = [
 const expectYou = [
   {
     title: "Ambition",
-    copy: "Owners who want the building run as Studio or Premier suites guests return to — not listed and left.",
+    copy: "Owners who want the building run as Studio or Premier suites guests return to, not listed and left.",
     icon: "medal" as const,
   },
   {
@@ -72,7 +72,7 @@ const expectYou = [
   },
   {
     title: "Smart Judgement",
-    copy: "We build for the stay that comes back in year two — not a quarter of discounted keys.",
+    copy: "We build for the stay that comes back in year two, not a quarter of discounted keys.",
     icon: "stairs" as const,
   },
 ];
@@ -84,7 +84,7 @@ const expectUs = [
   },
   {
     title: "Fair Selection",
-    copy: "Approval is about whether the building can hold the standard — not about filling a pipeline slide.",
+    copy: "Approval is about whether the building can hold the standard, not about filling a pipeline slide.",
   },
   {
     title: "Quick Follow-up",
@@ -121,7 +121,7 @@ export function OwnersPage() {
               not one of a thousand.
             </h1>
             <p className="mt-5 max-w-md text-[15px] leading-relaxed text-foreground/65 sm:text-base">
-              Work with a Hyderabad operator of serviced suites — Studio Suites
+              Work with a Hyderabad operator of serviced suites: Studio Suites
               and Premier Suites already open, and a standard that does not drift.
             </p>
             <a
@@ -322,12 +322,12 @@ export function OwnersPage() {
           <div>
             <h2 className="display-nav text-[clamp(1.85rem,4vw,2.75rem)]">Ready to open with Elysium?</h2>
             <p className="mt-3 max-w-md text-sm text-ivory/75">
-              Email your name, organisation and the property — location and
+              Email your name, organisation and the property: location and
               inventory. We take it from there.
             </p>
           </div>
           <a
-            href={`mailto:${SITE_EMAIL}?subject=${encodeURIComponent("Developers & Owners — property enquiry")}`}
+            href={`mailto:${SITE_EMAIL}?subject=${encodeURIComponent("Developers & Owners property enquiry")}`}
             className="inline-flex min-h-12 items-center rounded-[10px] bg-ivory px-6 font-nav text-sm font-extrabold text-forest"
           >
             {SITE_EMAIL}

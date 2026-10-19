@@ -423,7 +423,7 @@ function OfferFields({
       </div>
       {activeCode && !offer ? (
         <p className={cn("mt-2 text-xs", sheet ? "text-neutral-500" : "text-ivory/70")}>
-          That code isn’t valid — try ELYSIUM15 or DIRECT10.
+          That code isn’t valid. Try ELYSIUM15 or DIRECT10.
         </p>
       ) : null}
       {offer ? (

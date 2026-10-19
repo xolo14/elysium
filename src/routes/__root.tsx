@@ -91,7 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Elysium Hotels — luxury boutique stays in Hyderabad: Elysium Studio Suites, Madhapur and Elysium Premier Suites, Hitec City.",
+          "Elysium Hotels. Luxury boutique stays in Hyderabad: Elysium Studio Suites, Madhapur and Elysium Premier Suites, Hitec City.",
       },
       { name: "author", content: "grootdigitals.com" },
       { property: "og:type", content: "website" },

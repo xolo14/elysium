@@ -35,7 +35,7 @@ export function Testimonials() {
                 <figcaption className="mt-8 border-t border-border pt-5">
                   <p className="eyebrow">{t.name}</p>
                   <p className="mt-2 text-xs text-muted-foreground">
-                    {t.origin} — {t.stay}
+                    {t.origin}, {t.stay}
                   </p>
                   <div className="mt-4 flex gap-1.5">
                     {Array.from({ length: 5 }).map((_, s) => (

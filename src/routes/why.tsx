@@ -5,7 +5,7 @@ import { WhyPage } from "@/components/sections/WhyPage";
 import { Footer } from "@/components/sections/Footer";
 import { pageMeta } from "@/lib/site";
 
-const title = "Why Elysium — The 4B Standard in Hyderabad";
+const title = "Why Elysium: The 4B Standard in Hyderabad";
 const description =
   "Why guests choose Elysium: Studio Suites and Premier Suites, a 4.7★ rating, the 4B standard, and a front desk that answers.";
 

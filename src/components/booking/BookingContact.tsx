@@ -161,7 +161,7 @@ export function BookingContact({
             </h2>
             {signedInAs ? (
               <p className="mt-2 text-sm font-medium text-forest">
-                Signed in as {signedInAs} — details filled from your account. Edit anytime.
+                Signed in as {signedInAs}. Details filled from your account. Edit anytime.
               </p>
             ) : (
               <p className="mt-2 text-sm text-neutral-400">

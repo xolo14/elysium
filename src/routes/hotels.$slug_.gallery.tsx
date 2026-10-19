@@ -22,7 +22,7 @@ export const Route = createFileRoute("/hotels/$slug_/gallery")({
     if (!loaderData) {
       return { meta: [{ title: "Gallery unavailable" }, { name: "robots", content: "noindex" }] };
     }
-    const title = `${loaderData.hotel.name} — Photo Gallery`;
+    const title = `${loaderData.hotel.name} Photo Gallery`;
     const description = `View all photos of ${loaderData.hotel.name} in ${loaderData.hotel.place}. Suites, dining, exterior and more.`;
     return pageMeta({
       title,

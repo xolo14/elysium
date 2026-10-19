@@ -19,7 +19,7 @@ export function nightsBetween(checkIn: string, checkOut: string) {
 
 export function formatNice(iso: string) {
   const d = parseInputDate(iso);
-  if (!Number.isFinite(d.getTime())) return "—";
+  if (!Number.isFinite(d.getTime())) return "";
   return d.toLocaleDateString("en-IN", {
     weekday: "short",
     day: "numeric",

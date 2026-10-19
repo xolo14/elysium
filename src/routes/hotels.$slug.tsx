@@ -20,7 +20,7 @@ export const Route = createFileRoute("/hotels/$slug")({
       return { meta: [{ title: "Hotel unavailable" }, { name: "robots", content: "noindex" }] };
     }
     const h = loaderData.hotel;
-    const title = `${h.name}, ${h.place} — Rooms & Booking`;
+    const title = `${h.name}, ${h.place}. Rooms & Booking`;
     const description = `${h.summary} Rooms from ${h.fromRate} per night in ${h.region}. Book direct with Elysium Hotels.`;
     return pageMeta({
       title,
@@ -408,7 +408,7 @@ function HotelDesk({ hotel }: { hotel: Hotel }) {
             </address>
             <div className="aspect-[4/3] overflow-hidden rounded-[16px] bg-neutral-100">
               <iframe
-                title={`Map — ${hotel.name}`}
+                title={`Map of ${hotel.name}`}
                 src={mapSrc}
                 className="h-full w-full border-0"
                 loading="lazy"
@@ -439,7 +439,7 @@ function HotelDesk({ hotel }: { hotel: Hotel }) {
               <ul className="mt-4 space-y-2 text-sm text-neutral-600">
                 {hotel.nearby.map((n) => (
                   <li key={n.name}>
-                    {n.name} — {n.mins}
+                    {n.name}, {n.mins}
                   </li>
                 ))}
               </ul>

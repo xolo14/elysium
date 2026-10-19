@@ -6,7 +6,7 @@ import { Partnerships } from "@/components/sections/Partnerships";
 import { Footer } from "@/components/sections/Footer";
 import { pageMeta } from "@/lib/site";
 
-const title = "Developers & Owners — Partner with Elysium Hotels";
+const title = "Developers & Owners: Partner with Elysium Hotels";
 const description =
   "Partner with Elysium to operate Studio Suites and Premier Suites in Hyderabad. One 4B standard, a named desk, and a long operating relationship.";
 

@@ -30,7 +30,7 @@ const Footer = lazy(() =>
   import("@/components/sections/Footer").then((m) => ({ default: m.Footer })),
 );
 
-const title = "Elysium Hotels Hyderabad — Studio & Premier Suites";
+const title = "Elysium Hotels Hyderabad: Studio & Premier Suites";
 const description =
   "Serviced suites in Hyderabad: Elysium Studio Suites, Madhapur and Elysium Premier Suites, Hitec City. Kitchenettes, complimentary breakfast and direct booking.";
 

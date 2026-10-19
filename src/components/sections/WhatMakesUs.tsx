@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 const highlights = [
   {
     title: "A host on the floor",
-    copy: "Check-in, a late key, the 2 a.m. request — answered by someone in the building.",
+    copy: "Check-in, a late key, the 2 a.m. request, answered by someone in the building.",
     image: "/images/image-9.png",
     alt: "A quiet room at Elysium",
   },
@@ -15,7 +15,7 @@ const highlights = [
   },
   {
     title: "Sleep that holds",
-    copy: "Quiet floors and a considered bed — the same on one night as on a four-week stay.",
+    copy: "Quiet floors and a considered bed, the same on one night as on a four-week stay.",
     image: "/images/hero-suite-living.png",
     alt: "A bed at Elysium",
   },

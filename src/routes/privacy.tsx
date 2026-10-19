@@ -5,7 +5,7 @@ import { Footer } from "@/components/sections/Footer";
 import { LegalPage } from "@/components/sections/LegalPage";
 import { pageMeta, SITE_EMAIL } from "@/lib/site";
 
-const title = "Privacy Policy — Elysium Hotels";
+const title = "Privacy Policy, Elysium Hotels";
 const description =
   "How Elysium Hotels collects and uses guest information for bookings, stay management and communication in Hyderabad.";
 

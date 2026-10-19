@@ -115,7 +115,7 @@ export function Footer() {
 
       <div className="border-t border-ivory/15">
         <div className="page-wrap flex flex-col gap-3 py-5 text-xs text-ivory/45 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Elysium Hotels — All rights reserved</p>
+          <p>© {new Date().getFullYear()} Elysium Hotels. All rights reserved</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             <Link to="/privacy" className="hover:text-ivory/70">
               Privacy &amp; Cookie Policy

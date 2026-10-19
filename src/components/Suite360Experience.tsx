@@ -157,7 +157,7 @@ function EquirectangularViewer({ src, alt }: { src: string; alt: string }) {
 function EmbedViewer({ url, title }: { url: string; title: string }) {
   return (
     <iframe
-      title={`${title} — 360° tour`}
+      title={`${title} 360° tour`}
       src={url}
       className="absolute inset-0 h-full w-full border-0 bg-forest"
       allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer"

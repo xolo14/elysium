@@ -15,7 +15,7 @@ const values = [
   },
   {
     title: "The 4B standard",
-    copy: "Bed, breakfast, bathroom, balcony. Studio and Premier, one checklist — inspected before handover.",
+    copy: "Bed, breakfast, bathroom, balcony. Studio and Premier, one checklist, inspected before handover.",
   },
   {
     title: "A desk in the building",

@@ -4,7 +4,7 @@ import { Nav } from "@/components/Nav";
 import { Booking } from "@/components/sections/Booking";
 import { pageMeta } from "@/lib/site";
 
-const title = "Book Now — Elysium Hotels, Hyderabad";
+const title = "Book Now, Elysium Hotels, Hyderabad";
 const description =
   "Book direct at Elysium Studio Suites, Madhapur or Elysium Premier Suites, Hitec City. Choose a property, pick a suite and reserve with taxes and breakfast included.";
 

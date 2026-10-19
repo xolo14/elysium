@@ -33,7 +33,7 @@ export type SocialProofFeature = {
 };
 
 export const socialProofFeatures: SocialProofFeature[] = [
-  { label: "Direct rates", note: "Book with us — taxes included" },
+  { label: "Direct rates", note: "Book with us, taxes included" },
   { label: "Long-stay ready", note: "Kitchenettes & weekly service" },
   { label: "Family-run", note: "Same front desk from check-in" },
   { label: "Business stays", note: "Invoices & corporate billing" },
@@ -97,7 +97,7 @@ export const socialProofTiles: SocialProofTile[] = [
   },
   {
     kind: "quote",
-    quote: "Clean rooms, well designed — perfect for a six-week project stay.",
+    quote: "Clean rooms, well designed. Perfect for a six-week project stay.",
     source: "Direct guests",
     tone: "forest",
     layout: "col-span-2 sm:col-span-1 row-span-2",
@@ -131,7 +131,7 @@ export const socialProofTiles: SocialProofTile[] = [
   {
     kind: "stat",
     value: "24h",
-    label: "Front desk that answers — every hour",
+    label: "Front desk that answers, every hour",
     layout: "col-span-1 row-span-1",
   },
   {
@@ -149,7 +149,7 @@ export const socialProofTiles: SocialProofTile[] = [
   },
   {
     kind: "quote",
-    quote: "Breakfast, kitchen, quiet rooms — everything we needed for a month near Hitec.",
+    quote: "Breakfast, kitchen, quiet rooms. Everything we needed for a month near Hitec.",
     source: "Long-stay guests",
     tone: "forest",
     layout: "col-span-1 row-span-2",

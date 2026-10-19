@@ -2,7 +2,7 @@
 export const hotelFaqs = [
   {
     q: "What time is check-in and check-out?",
-    a: "Check-in is from 2:00 pm and check-out is by 11:00 am. Early check-in or late check-out can be arranged subject to availability — call the front desk.",
+    a: "Check-in is from 2:00 pm and check-out is by 11:00 am. Early check-in or late check-out can be arranged subject to availability. Call the front desk.",
   },
   {
     q: "Is breakfast included?",

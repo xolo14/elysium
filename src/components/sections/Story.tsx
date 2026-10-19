@@ -5,12 +5,12 @@ import { BrandStar } from "@/lib/brand";
 import { MaskImage, Reveal, RevealLines } from "@/components/Reveal";
 
 const promises = [
-  { title: "Verified addresses", copy: "Studio Suites and Premier Suites are owned and operated by us — no sub-let inventory, no surprise property." },
+  { title: "Verified addresses", copy: "Studio Suites and Premier Suites are owned and operated by us. No sub-let inventory, no surprise property." },
   { title: "Rate you see is the rate you pay", copy: "Taxes and breakfast included. No resort fee, no card surcharge." },
   { title: "Free cancellation", copy: "Cancel up to 24 hours before arrival on every direct booking." },
   { title: "Safety first", copy: "CCTV on all common floors, secure entry, fire equipment serviced annually." },
   { title: "GST invoices", copy: "Proper tax invoices for corporate travel and reimbursement, issued at checkout." },
-  { title: "Real people, real phone", copy: "One number, answered by the front desk in the building — 24 hours a day." },
+  { title: "Real people, real phone", copy: "One number, answered by the front desk in the building, 24 hours a day." },
 ];
 
 /** About the house — written to be read and to be trusted. */
@@ -28,7 +28,7 @@ export function Story() {
             <motion.div style={{ y: imgY }}>
               <MaskImage
                 src={hotel.about.image}
-                alt={`${hotel.name}, ${hotel.place} — interior`}
+                alt={`${hotel.name}, ${hotel.place} interior`}
                 ratio="4 / 5"
                 className="w-full"
               />

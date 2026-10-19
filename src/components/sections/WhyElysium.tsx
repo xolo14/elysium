@@ -13,7 +13,7 @@ const fourBs = [
   {
     title: "Breakfast",
     label: "Start with something real",
-    copy: "A real breakfast at O Sorriso — or at your own pace.",
+    copy: "A real breakfast at O Sorriso, or at your own pace.",
     detail: "Complimentary buffet · 7–10:30 am · In-room service",
   },
   {
