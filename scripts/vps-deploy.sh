@@ -11,7 +11,10 @@ mkdir -p "$(dirname "$LOG")" "$SECRETS"
 exec >>"$LOG" 2>&1
 
 echo "===== $(date -Is) deploy start ====="
+export PATH="/opt/node-v22/bin:${PATH}"
 cd "$APP"
+node -v
+npm -v
 
 if [[ -f "$APP/dist/client/api/config.php" ]]; then
   cp "$APP/dist/client/api/config.php" "$SECRETS/config.php"
@@ -28,7 +31,7 @@ if [[ -f "$SECRETS/config.php" ]]; then
   cp "$SECRETS/config.php" "$APP/public/api/config.php"
 fi
 
-npm ci
+npm install --no-audit --no-fund
 npm run build:shared
 
 if [[ -f "$SECRETS/config.php" ]]; then
