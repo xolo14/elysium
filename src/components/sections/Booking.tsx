@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useHotel } from "@/context/hotel";
 import { guestFullName, useGuest } from "@/context/guest";
+import { displaySrc, getHotelCarouselImages } from "@/data/hotel-images";
 import type { Hotel, Suite } from "@/data/hotels";
 import { submitBooking } from "@/lib/submit-booking";
 import { DateRangePicker } from "@/components/booking/DateRangePicker";
@@ -16,8 +18,84 @@ import {
 } from "@/components/booking/BookingContact";
 import { formatStayCompact, nightsBetween } from "@/lib/booking-dates";
 import { formatInr, parseRate, computePricing } from "@/lib/booking-pricing";
+import { cn } from "@/lib/utils";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+function HotelCardPhotos({ hotel }: { hotel: Hotel }) {
+  const images = useMemo(
+    () => getHotelCarouselImages(hotel).map((image) => displaySrc(image.src)),
+    [hotel],
+  );
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => {
+      setIndex((n) => (n + 1) % images.length);
+    }, 4000);
+    return () => window.clearInterval(id);
+  }, [images.length]);
+
+  return (
+    <div className="relative aspect-[16/11] overflow-hidden bg-neutral-100 sm:aspect-auto sm:min-h-[17rem]">
+      {images.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt=""
+          loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",
+            i === index ? "opacity-100" : "opacity-0",
+          )}
+        />
+      ))}
+      {images.length > 1 ? (
+        <>
+          <button
+            type="button"
+            onClick={() => setIndex((n) => (n - 1 + images.length) % images.length)}
+            className="absolute top-1/2 left-3 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:left-4 sm:h-11 sm:w-11"
+            aria-label={`Previous ${hotel.name} photo`}
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onClick={() => setIndex((n) => (n + 1) % images.length)}
+            className="absolute top-1/2 right-3 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:right-4 sm:h-11 sm:w-11"
+            aria-label={`Next ${hotel.name} photo`}
+          >
+            ›
+          </button>
+          <div
+            className="absolute inset-x-3 bottom-3 z-20 flex items-center gap-1.5 sm:inset-x-4 sm:bottom-4 sm:gap-2"
+            role="tablist"
+            aria-label={`${hotel.name} photos`}
+          >
+            {images.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                role="tab"
+                aria-label={`${hotel.name} photo ${i + 1}`}
+                aria-selected={i === index}
+                onClick={() => setIndex(i)}
+                className={cn(
+                  "h-[5px] min-w-0 flex-1 rounded-full transition-colors duration-300",
+                  i === index ? "bg-forest" : "bg-white",
+                )}
+              />
+            ))}
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+}
 
 function suiteFromHotel(hotel: Hotel, name?: string) {
   if (!name) return hotel.suites[0]!;
@@ -261,16 +339,15 @@ export function Booking({
             transition={{ duration: 0.22, ease }}
             className="bg-white pb-16"
           >
-            <section className="relative overflow-hidden bg-[#f5c400] lg:min-h-[22.5rem]">
+            <section className="relative overflow-hidden bg-forest lg:min-h-[22.5rem]">
               <img
-                src="/images/charminar.png"
+                src="/images/charminar.webp"
                 alt=""
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[68%_center]"
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[70%_center]"
               />
-              <div className="pointer-events-none absolute inset-0 bg-[#f5c400]/80 mix-blend-multiply" />
-              <div className="pointer-events-none absolute inset-0 bg-[#f6c200]/30" />
+              <div className="pointer-events-none absolute inset-0 bg-forest/45 mix-blend-multiply" />
               <div className="page-wrap relative z-10 flex items-center pt-[5.25rem] pb-8 sm:pt-24 lg:min-h-[22.5rem] lg:py-8 lg:pt-[5.75rem]">
-                <div className="w-full max-w-[34rem] rounded-[28px] bg-[#f5c400] px-5 py-6 sm:px-8 sm:py-8">
+                <div className="w-full max-w-[34rem] rounded-[28px] bg-forest px-5 py-6 sm:px-8 sm:py-8">
                   <img src="/logo-light.svg" alt="Elysium" className="h-8 w-auto sm:h-9" />
                   <h1 className="mt-8 font-nav text-[clamp(2.5rem,6vw,3.6rem)] leading-none font-extrabold tracking-[-0.04em] text-white sm:mt-10">
                     Hyderabad
@@ -314,25 +391,17 @@ export function Booking({
                   transition={{ delay: 0.04 + i * 0.04, duration: 0.28, ease }}
                   className="overflow-hidden rounded-[22px] bg-white ring-1 ring-neutral-100 sm:grid sm:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]"
                 >
-                  <div className="relative aspect-[16/11] bg-neutral-100 sm:aspect-auto sm:min-h-[17rem]">
-                    <picture>
-                      <source
-                        srcSet={h.hero.replace(/\.(png|jpe?g)$/i, ".webp")}
-                        type="image/webp"
-                      />
-                      <img
-                        src={h.hero}
-                        alt={h.name}
-                        loading="eager"
-                        decoding="async"
-                        className="absolute inset-0 h-full w-full object-cover"
-                      />
-                    </picture>
-                  </div>
+                  <HotelCardPhotos hotel={h} />
                   <div className="flex flex-col p-5 sm:p-6 lg:p-8">
                     <div className="flex items-start justify-between gap-3">
-                      <h2 className="font-nav text-[1.35rem] leading-tight font-extrabold text-neutral-800 sm:text-[1.7rem]">
-                        {h.name}
+                      <h2 className="font-nav text-[1.35rem] leading-tight font-extrabold sm:text-[1.7rem]">
+                        <Link
+                          to="/hotels/$slug"
+                          params={{ slug: h.slug }}
+                          className="text-neutral-800 transition-colors hover:text-forest"
+                        >
+                          {h.name}
+                        </Link>
                       </h2>
                       <span className="shrink-0 font-nav text-sm font-extrabold text-forest">
                         ★ {h.rating}

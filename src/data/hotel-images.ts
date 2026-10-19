@@ -188,7 +188,15 @@ export function getHotelCarouselImages(hotel: Hotel): GalleryImage[] {
       { src: studioLobbySrc, caption: "Lobby arrival" },
     );
   }
-  return uniqueImages(slides).slice(0, 12);
+  const unique = uniqueImages(slides).slice(0, 12);
+  if (hotel.id === "madhapur") {
+    const aerialAt = unique.findIndex((slide) => slide.src === "/images/image-7.jpg");
+    if (aerialAt > 0) {
+      const [aerial] = unique.splice(aerialAt, 1);
+      unique.unshift(aerial);
+    }
+  }
+  return unique;
 }
 
 /** Full-size WebP used on large frames so a small original is not stretched soft. */
@@ -201,6 +209,65 @@ const keepOriginalSrc = new Set([studioEntranceSrc]);
 /** Hero slides that must show the file on disk, not the sharpened WebP. */
 export function displaySrc(src: string) {
   return keepOriginalSrc.has(src) ? src : sharpSrc(src);
+}
+
+/** Photos for a room card. Each file is used on one suite only. */
+const suiteCardImages: Record<string, string[]> = {
+  "Deluxe Studio": [
+    "/images/image-9.png",
+    "/images/deluxe-studio-kitchen.jpg",
+    "/images/deluxe-studio-living.jpg",
+  ],
+  "Studio Suite": [
+    "/images/image-11.jpg",
+    "/images/studio-suite-kitchen.jpg",
+    "/images/studio-suite-dining.jpg",
+  ],
+  "One Bedroom Suite": [
+    "/images/image-10.png",
+    "/images/hero-suite-living.png",
+    "/images/one-bedroom-room.jpg",
+  ],
+  "Family Studio": [
+    "/images/family-studio-room.jpg",
+    "/images/family-terrace.jpg",
+    "/images/family-studio-living.jpg",
+  ],
+  "Long Stay Apartment": [
+    "/images/image-6.png",
+    "/images/studio-lobby-day.jpg",
+    "/images/long-stay-lobby.jpg",
+  ],
+  "Premier Studio": [
+    "/images/hitec-city/room/room-06.png",
+    "/images/hitec-city/room/room-08.png",
+  ],
+  "Premier One Bedroom": [
+    "/images/hitec-city/room/room-22.png",
+    "/images/hitec-city/room/room-24.png",
+  ],
+  "Premier Family Suite": [
+    "/images/hitec-city/room/room-30.png",
+    "/images/hitec-city/room/room-16.png",
+  ],
+  "Executive Corner Suite": [
+    "/images/hitec-city/room/room-20.png",
+    "/images/hitec-city/room/room-28.png",
+  ],
+  "Two Bedroom Residence": [
+    "/images/hitec-city/room/room-21.png",
+    "/images/hitec-city/room/room-04.png",
+  ],
+};
+
+export function getSuiteCardImages(suite: { name: string; image: string }) {
+  const picked = suiteCardImages[suite.name] ?? [suite.image];
+  return picked
+    .filter((src, index, all) => {
+      const shown = displaySrc(src);
+      return all.findIndex((item) => displaySrc(item) === shown) === index;
+    })
+    .slice(0, 4);
 }
 
 export function getHotelGalleryHref(hotel: Hotel) {

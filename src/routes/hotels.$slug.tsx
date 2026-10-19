@@ -1,8 +1,8 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { hotels, type Hotel } from "@/data/hotels";
+import { hotels, type Hotel, type Suite } from "@/data/hotels";
 import { hotelFaqs } from "@/data/faqs";
-import { displaySrc, getHotelCarouselImages } from "@/data/hotel-images";
+import { displaySrc, getHotelCarouselImages, getSuiteCardImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
@@ -44,6 +44,85 @@ const tabs = [
 function strikeFrom(rate: string) {
   const n = Number(rate.replace(/[^\d]/g, "")) || 0;
   return n ? `₹${Math.round(n * 1.1).toLocaleString("en-IN")}` : "";
+}
+
+function SuitePhotoReel({ suite, offset }: { suite: Suite; offset: number }) {
+  const images = useMemo(() => getSuiteCardImages(suite).map(displaySrc), [suite]);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let interval = 0;
+    const start = window.setTimeout(() => {
+      setIndex((n) => (n + 1) % images.length);
+      interval = window.setInterval(() => {
+        setIndex((n) => (n + 1) % images.length);
+      }, 5000);
+    }, offset);
+    return () => {
+      window.clearTimeout(start);
+      window.clearInterval(interval);
+    };
+  }, [images.length, offset]);
+
+  return (
+    <div className="relative min-h-[8rem] overflow-hidden sm:min-h-[12rem]">
+      {images.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt={i === 0 ? suite.name : ""}
+          loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover transition-opacity duration-700",
+            i === index ? "opacity-100" : "opacity-0",
+          )}
+        />
+      ))}
+      {images.length > 1 ? (
+        <>
+          <button
+            type="button"
+            onClick={() => setIndex((n) => (n - 1 + images.length) % images.length)}
+            className="absolute top-1/2 left-1.5 z-30 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-base text-forest sm:left-2 sm:h-8 sm:w-8"
+            aria-label={`Previous ${suite.name} photo`}
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onClick={() => setIndex((n) => (n + 1) % images.length)}
+            className="absolute top-1/2 right-1.5 z-30 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-base text-forest sm:right-2 sm:h-8 sm:w-8"
+            aria-label={`Next ${suite.name} photo`}
+          >
+            ›
+          </button>
+          <div
+            className="absolute inset-x-2 bottom-2 z-20 flex items-center gap-1 sm:inset-x-3 sm:bottom-2.5 sm:gap-1.5"
+            role="tablist"
+            aria-label={`${suite.name} photos`}
+          >
+            {images.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                role="tab"
+                aria-label={`${suite.name} photo ${i + 1}`}
+                aria-selected={i === index}
+                onClick={() => setIndex(i)}
+                className={cn(
+                  "h-[5px] min-w-0 flex-1 rounded-full transition-colors duration-300",
+                  i === index ? "bg-forest" : "bg-white",
+                )}
+              />
+            ))}
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
 }
 
 function HotelPage() {
@@ -248,14 +327,12 @@ function HotelDesk({ hotel }: { hotel: Hotel }) {
         <section id="rooms">
           <h2 className="display-nav text-[clamp(1.7rem,4vw,2.5rem)] text-forest">Rooms</h2>
           <ul className="mt-6 grid gap-4 sm:mt-8 lg:grid-cols-2">
-            {hotel.suites.map((suite) => (
+            {hotel.suites.map((suite, i) => (
               <li
                 key={suite.name}
                 className="grid grid-cols-[7rem_minmax(0,1fr)] overflow-hidden rounded-[16px] bg-white ring-1 ring-neutral-100 sm:grid-cols-[1.05fr_1fr]"
               >
-                <div className="relative min-h-[8rem] overflow-hidden sm:min-h-[12rem]">
-                  <img src={suite.image} alt={suite.name} className="absolute inset-0 h-full w-full object-cover" />
-                </div>
+                <SuitePhotoReel suite={suite} offset={i * 700} />
                 <div className="flex flex-col p-4 sm:p-5">
                   <p className="text-[11px] font-semibold text-neutral-400">{suite.capacity} max</p>
                   <h3 className="mt-1 font-nav text-lg font-extrabold text-neutral-800">{suite.name}</h3>

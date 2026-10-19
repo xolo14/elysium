@@ -373,7 +373,7 @@ export const hotels: Hotel[] = [
       {
         name: "Premier Studio",
         index: "01",
-        image: bedroom,
+        image: "/images/hitec-city/room/room-06.png",
         size: "340 sq ft",
         capacity: "2 guests",
         view: "City / balcony",
@@ -385,7 +385,7 @@ export const hotels: Hotel[] = [
       {
         name: "Premier One Bedroom",
         index: "02",
-        image: premierLiving,
+        image: "/images/hitec-city/room/room-22.png",
         size: "720 sq ft",
         capacity: "4 guests",
         view: "City",
@@ -397,7 +397,7 @@ export const hotels: Hotel[] = [
       {
         name: "Premier Family Suite",
         index: "03",
-        image: premierKitchen,
+        image: "/images/hitec-city/room/room-30.png",
         size: "980 sq ft",
         capacity: "5 guests",
         view: "City / two balconies",
@@ -409,7 +409,7 @@ export const hotels: Hotel[] = [
       {
         name: "Executive Corner Suite",
         index: "04",
-        image: studioLiving,
+        image: "/images/hitec-city/room/room-20.png",
         size: "640 sq ft",
         capacity: "3 guests",
         view: "Corner / city",
@@ -421,7 +421,7 @@ export const hotels: Hotel[] = [
       {
         name: "Two Bedroom Residence",
         index: "05",
-        image: dining,
+        image: "/images/hitec-city/room/room-21.png",
         size: "1,180 sq ft",
         capacity: "6 guests",
         view: "City / two balconies",

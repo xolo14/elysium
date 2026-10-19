@@ -27,7 +27,7 @@ export function Nav() {
     pathname === "/why" ||
     onBookFlow ||
     pathname.startsWith("/hotels/");
-  /** Ivory chrome when scrolled. The city booking hero floats a light bar over the yellow photo. */
+  /** Ivory chrome when scrolled. The city booking hero floats a light bar over the forest photo. */
   const solid = !onBookFlow && (scrolled || !onDarkHero);
   const bookFloating = onBookFlow && !scrolled && !open;
 
