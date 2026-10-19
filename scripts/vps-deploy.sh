@@ -40,6 +40,25 @@ if [[ -f "$SECRETS/config.php" ]]; then
   cp "$SECRETS/config.php" "$APP/public/api/config.php"
 fi
 
+if getent group www-data >/dev/null; then
+  for cfg in "$APP/dist/client/api/config.php" "$APP/public/api/config.php"; do
+    if [[ -f "$cfg" ]]; then
+      chgrp www-data "$cfg"
+      chmod 640 "$cfg"
+    fi
+  done
+  mkdir -p "$APP/dist/client/_bookings"
+  chown www-data:www-data "$APP/dist/client/_bookings"
+  chmod 775 "$APP/dist/client/_bookings"
+fi
+
+if [[ -f "$APP/scripts/nginx-elysiumhotels.in" && -f /etc/letsencrypt/live/elysiumhotels.in/fullchain.pem ]]; then
+  cp "$APP/scripts/nginx-elysiumhotels.in" /etc/nginx/sites-available/elysiumhotels.in
+  ln -sfn /etc/nginx/sites-available/elysiumhotels.in /etc/nginx/sites-enabled/elysiumhotels.in
+  nginx -t
+  systemctl reload nginx
+fi
+
 if [[ -f "$APP/scripts/vps-deploy.sh" ]]; then
   cp "$APP/scripts/vps-deploy.sh" /root/elysium-deploy.sh
   chmod 755 /root/elysium-deploy.sh
