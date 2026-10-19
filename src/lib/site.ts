@@ -1,5 +1,5 @@
 /** Canonical public origin for SEO, sitemaps and absolute OG images. */
-export const SITE_URL = "https://elysiumhotel.grootdigitals.com";
+export const SITE_URL = "https://elysiumhotels.in";
 
 export const SITE_EMAIL = "elysium.hyd@gmail.com";
 export const SITE_NAME = "Elysium Hotels";

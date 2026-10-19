@@ -150,11 +150,10 @@ function elysium_sql_via_pdo(string $query, array $params, array $config): array
     ]);
   }
 
-  $stmt = $pdo->prepare($query);
-  foreach ($params as $i => $value) {
-    $stmt->bindValue($i + 1, $value);
-  }
-  $stmt->execute();
+  // Local PostgreSQL PDO binds `?`. Neon HTTP keeps `$1` style in the caller.
+  $statement = preg_replace('/\$\d+/', '?', $query) ?? $query;
+  $stmt = $pdo->prepare($statement);
+  $stmt->execute(array_values($params));
 
   if ($stmt->columnCount() === 0) {
     return [];

@@ -6,7 +6,7 @@ import { HotelProvider, useHotel } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { HotelSelector } from "@/components/sections/HotelSelector";
-import { pageMeta, SITE_EMAIL } from "@/lib/site";
+import { pageMeta, SITE_EMAIL, SITE_URL } from "@/lib/site";
 
 const ValueStay = lazy(() =>
   import("@/components/sections/ValueStay").then((m) => ({ default: m.ValueStay })),
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/")({
           description,
           telephone: "+91 98887 65776",
           email: SITE_EMAIL,
-          url: "https://elysiumhotel.grootdigitals.com/",
+          url: `${SITE_URL}/`,
           address: {
             "@type": "PostalAddress",
             streetAddress: "Plot no. 744, Road No. 40, Ayyappa Society, Madhapur",
