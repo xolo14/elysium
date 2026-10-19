@@ -40,7 +40,6 @@ export function Experiences() {
                   alt={exp.title}
                   ratio="4 / 3"
                   className="w-full"
-                  imgClassName="brightness-[0.95]"
                 />
               </div>
               <div className="lg:col-span-5 lg:[direction:ltr]">

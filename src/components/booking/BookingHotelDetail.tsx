@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { Pencil } from "lucide-react";
 import type { Hotel, Suite } from "@/data/hotels";
-import { getHotelCarouselImages } from "@/data/hotel-images";
+import { displaySrc, getHotelCarouselImages } from "@/data/hotel-images";
 import { PhotoDots } from "@/components/HotelImageCarousel";
 import { hotelFaqs } from "@/data/faqs";
 import { formatStayCompact, nightsBetween } from "@/lib/booking-dates";
@@ -75,8 +75,7 @@ export function BookingHotelDetail({
   onBack: () => void;
 }) {
   const images = useMemo(() => {
-    const gallery = getHotelCarouselImages(hotel).map((g) => g.src);
-    return [hotel.hero, ...gallery].filter((src, i, arr) => arr.indexOf(src) === i);
+    return getHotelCarouselImages(hotel).map((g) => g.src);
   }, [hotel]);
 
   const [index, setIndex] = useState(0);
@@ -111,19 +110,17 @@ export function BookingHotelDetail({
       <section className="relative">
         <div className="relative h-[min(62vw,18.5rem)] overflow-hidden bg-neutral-200 sm:h-[28rem] lg:h-[32rem]">
           {images.map((src, i) => (
-            <picture key={src}>
-              <source srcSet={src.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
-              <img
-                src={src}
-                alt={`${hotel.name} photo ${i + 1}`}
-                loading={i === 0 ? "eager" : "lazy"}
-                decoding="async"
-                className={cn(
-                  "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
-                  i === index ? "opacity-100" : "opacity-0",
-                )}
-              />
-            </picture>
+            <img
+              key={src}
+              src={displaySrc(src)}
+              alt={`${hotel.name} photo ${i + 1}`}
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding={i === 0 ? "sync" : "async"}
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500",
+                i === index ? "opacity-100" : "opacity-0",
+              )}
+            />
           ))}
           <button
             type="button"

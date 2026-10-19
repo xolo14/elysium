@@ -27,9 +27,9 @@ export function Nav() {
     pathname === "/why" ||
     onBookFlow ||
     pathname.startsWith("/hotels/");
-  /** Ivory chrome when scrolled — booking desk always matches forest page + light logo */
+  /** Ivory chrome when scrolled. The city booking hero floats a light bar over the yellow photo. */
   const solid = !onBookFlow && (scrolled || !onDarkHero);
-  const bookForestChrome = onBookFlow;
+  const bookFloating = onBookFlow && !scrolled && !open;
 
   useMotionValueEvent(scrollY, "change", (v) => setScrolled(v > 48));
 
@@ -83,11 +83,13 @@ export function Nav() {
 
   const headerClassName = cn(
     "fixed top-0 right-0 left-0 z-[80] transition-[background-color,box-shadow,color] duration-500 ease-luxe",
-    open || bookForestChrome
+    open || (onBookFlow && scrolled)
       ? cn(
           "bg-forest text-ivory",
           (open || scrolled) && "shadow-[0_8px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-md",
         )
+      : bookFloating
+        ? "bg-transparent text-white"
       : solid
         ? "bg-ivory/95 text-forest shadow-[0_8px_30px_-18px_rgba(6,51,44,0.35)] backdrop-blur-md"
         : "bg-transparent text-ivory",
@@ -96,6 +98,7 @@ export function Nav() {
   const bar = (
     <NavBar
       solid={solid && !open && !onBookFlow}
+      minimal={bookFloating}
       menuOpen={open}
       hotels={hotels}
       hotelId={hotelId}
@@ -286,6 +289,7 @@ export function Nav() {
 
 function NavBar({
   solid,
+  minimal = false,
   menuOpen,
   hotels,
   hotelId,
@@ -299,6 +303,7 @@ function NavBar({
   guest,
 }: {
   solid: boolean;
+  minimal?: boolean;
   menuOpen: boolean;
   hotels: Hotel[];
   hotelId: Hotel["id"];
@@ -313,15 +318,18 @@ function NavBar({
 }) {
   return (
     <nav className="safe-top relative flex w-full items-center justify-between px-4 py-3 sm:px-6 sm:py-[1.05rem] lg:px-10 lg:py-4">
-      <Link to="/" className="relative z-10 shrink-0">
-        <img
-          src={solid && !menuOpen ? "/logo-dark.svg" : "/logo-light.svg"}
-          alt="Elysium Hotels"
-          className="h-7 w-auto sm:h-9"
-        />
-      </Link>
+      {minimal ? null : (
+        <Link to="/" className="relative z-10 shrink-0">
+          <img
+            src={solid && !menuOpen ? "/logo-dark.svg" : "/logo-light.svg"}
+            alt="Elysium Hotels"
+            className="h-7 w-auto sm:h-9"
+          />
+        </Link>
+      )}
 
-      <div className="flex shrink-0 items-center gap-3.5 sm:gap-6 lg:gap-8">
+      <div className={cn("flex shrink-0 items-center gap-3.5 sm:gap-6 lg:gap-8", minimal && "ml-auto")}>
+        {minimal ? null : (
         <ul className="hidden items-center gap-7 lg:flex xl:gap-9">
           <li
             className="relative"
@@ -390,6 +398,7 @@ function NavBar({
             </li>
           ))}
         </ul>
+        )}
 
         {guest ? (
           <Link to="/account" className="flex min-w-0 items-center gap-2.5">

@@ -100,12 +100,16 @@ const hitecWashroomImages: GalleryImage[] = [
   { src: "/images/hitec-city/washroom/washroom-03.png", caption: "Marble washroom with wall-hung toilet" },
 ];
 
+export const studioEntranceSrc = "/images/studio-entrance-night.jpg";
+export const studioLobbySrc = "/images/studio-lobby-day.jpg";
+
 const madhapurAlbums: GalleryAlbum[] = [
   {
     title: "Exterior & Arrival",
     images: [
-      { src: "/images/image-6.png", caption: "Arrival, after dark" },
-      { src: "/images/image-7.png", caption: "Neighbourhood context" },
+      { src: studioEntranceSrc, caption: "Arrival, after dark" },
+      { src: studioLobbySrc, caption: "Lobby arrival" },
+      { src: "/images/image-7.jpg", caption: "Neighbourhood context" },
       { src: "/images/hero-suite-living.png", caption: "Suite living" },
     ],
   },
@@ -113,15 +117,15 @@ const madhapurAlbums: GalleryAlbum[] = [
     title: "Suites & Rooms",
     images: [
       { src: "/images/image-9.png", caption: "Deluxe Studio" },
-      { src: "/images/image-11.png", caption: "Studio Suite with kitchenette" },
+      { src: "/images/image-11.jpg", caption: "Studio Suite with kitchenette" },
       { src: "/images/image-10.png", caption: "One Bedroom Suite living" },
-      { src: "/images/image-12.png", caption: "Family Studio dining" },
+      { src: "/images/image-12.jpg", caption: "Family Studio dining" },
     ],
   },
   {
     title: "Dining & Events",
     images: [
-      { src: "/images/image-12.png", caption: "O Sorriso dining" },
+      { src: "/images/image-12.jpg", caption: "O Sorriso dining" },
       { src: "/images/image-25.png", caption: "Private dining room" },
     ],
   },
@@ -177,11 +181,26 @@ export function getHotelGalleryAlbums(hotelId: Hotel["id"]): GalleryAlbum[] {
 
 export function getHotelCarouselImages(hotel: Hotel): GalleryImage[] {
   const fromAlbums = getHotelGalleryAlbums(hotel.id).flatMap((album) => album.images);
-  if (hotel.id === "hitec") {
-    return uniqueImages(fromAlbums);
+  const slides: GalleryImage[] = [{ src: hotel.hero, caption: hotel.name }, ...fromAlbums];
+  if (hotel.id === "madhapur") {
+    slides.unshift(
+      { src: studioEntranceSrc, caption: "Arrival, after dark" },
+      { src: studioLobbySrc, caption: "Lobby arrival" },
+    );
   }
-  const ordered = uniqueImages([{ src: hotel.hero, caption: hotel.name }, ...fromAlbums]);
-  return ordered;
+  return uniqueImages(slides).slice(0, 12);
+}
+
+/** Full-size WebP used on large frames so a small original is not stretched soft. */
+export function sharpSrc(src: string) {
+  return src.replace(/\.(png|jpe?g)$/i, ".webp");
+}
+
+const keepOriginalSrc = new Set([studioEntranceSrc]);
+
+/** Hero slides that must show the file on disk, not the sharpened WebP. */
+export function displaySrc(src: string) {
+  return keepOriginalSrc.has(src) ? src : sharpSrc(src);
 }
 
 export function getHotelGalleryHref(hotel: Hotel) {

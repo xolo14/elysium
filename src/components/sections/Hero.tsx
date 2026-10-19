@@ -86,7 +86,7 @@ export function Hero() {
         )}
       </motion.div>
 
-      <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(0,0,0,0.58)_0%,rgba(0,0,0,0.34)_32%,rgba(0,0,0,0.1)_58%,rgba(0,0,0,0)_82%)]" />
+      <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(0,0,0,0.4)_0%,rgba(0,0,0,0.08)_12%,rgba(0,0,0,0)_24%),linear-gradient(90deg,rgba(0,0,0,0.38)_0%,rgba(0,0,0,0.12)_24%,rgba(0,0,0,0)_48%)]" />
 
       <AnimatePresence>
         {opening ? (

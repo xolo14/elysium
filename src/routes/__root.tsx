@@ -189,15 +189,9 @@ function ScrollToTop() {
 
     toTop();
     const frame = window.requestAnimationFrame(toTop);
-    const t0 = window.setTimeout(toTop, 0);
-    const t1 = window.setTimeout(toTop, 50);
-    const t2 = window.setTimeout(toTop, 150);
 
     return () => {
       window.cancelAnimationFrame(frame);
-      window.clearTimeout(t0);
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
     };
   }, [pathname, search, hash]);
 

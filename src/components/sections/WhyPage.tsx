@@ -38,7 +38,7 @@ const values = [
 const quotes = hotels.flatMap((h) =>
   h.testimonials.map((t) => ({
     ...t,
-    image: h.id === "madhapur" ? "/images/image-12.png" : "/images/image-14.png",
+    image: h.id === "madhapur" ? "/images/image-12.webp" : "/images/image-14.png",
     house: h.place,
   })),
 );

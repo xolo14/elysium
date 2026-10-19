@@ -259,52 +259,50 @@ export function Booking({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22, ease }}
-            className="bg-white pt-[4.5rem] pb-16"
+            className="bg-white pb-16"
           >
-            <section className="relative overflow-hidden bg-forest text-ivory lg:h-[23rem]">
-              <div className="page-wrap relative z-10 flex h-full flex-col justify-center py-6 sm:py-8 lg:py-0 lg:pr-72">
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => window.history.back()}
-                    className="mb-3 inline-flex items-center gap-1.5 font-nav text-[15px] font-bold text-ivory/80"
-                  >
-                    <span aria-hidden="true">‹</span>
-                    City
-                  </button>
-                  <h1 className="display-nav text-[clamp(2.4rem,8vw,4.25rem)] leading-[0.9] text-ivory">
+            <section className="relative overflow-hidden bg-[#f5c400] lg:min-h-[22.5rem]">
+              <img
+                src="/images/charminar.png"
+                alt=""
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[68%_center]"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[#f5c400]/80 mix-blend-multiply" />
+              <div className="pointer-events-none absolute inset-0 bg-[#f6c200]/30" />
+              <div className="page-wrap relative z-10 flex items-center pt-[5.25rem] pb-8 sm:pt-24 lg:min-h-[22.5rem] lg:py-8 lg:pt-[5.75rem]">
+                <div className="w-full max-w-[34rem] rounded-[28px] bg-[#f5c400] px-5 py-6 sm:px-8 sm:py-8">
+                  <img src="/logo-light.svg" alt="Elysium" className="h-8 w-auto sm:h-9" />
+                  <h1 className="mt-8 font-nav text-[clamp(2.5rem,6vw,3.6rem)] leading-none font-extrabold tracking-[-0.04em] text-white sm:mt-10">
                     Hyderabad
                   </h1>
                   <button
                     type="button"
                     onClick={openCityDates}
-                    className="mt-6 flex w-full max-w-xl items-center gap-3 rounded-[999px] bg-white px-3 py-2.5 text-left text-neutral-800 sm:px-4 sm:py-3"
+                    className="mt-6 flex w-full items-center gap-3 rounded-[18px] bg-white px-4 py-3 text-left text-neutral-900 sm:mt-8"
                   >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-500">
-                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden>
-                        <rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" strokeWidth="1.8" />
-                        <path d="M4 10h16M8 5V3M16 5V3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                      </svg>
-                    </span>
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-neutral-700" fill="none" aria-hidden>
+                      <path
+                        d="M4 16.5V19h2.5L16.8 8.7l-2.5-2.5L4 16.5Z"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinejoin="round"
+                      />
+                      <path d="M13.6 6.9l2.5 2.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                    </svg>
                     <span className="min-w-0 flex-1 truncate font-nav text-[14px] font-bold sm:text-[15px]">
                       {checkIn && checkOut
                         ? `${formatStayCompact(checkIn)} → ${formatStayCompact(checkOut)}`
                         : "Pick Check-in & Check-out Dates"}
                     </span>
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest text-ivory sm:h-11 sm:w-auto sm:rounded-[999px] sm:px-5">
-                      <span className="hidden font-nav text-[13px] font-extrabold sm:inline">Select</span>
-                      <span className="sm:hidden" aria-hidden>
-                        →
+                    {checkIn && checkOut ? (
+                      <span className="shrink-0 rounded-full border border-neutral-300 px-3 py-1 font-nav text-[12px] font-semibold text-neutral-700 sm:text-[13px]">
+                        {nightsBetween(checkIn, checkOut)}{" "}
+                        {nightsBetween(checkIn, checkOut) === 1 ? "Night" : "Nights"}
                       </span>
-                    </span>
+                    ) : null}
                   </button>
                 </div>
               </div>
-              <img
-                src="/images/charminar.png"
-                alt=""
-                className="pointer-events-none absolute bottom-0 right-0 hidden h-full w-auto max-w-[42%] object-contain object-bottom object-right lg:block"
-              />
             </section>
 
             <div className="page-wrap mt-5 space-y-5 sm:mt-7 sm:space-y-6">

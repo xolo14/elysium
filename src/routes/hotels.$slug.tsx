@@ -1,9 +1,8 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { hotels, type Hotel } from "@/data/hotels";
 import { hotelFaqs } from "@/data/faqs";
-import { getHotelCarouselImages } from "@/data/hotel-images";
-import { PhotoDots } from "@/components/HotelImageCarousel";
+import { displaySrc, getHotelCarouselImages } from "@/data/hotel-images";
 import { HotelProvider } from "@/context/hotel";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
@@ -63,11 +62,19 @@ function HotelPage() {
 function HotelDesk({ hotel }: { hotel: Hotel }) {
   const navigate = useNavigate();
   const images = useMemo(() => {
-    const gallery = getHotelCarouselImages(hotel).map((g) => g.src);
-    return [hotel.hero, ...gallery].filter((src, i, arr) => arr.indexOf(src) === i);
+    return getHotelCarouselImages(hotel).map((g) => g.src);
   }, [hotel]);
   const [index, setIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]["id"]>("rooms");
+
+  useEffect(() => {
+    if (images.length < 2 || index >= images.length - 1) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setTimeout(() => {
+      setIndex((n) => (n + 1) % images.length);
+    }, 5000);
+    return () => window.clearTimeout(id);
+  }, [images.length, index]);
   const others = hotels.filter((h) => h.id !== hotel.id);
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(hotel.mapQuery)}&output=embed`;
 
@@ -84,27 +91,26 @@ function HotelDesk({ hotel }: { hotel: Hotel }) {
   };
 
   return (
-    <div className="pt-[4.5rem]">
+    <div>
       <section className="relative">
-        <div className="relative h-[min(62vw,18.5rem)] overflow-hidden bg-neutral-200 sm:h-[28rem] lg:h-[32rem]">
+        <div className="relative h-[calc(min(62vw,18.5rem)+4.5rem)] overflow-hidden bg-neutral-200 sm:h-[calc(28rem+4.5rem)] lg:h-[calc(32rem+4.5rem)]">
           {images.map((src, i) => (
-            <picture key={src}>
-              <source srcSet={src.replace(/\.(png|jpe?g)$/i, ".webp")} type="image/webp" />
-              <img
-                src={src}
-                alt={`${hotel.name} photo ${i + 1}`}
-                loading={i === 0 ? "eager" : "lazy"}
-                className={cn(
-                  "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
-                  i === index ? "opacity-100" : "opacity-0",
-                )}
-              />
-            </picture>
+            <img
+              key={src}
+              src={displaySrc(src)}
+              alt={`${hotel.name} photo ${i + 1}`}
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding={i === 0 ? "sync" : "async"}
+              className={cn(
+                "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500",
+                i === index ? "opacity-100" : "opacity-0",
+              )}
+            />
           ))}
           <button
             type="button"
             onClick={() => setIndex((n) => (n - 1 + images.length) % images.length)}
-            className="absolute top-1/2 left-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:left-5 sm:h-11 sm:w-11"
+            className="absolute top-1/2 left-3 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:left-5 sm:h-11 sm:w-11"
             aria-label="Previous photo"
           >
             ‹
@@ -112,24 +118,70 @@ function HotelDesk({ hotel }: { hotel: Hotel }) {
           <button
             type="button"
             onClick={() => setIndex((n) => (n + 1) % images.length)}
-            className="absolute top-1/2 right-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:right-5 sm:h-11 sm:w-11"
+            className="absolute top-1/2 right-3 z-30 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-lg text-forest sm:right-5 sm:h-11 sm:w-11"
             aria-label="Next photo"
           >
             ›
           </button>
-          <div className="absolute inset-x-0 bottom-3 flex items-end justify-between gap-3 px-4 sm:bottom-4 sm:px-8">
-            <PhotoDots count={images.length} index={index} onSelect={setIndex} />
-            <Link
-              to="/hotels/$slug/gallery"
-              params={{ slug: hotel.slug }}
-              className="shrink-0 text-[12px] font-semibold text-ivory underline underline-offset-4 sm:text-sm"
-            >
-              View All Images
-            </Link>
-          </div>
+          {images.length > 1 && index === images.length - 1 ? (
+            <div className="absolute inset-0 z-[5] flex items-center justify-center bg-black/45 px-6 pb-28 pt-16 text-center">
+              <div className="max-w-[22rem]">
+                <p className="font-nav text-[1.65rem] leading-tight font-extrabold text-white sm:text-[2rem]">
+                  Like what you see?
+                </p>
+                <p className="mx-auto mt-2 max-w-[18rem] text-[15px] leading-snug text-white sm:text-[16px]">
+                  Take a look at our entire gallery for more images of this Elysium
+                </p>
+                <Link
+                  to="/hotels/$slug/gallery"
+                  params={{ slug: hotel.slug }}
+                  className="mt-4 inline-flex min-h-10 items-center rounded-full bg-forest px-5 py-2 font-nav text-[15px] font-extrabold text-ivory"
+                >
+                  View All Images
+                </Link>
+              </div>
+            </div>
+          ) : null}
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-24 bg-gradient-to-b from-black/45 via-black/10 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/25 to-transparent" />
+          {images.length > 1 ? (
+            <div className="absolute inset-x-0 bottom-7 z-20 sm:bottom-9">
+              <div className="page-wrap">
+                <div className="relative">
+                  <Link
+                    to="/hotels/$slug/gallery"
+                    params={{ slug: hotel.slug }}
+                    className="pointer-events-auto absolute right-1 bottom-full mb-3 text-[12px] leading-none font-semibold text-white underline decoration-white decoration-1 underline-offset-[3px] [text-shadow:0_1px_2px_rgba(0,0,0,0.45)] sm:right-2 sm:mb-3.5 sm:text-[13px]"
+                  >
+                    View All Images
+                  </Link>
+                  <div
+                    className="flex items-center gap-1.5 sm:gap-2"
+                    role="tablist"
+                    aria-label="Photos"
+                  >
+                    {images.map((src, i) => (
+                      <button
+                        key={src}
+                        type="button"
+                        role="tab"
+                        aria-label={`Photo ${i + 1}`}
+                        aria-selected={i === index}
+                        onClick={() => setIndex(i)}
+                        className={cn(
+                          "h-[5px] min-w-0 flex-1 rounded-full transition-colors duration-300",
+                          i === index ? "bg-forest" : "bg-white",
+                        )}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
 
-        <div className="page-wrap relative z-10 -mt-8 sm:-mt-14">
+        <div className="page-wrap relative z-10 -mt-6 sm:-mt-8">
           <div className="rounded-t-[22px] bg-forest px-4 pt-6 pb-5 text-ivory sm:rounded-t-[28px] sm:px-8 sm:pt-8 sm:pb-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div>

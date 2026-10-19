@@ -59,7 +59,7 @@ export const socialProofTiles: SocialProofTile[] = [
   },
   {
     kind: "image",
-    src: "/images/image-12.png",
+    src: "/images/image-12.webp",
     alt: "All-day dining at O Sorriso",
     layout: "col-span-1 row-span-2",
   },

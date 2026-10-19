@@ -228,7 +228,7 @@ export function OwnersPage() {
           </div>
           <div className="aspect-[16/10] overflow-hidden lg:aspect-auto lg:min-h-[20rem]">
             <img
-              src="/images/image-12.png"
+              src="/images/image-12.webp"
               alt="Dining at Elysium"
               className="h-full w-full object-cover"
             />

@@ -30,7 +30,8 @@ async function optimize(file) {
         width: Math.min(meta.width ?? MAX, MAX),
         withoutEnlargement: true,
       })
-      .webp({ quality: 76, effort: 4 })
+      .sharpen({ sigma: 0.6 })
+      .webp({ quality: 86, effort: 5, smartSubsample: true })
       .toFile(webp);
     console.log("ok", path.relative(process.cwd(), webp));
   } catch (err) {
